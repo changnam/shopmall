@@ -24,8 +24,11 @@
 
  	<div class="row align-items-md-stretch">
  		<div class="col-md-4">
- 			<img th:src="@{/img/}+${book.fileName}" alt="image" style="width: 90%"/>
- 		</div>
+		 		<img th:src="@{/files/}+${book.fileName}" style="width: 90%" />		
+		 		<div class="text-center"> 	
+		 			<a th:href="@{/books/download(file=${book.fileName})}" style="text-decoration-line:none">이미지다운로드</a>
+				</div>
+		 </div>
 		<div class="col-md-12">
 			<h3 th:text ="${book.name}"></h3> 
 				<p th:text ="${book.description}"></p>

@@ -1,7 +1,9 @@
 package com.honsoft.shopmall.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.dto.BookResponse;
 import com.honsoft.shopmall.service.BookService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/books")
@@ -111,6 +116,19 @@ public class BookController {
 //			e.printStackTrace();
 //		}
 		return "uploadResult";
+	}
+	
+	@GetMapping("/download")
+	public void downloadBookImage(@RequestParam("file") String paramKey, HttpServletResponse resp) throws IOException {
+		File imageFile = new File(fileDir+paramKey);
+		resp.setContentType("application/download");
+		resp.setContentLength((int)imageFile.length());
+		resp.setHeader("Content-disposition", "attachment;filename=\""+paramKey + "\"");
+		OutputStream os = resp.getOutputStream();
+		FileInputStream fis = new FileInputStream(imageFile);
+		FileCopyUtils.copy(fis, os);
+		fis.close();
+		os.close();
 	}
 	
 	@GetMapping("/error")
