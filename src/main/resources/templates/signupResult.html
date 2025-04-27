@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>회원가입</h1>
+<form th:action="@{/signup}" method="post">
+	<p>아이디:<span th:text="${signupRequest.userId}"></span></p>
+	<p>비밀번호:<span th:text="${signupRequest.password}"></span></p>
+	<p>거주지:<span th:text="${signupRequest.address}"></span></p>
+	<p>성별:<span th:text="${signupRequest.gender}"></span></p>
+	<p>취미:<span th:text="${signupRequest.hobbies}"></span></p>
+	<p>인사말:<span th:text="${signupRequest.welcomeWords}"></span></p>	
+
+</form>
+</body>
+</html>
