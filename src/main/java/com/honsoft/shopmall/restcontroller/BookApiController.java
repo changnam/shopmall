@@ -1,9 +1,11 @@
 package com.honsoft.shopmall.restcontroller;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -23,18 +25,20 @@ import com.honsoft.shopmall.service.BookService;
 @RequestMapping("/api/books")
 public class BookApiController {
 	private static Logger logger = LoggerFactory.getLogger(BookApiController.class);
-	private BookService bookService;
+	private final BookService bookService;
+	private final MessageSource messageSource;
 	
-	public BookApiController(BookService bookService) {
+	public BookApiController(BookService bookService,MessageSource messageSource) {
 		this.bookService = bookService;
+		this.messageSource = messageSource;
 	}
 	
 	@GetMapping
-	public ResponseEntity<Object> requestBookList(){
+	public ResponseEntity<Object> requestBookList(Locale locale){
 		logger.info("requestBookList started.");
 		
 		//return bookService.getAllBookList();
-		return ResponseHandler.responseBuilder("success",HttpStatus.OK,bookService.getAllBookList());
+		return ResponseHandler.responseBuilder(messageSource.getMessage("success.message",null,locale),HttpStatus.OK,bookService.getAllBookList());
 	}
 	
 	
