@@ -21,7 +21,11 @@
 		</div>
 	</div>	
    <div class="row align-items-md-stretch">
-      <form th:action="@{/books/add}"  method="post" enctype="multipart/form-data">  
+	   <div class="text-end" style="padding-right:30px">
+		   	<a href="?lang=ko" style="text-decoration-line:none">Korean</a> |
+		   	<a href="?lang=en" style="text-decoration-line:none">English</a>
+		   </div>
+	   <form th:action="@{/books/add}"  method="post" enctype="multipart/form-data">  
       <legend>[[#{addBook.form.subtitle.label}]]</legend>
       <div class="mb-3 row">
          <label class="col-sm-2 control-label"><span th:text="#{addBook.form.bookId.label}"/></label>
