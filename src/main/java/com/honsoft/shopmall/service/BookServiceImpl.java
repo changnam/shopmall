@@ -53,21 +53,21 @@ public class BookServiceImpl implements BookService {
 	@Override
 	@Transactional
 	public BookResponse updateBookById(BookRequest bookRequest) {
-		Book book = bookRepository.findByBookId(bookRequest.bookId()).orElseThrow(() -> {
+		Book book = bookRepository.findByBookId(bookRequest.getBookId()).orElseThrow(() -> {
 			// IllegalArgumentException 예외 처리
-			throw new IllegalArgumentException("해당하는 아이디가 없습니다 bookId : " + bookRequest.bookId());
+			throw new IllegalArgumentException("해당하는 아이디가 없습니다 bookId : " + bookRequest.getBookId());
 		});
 
-		book.setAuthor(bookRequest.author());
-		book.setBookId(bookRequest.bookId());
-		book.setCategory(bookRequest.category());
-		book.setCondition(bookRequest.condition());
-		book.setDescription(bookRequest.description());
-		book.setName(bookRequest.name());
-		book.setPublisher(bookRequest.publisher());
-		book.setReleaseDate(bookRequest.releaseDate());
-		book.setUnitPrice(bookRequest.unitPrice());
-		book.setUnitsInStock(bookRequest.unitsInStock());
+		book.setAuthor(bookRequest.getAuthor());
+		book.setBookId(bookRequest.getBookId());
+		book.setCategory(bookRequest.getCategory());
+		book.setCondition(bookRequest.getCondition());
+		book.setDescription(bookRequest.getDescription());
+		book.setName(bookRequest.getName());
+		book.setPublisher(bookRequest.getPublisher());
+		book.setReleaseDate(bookRequest.getReleaseDate());
+		book.setUnitPrice(bookRequest.getUnitPrice());
+		book.setUnitsInStock(bookRequest.getUnitsInStock());
 
 		bookRepository.save(book);
 		return book.toBookResponse();
@@ -76,20 +76,20 @@ public class BookServiceImpl implements BookService {
 	@Override
 	@Transactional
 	public BookResponse insertBook(BookRequest bookRequest) throws IllegalStateException, IOException {
-		Optional<Book> checkBook = bookRepository.findByBookId(bookRequest.bookId());
+		Optional<Book> checkBook = bookRepository.findByBookId(bookRequest.getBookId());
 
 		if (checkBook.isEmpty()) {
 			Book targetBook = Book.from(bookRequest);
-			if (bookRequest.bookImage() != null) {
-				String fileName = bookRequest.bookImage().getOriginalFilename();
+			if (bookRequest.getBookImage() != null) {
+				String fileName = bookRequest.getBookImage().getOriginalFilename();
 				File savedFile = new File(fileDir, fileName);
-				bookRequest.bookImage().transferTo(savedFile);
+				bookRequest.getBookImage().transferTo(savedFile);
 				targetBook.setFileName(fileName);
 			}
 			Book savedBook = bookRepository.save(targetBook);
 			return savedBook.toBookResponse();
 		} else {
-			throw new RuntimeException("bookId " + bookRequest.bookId() + " already exists");
+			throw new RuntimeException("bookId " + bookRequest.getBookId() + " already exists");
 		}
 	}
 

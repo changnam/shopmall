@@ -25,12 +25,15 @@
 		   	<a href="?lang=ko" style="text-decoration-line:none">Korean</a> |
 		   	<a href="?lang=en" style="text-decoration-line:none">English</a>
 		   </div>
-	   <form th:action="@{/books/add}"  method="post" enctype="multipart/form-data">  
+	   <form th:object="${book}" th:action="@{/books/add}"  method="post" enctype="multipart/form-data">  
       <legend>[[#{addBook.form.subtitle.label}]]</legend>
       <div class="mb-3 row">
          <label class="col-sm-2 control-label"><span th:text="#{addBook.form.bookId.label}"/></label>
          <div class="col-sm-3">
-            <input  type="text" name="bookId"  class="form-control"/> 
+            <input  type="text" name="bookId"  class="form-control" th:field="*{bookId}"/> 
+         </div>
+         <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{bookId}"/>
          </div>
       </div>
       <div class="mb-3 row">
@@ -42,8 +45,11 @@
       <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.unitPrice.label}"/></label>
          <div class="col-sm-3">					     
-           <input   type="text" name="unitPrice" class="form-control"/>  
-         </div>					
+           <input   type="text" name="unitPrice" class="form-control"  th:field="*{unitPrice}"/>  
+         </div>		
+         <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{unitPrice}"/>
+         </div>			
       </div>
    	  <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.author.label}"/></label>

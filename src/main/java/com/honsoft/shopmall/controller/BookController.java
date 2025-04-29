@@ -17,9 +17,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,12 +89,13 @@ public class BookController {
 	}
 
 	@GetMapping("/add")
-	public String requestAddBookForm() {
+	public String requestAddBookForm(Model m) {
+		m.addAttribute("book",new BookRequest());
 		return "books/addBook";
 	}
 
 	@PostMapping("/add")
-	public String requestAddBook(@Validated BookRequest bookRequest) throws IllegalStateException, IOException {
+	public String requestAddBook(@Validated @ModelAttribute("book") BookRequest bookRequest, BindingResult bindingResult) throws Exception {
 		// Book bookTemp = modelMapper.map(addBookRequest, Book.class);
 		/*
 		 * Book bookTemp = new Book(); bookTemp.setAuthor(addBookRequest.author());
@@ -107,6 +110,10 @@ public class BookController {
 		 * bookTemp.setUnitsInStock(addBookRequest.unitsInStock());
 		 */
 		// bookService.insertBook(modelMapper.map(addBookRequest, Book.class));
+		if (bindingResult.hasErrors()) {
+			return "books/addBook";
+        }
+		
 		bookService.insertBook(bookRequest);
 		return "redirect:/books";
 	}

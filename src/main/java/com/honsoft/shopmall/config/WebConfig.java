@@ -8,6 +8,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -66,7 +67,15 @@ public class WebConfig implements WebMvcConfigurer {
     	messageSource.setBasename("messages");
     	messageSource.setDefaultEncoding("UTF-8");
     	messageSource.setFallbackToSystemLocale(false);
-    	messageSource.setAlwaysUseMessageFormat(true);
+    	messageSource.setAlwaysUseMessageFormat(false);
     	return messageSource;
+    }
+    
+    //반드시 validator 이름으로 등록해야함. 
+    @Bean
+    public LocalValidatorFactoryBean validator(@Qualifier("messageSource") MessageSource messageSource) {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource);
+        return bean;
     }
 }
