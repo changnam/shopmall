@@ -1,8 +1,10 @@
 package com.honsoft.shopmall.controller;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +20,11 @@ import com.honsoft.shopmall.util.ProductRequestValidator;
 @RequestMapping("/products")
 public class ProductController {
 
+	private final Validator defaultValidator;
 	private final ProductRequestValidator productRequestValidator;
 
-	public ProductController(ProductRequestValidator productRequestValidator) {
+	public ProductController(@Qualifier("validator") Validator defaultValidator,ProductRequestValidator productRequestValidator) {
+		this.defaultValidator = defaultValidator;
 		this.productRequestValidator = productRequestValidator;
 	}
 
@@ -42,6 +46,6 @@ public class ProductController {
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.setValidator(productRequestValidator);
+		binder.addValidators(defaultValidator,productRequestValidator);
 	}
 }
