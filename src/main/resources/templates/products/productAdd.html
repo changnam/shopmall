@@ -1,0 +1,23 @@
+<html>
+<head>	
+	<title>Chap09</title>
+<style>
+span {
+     color: red;
+    border-color: red;
+}
+
+</style>
+</head>
+
+<body>
+	<h3>유효성 검사</h3>
+	
+	<form th:object="${product}" th:action="@{/products/add}"  method="post">
+		<p>품명 : <input type="text"   th:field="*{name}"> <span th:errors="*{name}"></span>
+		<p>가격 : <input type="text"   th:field="*{price}"> <span th:errors="*{price}"></span>
+		<p><input type="submit" value="확인"/> 
+		<input type="reset"  value="취소"/>
+	</form>
+</body>
+<html>
