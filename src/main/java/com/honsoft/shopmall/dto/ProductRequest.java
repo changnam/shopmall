@@ -4,12 +4,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record ProductRequest(@NotBlank @Size(min = 4, max = 10, message="4자 ~ 10자 이내로 입력해주세요") String name,
+public record ProductRequest(@NotBlank @Size(min = 4, max = 10) String name,
 
-		@Min(value = 0) int price) {
+		@Min(value = 0) int price, String email) {
 	
 	public ProductRequest(String name) {
-		this(name,0);
+		this(name,0,"");
 	}
 	
 	public ProductRequest() {

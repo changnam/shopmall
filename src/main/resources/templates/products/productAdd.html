@@ -21,6 +21,8 @@ span {
 	<form th:object="${product}" th:action="@{/products/add}"  method="post">
 		<p><span th:text="#{productAdd.form.name.label}"></span><input type="text"   th:field="*{name}"> <span th:errors="*{name}"></span></p>
 		<p><span th:text="#{productAdd.form.price.label}"></span><input type="text"   th:field="*{price}"> <span th:errors="*{price}"></span></p>
+		<p><span th:text="#{productAdd.form.email.label}"></span><input type="text"   th:field="*{email}"> <span th:errors="*{email}"></span></p>
+		
 		<p><input type="submit" value="확인"/> 
 		<input type="reset"  value="취소"/>
 	</form>
