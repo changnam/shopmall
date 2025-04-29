@@ -13,9 +13,14 @@ span {
 <body>
 	<h3>유효성 검사</h3>
 	
+	 <div class="text-end" style="padding-right:30px">
+		   	<a href="?lang=ko" style="text-decoration-line:none">Korean</a> |
+		   	<a href="?lang=en" style="text-decoration-line:none">English</a>
+	</div>
+		   
 	<form th:object="${product}" th:action="@{/products/add}"  method="post">
-		<p>품명 : <input type="text"   th:field="*{name}"> <span th:errors="*{name}"></span>
-		<p>가격 : <input type="text"   th:field="*{price}"> <span th:errors="*{price}"></span>
+		<p><span th:text="#{productAdd.form.name.label}"></span><input type="text"   th:field="*{name}"> <span th:errors="*{name}"></span></p>
+		<p><span th:text="#{productAdd.form.price.label}"></span><input type="text"   th:field="*{price}"> <span th:errors="*{price}"></span></p>
 		<p><input type="submit" value="확인"/> 
 		<input type="reset"  value="취소"/>
 	</form>
