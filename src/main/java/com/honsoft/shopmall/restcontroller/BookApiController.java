@@ -1,5 +1,6 @@
 package com.honsoft.shopmall.restcontroller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -9,14 +10,18 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.dto.BookResponse;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.BookService;
@@ -47,6 +52,11 @@ public class BookApiController {
 		logger.info("requestBookById started.");
 		
 		return ResponseHandler.responseBuilder("success", HttpStatus.OK, bookService.getBookById(bookId));
+	}
+	
+	@PostMapping("/add")
+	public ResponseEntity<Object> requestBookAdd(@RequestBody BookRequest bookRequest) throws IllegalStateException, IOException{
+		return ResponseHandler.responseBuilder("success", HttpStatus.OK, bookService.insertBook(bookRequest));
 	}
 	
 	@GetMapping("/{category}")

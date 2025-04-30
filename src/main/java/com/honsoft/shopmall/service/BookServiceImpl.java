@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,15 +15,22 @@ import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.repository.BookRepository;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 
 @Service
 public class BookServiceImpl implements BookService {
-	private BookRepository bookRepository;
+	private final BookRepository bookRepository;
+	
+	private final Validator validator;
+	
 	@Value("${file.uploadDir}")
 	String fileDir;
 
-	public BookServiceImpl(BookRepository bookRepository) {
+	public BookServiceImpl(BookRepository bookRepository,Validator validator) {
 		this.bookRepository = bookRepository;
+		this.validator = validator;
 	}
 
 	@Override
@@ -76,6 +84,12 @@ public class BookServiceImpl implements BookService {
 	@Override
 	@Transactional
 	public BookResponse insertBook(BookRequest bookRequest) throws IllegalStateException, IOException {
+		
+		Set<ConstraintViolation<BookRequest>> violations = validator.validate(bookRequest);
+		if (!violations.isEmpty()) {
+			throw new ConstraintViolationException(violations);
+		}
+		
 		Optional<Book> checkBook = bookRepository.findByBookId(bookRequest.getBookId());
 
 		if (checkBook.isEmpty()) {
