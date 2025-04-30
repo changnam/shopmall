@@ -94,7 +94,7 @@ public class BookServiceImpl implements BookService {
 
 		if (checkBook.isEmpty()) {
 			Book targetBook = Book.from(bookRequest);
-			if (bookRequest.bookImage() != null) {
+			if (!bookRequest.bookImage().isEmpty()) {
 				String fileName = bookRequest.bookImage().getOriginalFilename();
 				File savedFile = new File(fileDir, fileName);
 				bookRequest.bookImage().transferTo(savedFile);
