@@ -25,7 +25,7 @@ public class SecurityConfig {
 				.requestMatchers(contextPath + "/member/**").authenticated()
 				.requestMatchers(contextPath + "/books/**").authenticated()
 				.anyRequest().permitAll());
-
+		http.formLogin((formLogin) -> {});
 		return http.build();
 	}
 
