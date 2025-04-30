@@ -39,7 +39,10 @@
       <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.name.label}"/></label>
          <div class="col-sm-3">
-            <input   type="text" name="name"  class="form-control"/> 
+            <input   type="text" name="name"  class="form-control"  th:field="*{name}"/> 
+         </div>
+          <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{name}"/>
          </div>
       </div>
       <div class="mb-3 row">
@@ -54,52 +57,76 @@
    	  <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.author.label}"/></label>
          <div class="col-sm-3">
-           <input   type="text" name="author" class="form-control"/>  
+           <input   type="text" name="author" class="form-control" th:field="*{author}"/>  
+         </div>
+          <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{author}"/>
          </div>
       </div>
       <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.description.label}"/></label>
          <div class="col-sm-5">	
-         <textarea  type="text" name="description" cols="50" rows="2" class="form-control"> </textarea>
+         <textarea  type="text" name="description" cols="50" rows="2" class="form-control" th:field="*{description}"> </textarea>
          </div>		
+          <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{description}"/>
+         </div>
       </div>
       <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.publisher.label}"/></label>
          <div class="col-sm-3">	
-          <input   type="text" name="publisher" class="form-control"/> 
+          <input   type="text" name="publisher" class="form-control" th:field="*{publisher}"/> 
          </div>		
+          <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{publisher}"/>
+         </div>
       </div>
       <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.category.label}"/></label>
          <div class="col-sm-3">	 
-           <input  type="text" name="category" class="form-control"/> 
+           <input  type="text" name="category" class="form-control" th:field="*{category}"/> 
          </div>		
+          <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{category}"/>
+         </div>
       </div>
       <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.unitsInStock.label}"/> </label>
          <div class="col-sm-3">	
-            <input  type="text" name="unitsInStock" class="form-control"/> 
+            <input  type="text" name="unitsInStock" class="form-control" th:field="*{unitsInStock}" th:value="0"/> 
          </div>		
+          <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{unitsInStock}"/>
+         </div>
       </div>      
       <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.releaseDate.label}"/></label>
          <div class="col-sm-3">	
-          <input  type="text" name="releaseDate" class="form-control"/> 
+          <input  type="text" name="releaseDate" class="form-control" th:field="*{releaseDate}"/> 
          </div>		
+          <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{releaseDate}"/>
+         </div>
       </div>
       <div class="mb-3 row">
          <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.condition.label}"/></label>
          <div class="col-sm-3">	
-            <input type="radio" name="condition" value="New" /> New 
-            <input type="radio"  name="condition" value="Old" /> Old 
-            <input type="radio" name="condition" value="E-Book" /> E-Book 
+            <input type="radio" name="condition" th:field="*{condition}" value="New" /> New 
+            <input type="radio"  name="condition" th:field="*{condition}" value="Old" /> Old 
+            <input type="radio" name="condition" th:field="*{condition}" value="E-Book" /> E-Book 
          </div>		
+          <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{condition}"/>
+         </div>
       </div>
       <div class="mb-3 row">
       	<label class="col-sm-2 control-label"><span th:text="#{addBook.form.bookImage.label}"/></label>
       	<div class="col-sm-7">
-      		<input type="file" name="bookImage" class="form-control"/>
+      		<input type="file" name="bookImage" class="form-control"  th:field="*{bookImage}"/>
       	</div>
+      	 <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{bookImage}"/>
+         </div>
       </div>
       <div class="mb-3 row">
          <div class="col-sm-offset-2 col-sm-10" >

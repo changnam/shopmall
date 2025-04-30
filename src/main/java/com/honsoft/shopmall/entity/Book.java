@@ -56,17 +56,17 @@ public class Book {
 
 	public static Book from(BookRequest request) {
 	    return new Book(
-	        request.getBookId(),
-	        request.getName(),
-	        request.getUnitPrice(),
-	        request.getAuthor(),
-	        request.getDescription(),
-	        request.getPublisher(),
-	        request.getCategory(),
-	        request.getUnitsInStock(),
-	        request.getReleaseDate(),
-	        request.getCondition(),
-	        request.getFileName()
+	        request.bookId(),
+	        request.name(),
+	        request.unitPrice(),
+	        request.author(),
+	        request.description(),
+	        request.publisher(),
+	        request.category(),
+	        request.unitsInStock(),
+	        request.releaseDate(),
+	        request.condition(),
+	        request.fileName()
 	    );
 	}
 
