@@ -24,17 +24,17 @@ public class WebConfig implements WebMvcConfigurer {
 	@Value("${file.uploadDir}")
 	String fileDir;
 	
-	@Value("${server.servlet.context-path:}")
-	private String contextPath; 
+//	@Value("${server.servlet.context-path:}")
+//	private String contextPath; 
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		System.out.println("=======================> "+contextPath+"/files/**");
-		registry.addResourceHandler(contextPath+"/webjars/*").addResourceLocations("classpath:/META-INF/resources/webjars/");
-		registry.addResourceHandler(contextPath+"/js/**").addResourceLocations("classpath:/static/js/");
-		registry.addResourceHandler(contextPath+"/img/**").addResourceLocations("classpath:/static/img/");
-		registry.addResourceHandler(contextPath+"/css/**").addResourceLocations("classpath:/static/css/");
-		registry.addResourceHandler(contextPath+"/files/**").addResourceLocations("file:///"+fileDir);
+//		System.out.println("=======================> "+contextPath+"/files/**");
+		registry.addResourceHandler("/webjars/*").addResourceLocations("classpath:/META-INF/resources/webjars/");
+		registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
+		registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
+		registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
+		registry.addResourceHandler("/files/**").addResourceLocations("file:///"+fileDir);
 //		.setCachePeriod(60*60*24*365);
 		//"file:/upload/files/" <-- 리눅스의 경우, / 로 끝나야 함
 	}
