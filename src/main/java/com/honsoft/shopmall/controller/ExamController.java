@@ -93,6 +93,22 @@ public class ExamController {
 		return "viewPage04";
 	}
 	
+	@GetMapping("/exam05")
+	public String requestExam05Page() {
+		return "viewPage05";
+	}
+	
+	@GetMapping("/loginfailed")
+	public String requestLoginFailPage() {
+		return "viewPage05";
+	}
+	
+	@GetMapping("/admin")
+	public String requestAdminPage(Authentication authentication,Model m) {
+		m.addAttribute("data",authentication.getName());
+		return "viewPage05_result";
+	}
+	
 	
 	@GetMapping("/admin/main")
 	public String requestMethod2(Model model) {			
@@ -115,4 +131,9 @@ public class ExamController {
 	   	return "adminPage";
 	}
 
+	
+//	@GetMapping("/logout")
+//	public String logout(Model m) {
+//		return "viewPage05";
+//	}
 }

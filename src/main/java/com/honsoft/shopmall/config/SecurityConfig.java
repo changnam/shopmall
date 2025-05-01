@@ -35,19 +35,19 @@ public class SecurityConfig {
 		http.securityMatcher("/**");
 		http.csrf((csrf) -> csrf.disable());
 		http.authorizeHttpRequests((auth) -> auth.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-				.requestMatchers("/manager/**").hasRole("MANAGER")
-				.requestMatchers("/member/**").hasAnyRole("USER","ADMIN")
-				.requestMatchers("/books/**").authenticated()
-				.anyRequest().permitAll());
-		http.formLogin(Customizer.withDefaults());
+				.requestMatchers("/manager/**").hasRole("MANAGER").requestMatchers("/member/**")
+				.hasAnyRole("USER", "ADMIN").requestMatchers("/books/**").authenticated().anyRequest().permitAll());
+		http.formLogin(
+				(formLogin) -> formLogin.loginPage("/exam05").loginProcessingUrl("/exam05").defaultSuccessUrl("/admin")
+						.usernameParameter("username").passwordParameter("password").failureUrl("/loginfailed"));
+		http.logout(logout -> logout.logoutSuccessUrl("/exam05"));
 		return http.build();
 	}
 
 	@Bean
 	public WebSecurityCustomizer webSecurity() {
 
-		return (web) -> web.ignoring().requestMatchers("/css/**", "/img/**",
-				"/js/**", "/webjars/**");
+		return (web) -> web.ignoring().requestMatchers("/css/**", "/img/**", "/js/**", "/webjars/**");
 	}
 
 	@Bean
@@ -58,28 +58,18 @@ public class SecurityConfig {
 
 		return http.build();
 	}
-	
-	
+
 	@Bean
 	public UserDetailsService user(PasswordEncoder passwordEncoder) {
-	UserDetails user = User.builder()
-			.username("user")
-			.password(passwordEncoder.encode("pass"))
-			.roles("USER")
-			.build();
-		UserDetails admin = User.builder()
-			.username("admin")
-			.password(passwordEncoder.encode("pass"))
-			.roles("ADMIN")
-			.build();
-		UserDetails manager = User.builder()
-				.username("manager")
-				.password(passwordEncoder.encode("pass"))
-				.roles("MANAGER")
+		UserDetails user = User.builder().username("user").password(passwordEncoder.encode("pass")).roles("USER")
 				.build();
+		UserDetails admin = User.builder().username("admin").password(passwordEncoder.encode("pass")).roles("ADMIN")
+				.build();
+		UserDetails manager = User.builder().username("manager").password(passwordEncoder.encode("pass"))
+				.roles("MANAGER").build();
 		return new InMemoryUserDetailsManager(user, admin, manager);
 	}
-	
+
 	@Bean
 	public PasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
