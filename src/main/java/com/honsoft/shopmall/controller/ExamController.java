@@ -150,12 +150,12 @@ public class ExamController {
 		throw new UserException("UserException 메시지 입니다");
 	}
 	
-//	@ExceptionHandler(UserException.class)
-//	public String handleUserException(UserException e,Model m) {
-//		
-//		m.addAttribute("data1",e.getMessage());
-//		m.addAttribute("data2",e);
-//		
-//		return "userException";
-//	}
+	@ExceptionHandler(UserException.class)
+	public String handleUserException(UserException e,Model m) {
+		
+		m.addAttribute("data1",e.getMessage());
+		m.addAttribute("data2",e);
+		
+		return "userException";
+	}
 }
