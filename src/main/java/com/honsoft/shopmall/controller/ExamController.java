@@ -73,6 +73,16 @@ public class ExamController {
 		return "managerUserPage";
 	}
 	
+	@GetMapping("/exam03")
+	public String requestExam03Page() {
+		return "viewPage03";
+	}
+	
+	@GetMapping("/manager/tag")
+	public String requestMemberTag() {
+		return "viewPage03";
+	}
+	
 	@GetMapping("/admin/main")
 	public String requestMethod2(Model model) {			
 	   	model.addAttribute("data", "adminPage.html");	 
