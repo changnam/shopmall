@@ -1,9 +1,3 @@
-configurations {
-	all {
-		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-	}
-}
-
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.4'
@@ -21,6 +15,14 @@ java {
 
 repositories {
 	mavenCentral()
+}
+
+configurations {
+    all {
+        // ❌ Globally exclude Logback from all configurations
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+    }
 }
 
 dependencies {
