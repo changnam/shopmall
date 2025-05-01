@@ -11,7 +11,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.honsoft.shopmall.exception.UserException;
 
 @Controller
 public class ExamController {
@@ -140,5 +143,19 @@ public class ExamController {
 //	@GetMapping("/logout")
 //	public String logout(Model m) {
 //		return "viewPage05";
+//	}
+	
+	@GetMapping("/userexception")
+	public String requestUserException() {
+		throw new UserException("UserException 메시지 입니다");
+	}
+	
+//	@ExceptionHandler(UserException.class)
+//	public String handleUserException(UserException e,Model m) {
+//		
+//		m.addAttribute("data1",e.getMessage());
+//		m.addAttribute("data2",e);
+//		
+//		return "userException";
 //	}
 }
