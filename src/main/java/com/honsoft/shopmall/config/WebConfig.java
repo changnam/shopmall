@@ -17,6 +17,7 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import com.honsoft.shopmall.interceptor.MonitoringInterceptor;
 import com.honsoft.shopmall.util.DelegatingLocaleResolver;
 
 @Configuration
@@ -67,6 +68,7 @@ public class WebConfig implements WebMvcConfigurer {
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
+        registry.addInterceptor(new MonitoringInterceptor());
     }
     
     @Bean
@@ -86,4 +88,7 @@ public class WebConfig implements WebMvcConfigurer {
         bean.setValidationMessageSource(messageSource);
         return bean;
     }
+    
+    
+    
 }
