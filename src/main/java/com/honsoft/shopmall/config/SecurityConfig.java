@@ -5,6 +5,7 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -35,10 +36,10 @@ public class SecurityConfig {
 		http.csrf((csrf) -> csrf.disable());
 		http.authorizeHttpRequests((auth) -> auth.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 				.requestMatchers("/manager/**").hasRole("MANAGER")
-				.requestMatchers("/member/**").authenticated()
+				.requestMatchers("/member/**").hasAnyRole("USER","ADMIN")
 				.requestMatchers("/books/**").authenticated()
 				.anyRequest().permitAll());
-		http.formLogin((formLogin) -> {});
+		http.formLogin(Customizer.withDefaults());
 		return http.build();
 	}
 
@@ -71,7 +72,12 @@ public class SecurityConfig {
 			.password(passwordEncoder.encode("pass"))
 			.roles("ADMIN")
 			.build();
-		return new InMemoryUserDetailsManager(user, admin);
+		UserDetails manager = User.builder()
+				.username("manager")
+				.password(passwordEncoder.encode("pass"))
+				.roles("MANAGER")
+				.build();
+		return new InMemoryUserDetailsManager(user, admin, manager);
 	}
 	
 	@Bean
