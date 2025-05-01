@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.dto.BookResponse;
@@ -157,5 +159,38 @@ public class BookController {
 		int divideByZero = 40 / 0;
 		throw new ErrorResponseException(HttpStatusCode.valueOf(900));
 	}
-
+	
+	@GetMapping("/error1")
+	@ResponseStatus(value=HttpStatus.I_AM_A_TEAPOT)
+	public String requestBooksByError1() {
+		logger.info("requestBooksByError started.");
+		int divideByZero = 40 / 0;
+		throw new ErrorResponseException(HttpStatusCode.valueOf(900));
+	}
+	
+	@GetMapping("/error2")
+//	@ResponseStatus(value=HttpStatus.BAD_REQUEST,reason="reason은 error2 입니다.")
+	public String requestBooksByError2() {
+		logger.info("requestBooksByError started.");
+//		int divideByZero = 40 / 0;
+		throw new ResponseStatusException(HttpStatusCode.valueOf(999),"blablabla");
+	}
+	
+	@GetMapping("/error3")
+	@ResponseStatus(value=HttpStatus.I_AM_A_TEAPOT)
+	public String requestBooksByError3() {
+		logger.info("requestBooksByError started.");
+//		int divideByZero = 40 / 0;
+//		throw new ErrorResponseException(HttpStatusCode.valueOf(900));
+		return "books/bookList";
+	}
+	
+	@GetMapping("/error4")
+	@ResponseStatus(value=HttpStatus.I_AM_A_TEAPOT,reason="reason은 error4 입니다.")
+	public String requestBooksByError4() {
+		logger.info("requestBooksByError started.");
+//		int divideByZero = 40 / 0;
+//		throw new ErrorResponseException(HttpStatusCode.valueOf(900));
+		return "books/bookList";
+	}
 }

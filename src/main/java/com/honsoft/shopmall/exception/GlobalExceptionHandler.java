@@ -56,18 +56,18 @@ public class GlobalExceptionHandler {
         m.addAttribute("message",sb.toString());
 		return "errorPage";
 	}
-
-	@ExceptionHandler(Exception.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public String handleDefalultException(Exception e,Model m) {
-		logger.info("handleException started.");
-		
-		m.addAttribute("status", HttpStatus.BAD_REQUEST.value());
-        m.addAttribute("error", "error");
-        m.addAttribute("message", e.getMessage());
-		return "errorPage";
-	}
-	
-	
+//
+//	@ExceptionHandler(Exception.class)
+////	@ResponseStatus(HttpStatus.BAD_REQUEST)
+//	public String handleDefalultException(Exception e,Model m) {
+//		logger.info("handleException started.");
+//		
+//		m.addAttribute("status", HttpStatus.BAD_REQUEST.value());
+//        m.addAttribute("error", "error");
+//        m.addAttribute("message", e.getMessage());
+//		return "errorPage";
+//	}
+//	
+//	
 
 }
