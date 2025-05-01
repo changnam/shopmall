@@ -99,8 +99,9 @@ public class ExamController {
 	}
 	
 	@GetMapping("/loginfailed")
-	public String requestLoginFailPage() {
-		return "viewPage05";
+	public String requestLoginFailPage(Model m) {
+		m.addAttribute("error","true");
+		return "login";
 	}
 	
 	@GetMapping("/admin")
@@ -131,6 +132,10 @@ public class ExamController {
 	   	return "adminPage";
 	}
 
+	@GetMapping("/login")
+	public String requestLoginPage() {
+		return "login";
+	}
 	
 //	@GetMapping("/logout")
 //	public String logout(Model m) {

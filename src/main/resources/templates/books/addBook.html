@@ -23,8 +23,15 @@
    <div class="row align-items-md-stretch">
 	   <div class="text-end" style="padding-right:30px">
 		   	<a href="?lang=ko" style="text-decoration-line:none">Korean</a> |
-		   	<a href="?lang=en" style="text-decoration-line:none">English</a>
-		   </div>
+		   	<a href="?lang=en" style="text-decoration-line:none">Englisha</a>	
+		   	<div>
+	   			<form action="/logout" method="POST">
+	   			    <p>blabla
+	   				<input type="submit" class="btn btn-sm btn-success" value="Logout" />				   	
+				</form>		
+			</div>	  
+      	</div>
+		   
 	   <form th:object="${book}" th:action="@{/books/add}"  method="post" enctype="multipart/form-data">  
       <legend>[[#{addBook.form.subtitle.label}]]</legend>
       <div class="mb-3 row">

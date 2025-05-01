@@ -35,12 +35,14 @@ public class SecurityConfig {
 		http.securityMatcher("/**");
 		http.csrf((csrf) -> csrf.disable());
 		http.authorizeHttpRequests((auth) -> auth.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-				.requestMatchers("/manager/**").hasRole("MANAGER").requestMatchers("/member/**")
-				.hasAnyRole("USER", "ADMIN").requestMatchers("/books/**").authenticated().anyRequest().permitAll());
+				.requestMatchers("/manager/**").hasRole("MANAGER")
+				.requestMatchers("/member/**").hasAnyRole("USER", "ADMIN")
+				.requestMatchers("/books/add").hasRole("ADMIN")
+				.requestMatchers("/books/**").authenticated().anyRequest().permitAll());
 		http.formLogin(
-				(formLogin) -> formLogin.loginPage("/exam05").loginProcessingUrl("/exam05").defaultSuccessUrl("/admin")
+				(formLogin) -> formLogin.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/books")
 						.usernameParameter("username").passwordParameter("password").failureUrl("/loginfailed"));
-		http.logout(logout -> logout.logoutSuccessUrl("/exam05"));
+		http.logout(logout -> logout.logoutSuccessUrl("/login"));
 		return http.build();
 	}
 
