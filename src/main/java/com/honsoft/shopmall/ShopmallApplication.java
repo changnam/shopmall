@@ -1,15 +1,20 @@
 package com.honsoft.shopmall;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.repository.BookRepository;
 
-@SpringBootApplication
+import jakarta.annotation.PostConstruct;
+
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class,UserDetailsServiceAutoConfiguration.class})
 public class ShopmallApplication implements CommandLineRunner{
 
 	private BookRepository bookRepository;
@@ -67,6 +72,12 @@ public class ShopmallApplication implements CommandLineRunner{
 		bookRepository.save(book1);
 		bookRepository.save(book2);
 		bookRepository.save(book3);
+	}
+
+	
+	@PostConstruct
+	public void init() {
+	    System.out.println("🔄 Application restarted at " + Instant.now());
 	}
 
 }
