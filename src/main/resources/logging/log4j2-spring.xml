@@ -36,6 +36,9 @@
         <Logger name="com.honsoft.shopmall.interceptor.MonitoringInterceptor" level="INFO"  additivity="true">
         	<AppenderRef ref="File-Appender"/>  
       </Logger>  
+      <Logger name="com.honsoft.shopmall.util.StaticResourceFilter" level="INFO"  additivity="true">
+        	<AppenderRef ref="File-Appender"/>  
+      </Logger>  
   
     </Loggers>            
 </Configuration>  
