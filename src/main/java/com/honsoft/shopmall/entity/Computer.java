@@ -4,10 +4,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="computers")
 @Data
+@NoArgsConstructor
 public class Computer extends Product {
 	@Column(unique = true, nullable = false)
 	private String computerId;
