@@ -5,10 +5,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Controller;
@@ -18,9 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.honsoft.shopmall.entity.Person;
 import com.honsoft.shopmall.repository.PersonRepository;
+import com.honsoft.shopmall.util.PersonRowMapper;
 
 @Controller
-@RequestMapping("/person")
+@RequestMapping("/persons")
 public class PersonController {
 	private static Logger logger = LoggerFactory.getLogger(PersonController.class);
 	
@@ -44,13 +43,13 @@ public class PersonController {
 		int count = jdbcTemplate.queryForObject(sql, Integer.class,"홍길순");
 		logger.info("count: "+count);
 		
-		sql = "select * from persons where id = ?";
-		Person person = jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(Person.class),1);
-		logger.info("person: "+person.getName());;
+//		sql = "select * from persons where id = ?";
+//		Person person = jdbcTemplate.queryForObject(sql, BeanPropertyRowMapper.newInstance(Person.class),1);
+//		logger.info("person: "+person.getName());;
 		
 		
 		sql= "select * from persons where id = ?";
-		person = jdbcTemplate.queryForObject(sql, new RowMapper<Person>() {
+		Person person = jdbcTemplate.queryForObject(sql, new RowMapper<Person>() {
 
 			@Override
 			public Person mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -67,11 +66,20 @@ public class PersonController {
 		logger.info("person for rowmapper: "+person.toString());
 		
 		
+		sql= "select * from persons where id = ?";
+		
+		Person newPerson = jdbcTemplate.queryForObject(sql,new PersonRowMapper(),1);
+		
+		logger.info("newPerson for PersonRowMapper: "+newPerson.getName()+","+newPerson.getCreatedDate());
+		
+		
 		sql = "select * from persons";
 		List<Map<String,Object>> personList = jdbcTemplate.queryForList(sql);
 		
 		
-		list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Person.class));
+//		list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Person.class));
+		
+		
 		
 		return list;
 	}
