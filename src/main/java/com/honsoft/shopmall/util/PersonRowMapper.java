@@ -15,18 +15,20 @@ public class PersonRowMapper implements RowMapper<Person> {
         person.setId(rs.getLong("id"));
         person.setName(rs.getString("name"));
         person.setPassword(rs.getString("password"));
+        person.setAge(rs.getInt("age"));
+        person.setEmail(rs.getString("email"));
 
         // BaseEntity fields
         person.setCreatedBy(rs.getString("createdBy"));
-        person.setCreatedDate(rs.getTimestamp("createdDate").toLocalDateTime());
+        person.setCreatedDate(rs.getTimestamp("createdDate") != null ? rs.getTimestamp("createdDate").toLocalDateTime() : null);
         person.setLastModifiedBy(rs.getString("lastModifiedBy"));
-        person.setLastModifiedDate(rs.getTimestamp("lastModifiedDate").toLocalDateTime());
+        person.setLastModifiedDate(rs.getTimestamp("lastModifiedDate") != null ? rs.getTimestamp("lastModifiedDate").toLocalDateTime() : null);
         
         Timestamp timestamp = rs.getTimestamp("createdAt");
         person.setCreatedAt(timestamp != null ? timestamp.toInstant() : null);
         
         timestamp = rs.getTimestamp("updatedAt");
-        person.setUpdatedAt(rs.getTimestamp("updatedAt").toInstant());
+        person.setUpdatedAt(timestamp != null ? timestamp.toInstant() : null);
 
         return person;
     }

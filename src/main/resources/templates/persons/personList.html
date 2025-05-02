@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>Chap14</title>
+</head>
+<body>
+	<div align="center">
+		<h3>JDBC 데이터베이스</h3>
+		<a th:href="@{/persons/new}">Person 데이터 삽입</a> <br>
+		<br>
+		<table border="1" cellpadding="10">
+			<tr>
+				<th>아이디</th>
+				<th>이름</th>
+				<th>나이</th>
+				<th>이메일</th>
+				<th>비고</th>
+			</tr>
+			<tr th:each="person : ${personList}">
+				<td th:text="${person.id}"></td>
+				<td th:text="${person.name}"></td>
+				<td th:text="${person.age}"></td>
+				<td th:text="${person.email}"></td>
+				<td><a th:href="@{'/persons/edit/' + ${person.id}}">Edit</a>&nbsp;&nbsp;&nbsp;&nbsp;
+					<a th:href="@{'/persons/delete/' + ${person.id}}">Delete</a></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
