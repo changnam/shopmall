@@ -70,7 +70,7 @@ public class PersonController {
 		
 		Person newPerson = jdbcTemplate.queryForObject(sql,new PersonRowMapper(),1);
 		
-		logger.info("newPerson for PersonRowMapper: "+newPerson.getName()+","+newPerson.getCreatedDate());
+		logger.info("newPerson for PersonRowMapper: "+newPerson.getName()+","+newPerson.getCreatedDate()+newPerson.toString());
 		
 		
 		sql = "select * from persons";

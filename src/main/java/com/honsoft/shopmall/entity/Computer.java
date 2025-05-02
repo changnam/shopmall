@@ -11,6 +11,7 @@ import lombok.ToString;
 @Table(name="computers")
 @Data
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class Computer extends Product {
 	@Column(unique = true, nullable = false)
 	private String computerId;

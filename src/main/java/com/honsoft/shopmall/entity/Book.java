@@ -17,7 +17,7 @@ import lombok.ToString;
 @Table(name="books")
 @Data
 @NoArgsConstructor
-@ToString
+@ToString(callSuper = true)
 public class Book extends Product {
 	
 	@Column(unique = true, nullable = false)

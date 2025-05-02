@@ -13,7 +13,7 @@ import lombok.ToString;
 @Table(name = "persons")
 @Data
 @NoArgsConstructor
-@ToString
+@ToString(callSuper = true)
 public class Person extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
