@@ -2,6 +2,7 @@ package com.honsoft.shopmall.controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -79,7 +80,25 @@ public class PersonController {
 		
 //		list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Person.class));
 		
+		sql = "insert into persons (name,password,createdDate,createdAt) values(?,?,?,?)";
 		
+		int result = jdbcTemplate.update(sql,"이순신","1234",LocalDateTime.now(),LocalDateTime.now());
+		
+		logger.info("result : "+result);
+		
+		sql = "update persons set name = ? where name = ?";
+		
+		result = jdbcTemplate.update(sql,"김복동","이순신");
+		
+		logger.info("result : "+result);
+		
+		sql = "delete from persons where name = ?";
+		
+		result = jdbcTemplate.update(sql,"김복동");
+		
+		logger.info("result : "+result);
+		
+		list = personRepository.findAll();
 		
 		return list;
 	}
