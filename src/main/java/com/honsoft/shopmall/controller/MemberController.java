@@ -27,7 +27,8 @@ public class MemberController {
 	@GetMapping
 	public String viewHomePage(Model model) {		 
 				 
-		Iterable<Member> memberList = repository.findAll();		
+//		Iterable<Member> memberList = repository.findAll();		
+		Iterable<Member> memberList = repository.selectMethod();		
 		
 		model.addAttribute("memberList", memberList);
 		return "members/memberList";
@@ -44,32 +45,36 @@ public class MemberController {
 	@PostMapping("/insert")
 	public String insertMethod(@ModelAttribute("member") Member member) {
 		
-		repository.save(member);		
+//		repository.save(member);
+		repository.insertMethod(member.getName(), member.getAge(), member.getEmail());
 		return "redirect:/members";
 	}
 	
 	@GetMapping("/edit/{id}")
 	public String editMethod(@PathVariable(name = "id") Long id, Model model) {
 				
-		Optional<Member> member = repository.findById(id);
+//		Optional<Member> member = repository.findById(id);
+		Member member = repository.selectMethodById(id);
 	
 		 model.addAttribute("member", member);
 		
-		return "memberEdit";
+		return "members/memberEdit";
 	}	
 	
 	@PostMapping("/update")
 	public String updateMethod(@ModelAttribute("member") Member member) {
 		
 		
-		repository.save(member);					
+//		repository.save(member);	
+		repository.updateMethod(member.getName(), member.getAge(), member.getEmail(), member.getId());
 		return "redirect:/members";
 	}
 	
 	@GetMapping("/delete/{id}")
 	public String deleteMethod(@PathVariable(name = "id") Long id) {
 			
-		repository.deleteById(id);
+//		repository.deleteById(id);
+		repository.deleteMethod(id);
 		
 		return "redirect:/members";
 	}
