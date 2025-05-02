@@ -32,7 +32,7 @@
 			</div>	  
       	</div>
 		   
-	   <form th:object="${book}" th:action="@{/books/add}"  method="post" enctype="multipart/form-data">  
+	   <form th:object="${bookRequest}" th:action="@{/books/add}"  method="post" enctype="multipart/form-data">  
       <legend>[[#{addBook.form.subtitle.label}]]</legend>
       <div class="mb-3 row">
          <label class="col-sm-2 control-label"><span th:text="#{addBook.form.bookId.label}"/></label>

@@ -78,7 +78,9 @@ public class BookController {
 	@GetMapping("/book")
 	public String requestBookById(@RequestParam("id") String bookId, Model m) {
 		BookResponse bookById = bookService.getBookById(bookId);
+		logger.info("after service completed");
 		m.addAttribute("book", bookById);
+		logger.info("before responding to client");
 		return "books/bookDetail";
 	}
 
@@ -92,12 +94,12 @@ public class BookController {
 
 	@GetMapping("/add")
 	public String requestAddBookForm(Model m) {
-		m.addAttribute("book",new BookRequest());
+		m.addAttribute("bookRequest",new BookRequest());
 		return "books/addBook";
 	}
 
 	@PostMapping("/add")
-	public String requestAddBook(@Validated @ModelAttribute("book") BookRequest bookRequest, BindingResult bindingResult) throws Exception {
+	public String requestAddBook(@Validated @ModelAttribute("bookRequest") BookRequest bookRequest, BindingResult bindingResult) throws Exception {
 		// Book bookTemp = modelMapper.map(addBookRequest, Book.class);
 		/*
 		 * Book bookTemp = new Book(); bookTemp.setAuthor(addBookRequest.author());

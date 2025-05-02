@@ -16,7 +16,7 @@ public class GlobalControllerAdvice {
 	}
 	
 	
-	@InitBinder
+	@InitBinder("bookRequest")
 	public void initBinder(WebDataBinder binder) {
 		binder.addValidators(bookRequestValidator);
 	}
