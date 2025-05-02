@@ -15,7 +15,7 @@ import com.honsoft.shopmall.repository.ComputerRepository;
 import com.honsoft.shopmall.repository.ProductRepository;
 
 @Service
-public class ProductServiceImpl {
+public class ProductServiceImpl implements ProductService {
 	private static Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 	
     private final ProductRepository productRepository;
@@ -55,7 +55,7 @@ public class ProductServiceImpl {
         return productRepository.findAll();
     }
     
-    public void deleteProduct(Long id) {
+    public void deleteProductById(Long id) {
     	productRepository.deleteById(id);
     }
 }
