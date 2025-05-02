@@ -12,17 +12,21 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 
 import com.honsoft.shopmall.entity.Book;
+import com.honsoft.shopmall.entity.Person;
 import com.honsoft.shopmall.repository.BookRepository;
+import com.honsoft.shopmall.repository.PersonRepository;
 
 import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class,DataSourceAutoConfiguration.class,UserDetailsServiceAutoConfiguration.class})
 public class ShopmallApplication implements CommandLineRunner{
 
-	private BookRepository bookRepository;
+	private final BookRepository bookRepository;
+	private final PersonRepository personRepository;
 	
-	public ShopmallApplication(BookRepository bookRepository) {
+	public ShopmallApplication(BookRepository bookRepository,PersonRepository personRepository) {
 		this.bookRepository = bookRepository;
+		this.personRepository = personRepository;
 	}
 	
 	public static void main(String[] args) {
@@ -74,6 +78,12 @@ public class ShopmallApplication implements CommandLineRunner{
 		bookRepository.save(book1);
 		bookRepository.save(book2);
 		bookRepository.save(book3);
+		
+		Person person = new Person();
+		person.setName("홍길동");
+		person.setPassword("1234");
+		
+		personRepository.save(person);
 	}
 
 	
