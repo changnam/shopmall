@@ -1,6 +1,7 @@
 package com.honsoft.shopmall.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,9 +30,9 @@ public record BookRequest(
 		String description,
 		String publisher,
 		String category,
-		Long unitsInStock,
-		String releaseDate,
-		String condition,
+		Integer unitsInStock,
+		LocalDate releaseDate,
+		String productCondition,
 		String fileName,
 		MultipartFile bookImage
 		) {

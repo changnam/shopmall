@@ -69,7 +69,7 @@ public class BookServiceImpl implements BookService {
 		book.setAuthor(bookRequest.author());
 		book.setBookId(bookRequest.bookId());
 		book.setCategory(bookRequest.category());
-		book.setCondition(bookRequest.condition());
+		book.setProductCondition(bookRequest.productCondition());
 		book.setDescription(bookRequest.description());
 		book.setName(bookRequest.name());
 		book.setPublisher(bookRequest.publisher());
