@@ -2,8 +2,6 @@ package com.honsoft.shopmall.validation;
 
 import org.springframework.stereotype.Component;
 
-import com.honsoft.shopmall.dto.ProductRequest;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 @Component
