@@ -31,7 +31,7 @@
 
  	<div class="row align-items-md-stretch text-center">
 		<div class="col-md-4" th:each="book:${bookList}">
-		<img th:src="@{/files/}+${book.fileName}" alt="image" style="width: 60%"/>
+		<img th:src="@{/files/}+${book.fileName}" alt="image" style="width: 60%" th:if="${book.fileName != null}"/>
 			<h3 th:text ="${book.name}"></h3>
 			<p th:text = "${book.author}">
 			<p th:text = "${book.publisher} + '|'+ ${book.releaseDate}"> 

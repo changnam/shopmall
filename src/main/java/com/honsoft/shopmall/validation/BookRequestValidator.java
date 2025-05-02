@@ -35,7 +35,8 @@ public class BookRequestValidator implements Validator {
         BigDecimal bd1 = new BigDecimal("0");
         BigDecimal bd3 = new BigDecimal("500");
         
-        if (book.unitPrice().compareTo(bd1) < 0 || book.unitPrice().compareTo(bd3) > 0) {
+        
+        if (book.unitPrice() != null && (book.unitPrice().compareTo(bd1) < 0 || book.unitPrice().compareTo(bd3) > 0)) {
         	String msg = messageSource.getMessage("invalid.unitPrice", null, locale);
             errors.rejectValue("unitPrice", "invalid.unitPrice", msg);
         }

@@ -116,14 +116,14 @@
          </div>
       </div>
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.condition.label}"/></label>
+         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.productCondition.label}"/></label>
          <div class="col-sm-3">	
-            <input type="radio" name="condition" th:field="*{condition}" value="New" /> New 
-            <input type="radio"  name="condition" th:field="*{condition}" value="Old" /> Old 
-            <input type="radio" name="condition" th:field="*{condition}" value="E-Book" /> E-Book 
+            <input type="radio" name="productCondition" th:field="*{productCondition}" value="New" /> New 
+            <input type="radio"  name="productCondition" th:field="*{productCondition}" value="Old" /> Old 
+            <input type="radio" name="productCondition" th:field="*{productCondition}" value="E-Book" /> E-Book 
          </div>		
           <div class="col-sm-6">
-         	<p class="text-danger" th:errors="*{condition}"/>
+         	<p class="text-danger" th:errors="*{productCondition}"/>
          </div>
       </div>
       <div class="mb-3 row">
