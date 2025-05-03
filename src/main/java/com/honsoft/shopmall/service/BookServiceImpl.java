@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.dto.BookResponse;
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.repository.BookRepository;
+import com.honsoft.shopmall.repository.BookRepositoryContext;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
@@ -21,22 +25,32 @@ import jakarta.validation.Validator;
 
 @Service
 public class BookServiceImpl implements BookService {
+	private static Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
+	
 	private final BookRepository bookRepository;
+	private final BookRepositoryContext bookRepositoryContext;
 	
 	private final Validator validator;
+	
+	private final JdbcTemplate jdbcTemplate;
 	
 	@Value("${file.uploadDir}")
 	String fileDir;
 
-	public BookServiceImpl(BookRepository bookRepository,Validator validator) {
+	public BookServiceImpl(BookRepository bookRepository,Validator validator, JdbcTemplate jdbcTemplate,BookRepositoryContext bookRepositoryContext) {
 		this.bookRepository = bookRepository;
 		this.validator = validator;
+		this.jdbcTemplate = jdbcTemplate;
+		this.bookRepositoryContext = bookRepositoryContext;
 	}
 
 	@Override
 	public List<BookResponse> getAllBookList() {
 		// TODO Auto-generated method stub
-		List<Book> list = bookRepository.getAllBookList();
+//		List<Book> list = bookRepository.getAllBookList();
+		List<Book> list = bookRepositoryContext.selectMethod();
+		
+		list.stream().forEach((book) -> logger.info(book.getId()+","+book.getCreatedDate()));
 		return list.stream().map(Book::toBookResponse).toList();
 	}
 
