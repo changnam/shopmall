@@ -1,6 +1,7 @@
 package com.honsoft.shopmall.controller;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,9 +45,38 @@ public class MemberController {
 	
 	@PostMapping("/insert")
 	public String insertMethod(@ModelAttribute("member") Member member) {
-		
+		member.setCreatedDate(LocalDateTime.now());
+		member.setCreatedAt(LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant());
 //		repository.save(member);
 		repository.insertMethod(member.getName(), member.getAge(), member.getEmail());
+//		member.setCreatedDate(LocalDateTime.now());
+//		member.setCreatedAt(LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant());
+//		repository.insertMethod2(member);
+//		repository.insertMethod3(member.getName(), member.getAge(), member.getEmail(),LocalDateTime.now(),LocalDateTime.now());
+		return "redirect:/members";
+	}
+	
+	@PostMapping("/insert2")
+	public String insertMethod2(@ModelAttribute("member") Member member) {
+		member.setCreatedDate(LocalDateTime.now());
+		member.setCreatedAt(LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant());
+//		repository.save(member);
+//		repository.insertMethod(member.getName(), member.getAge(), member.getEmail());
+		repository.insertMethod2(member);
+//		repository.insertMethod3(member.getName(), member.getAge(), member.getEmail(),LocalDateTime.now(),LocalDateTime.now());
+		return "redirect:/members";
+	}
+	
+	@PostMapping("/insert3")
+	public String insertMethod3(@ModelAttribute("member") Member member) {
+		member.setCreatedDate(LocalDateTime.now());
+		member.setCreatedAt(LocalDateTime.now().atZone(ZoneId.of("UTC")).toInstant());
+//		repository.save(member);
+//		repository.insertMethod(member.getName(), member.getAge(), member.getEmail());
+//		member.setCreatedDate(LocalDateTime.now());
+//		member.setCreatedAt(LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant());
+//		repository.insertMethod2(member);
+		repository.insertMethod3(member.getName(), member.getAge(), member.getEmail(),member.getCreatedDate(),member.getCreatedAt());
 		return "redirect:/members";
 	}
 	

@@ -27,5 +27,55 @@
 			</table>
 		</form>
 	</div>
+	
+		<div align="center">
+		<h3>새로운 Member 등록2</h3>
+		<form action="#" th:action="@{/members/insert2}" th:object="${member}"
+			method="post">
+			<table border="0" cellpadding="10">
+				<tr>
+					<td>이름:</td>
+					<td><input type="text" th:field="*{name}" /></td>
+				</tr>
+				<tr>
+					<td>나이:</td>
+					<td><input type="text" th:field="*{age}" /></td>
+				</tr>
+				<tr>
+					<td>이메일:</td>
+					<td><input type="text" th:field="*{email}" /></td>
+				</tr>
+
+				<tr>
+					<td colspan="2"><button type="submit">Save</button></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+		<div align="center">
+		<h3>새로운 Member 등록3</h3>
+		<form action="#" th:action="@{/members/insert3}" th:object="${member}"
+			method="post">
+			<table border="0" cellpadding="10">
+				<tr>
+					<td>이름:</td>
+					<td><input type="text" th:field="*{name}" /></td>
+				</tr>
+				<tr>
+					<td>나이:</td>
+					<td><input type="text" th:field="*{age}" /></td>
+				</tr>
+				<tr>
+					<td>이메일:</td>
+					<td><input type="text" th:field="*{email}" /></td>
+				</tr>
+
+				<tr>
+					<td colspan="2"><button type="submit">Save</button></td>
+				</tr>
+			</table>
+		</form>
+	</div>
 </body>
 </html>

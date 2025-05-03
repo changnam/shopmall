@@ -1,5 +1,7 @@
 package com.honsoft.shopmall.repository;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,8 +33,14 @@ public interface MemberRepository extends JpaRepository<Member, Long>{
 	
 	 @Transactional
 	 @Modifying 
-	@Query(value = "INSERT INTO Member(name, age, email)  VALUES(:#{#entity.name}, :#{#entity.age}, :#{#entity.email})")
+	@Query(value = "INSERT INTO Member(name, age, email,createdDate,createdAt)  VALUES(:#{#entity.name}, :#{#entity.age}, :#{#entity.email}, :#{#entity.createdDate}, :#{#entity.createdAt})")
 	  int insertMethod2(@Param("entity") Member member);
+	 
+	 @Transactional
+	 @Modifying 
+	@Query(value = "INSERT INTO Member(name, age, email,createdDate,createdAt)  VALUES(:e_name, :e_age, :e_email, :e_createdDate, :e_createdAt )")
+	  int insertMethod3(@Param("e_name") String name, @Param("e_age") int age, @Param("e_email") String email, @Param("e_createdDate") LocalDateTime createdDate,@Param("e_createdAt") Instant createdAt );
+	
 
 	 @Transactional
 	 @Modifying 
