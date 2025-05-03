@@ -13,15 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.honsoft.shopmall.entity.Member;
 import com.honsoft.shopmall.repository.MemberRepository;
+import com.honsoft.shopmall.repository.MemberRepositoryContext;
 
 
 @Controller
 @RequestMapping("/members")
 public class MemberController {
 	
-	private final MemberRepository repository;
+	private final MemberRepositoryContext repository;
 	
-	public MemberController(MemberRepository repository) {
+	
+	public MemberController(MemberRepositoryContext repository) {
 		this.repository = repository;
 	}
 	
