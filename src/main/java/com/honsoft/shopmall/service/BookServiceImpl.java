@@ -120,6 +120,8 @@ public class BookServiceImpl implements BookService {
 			if (productDetail.getProduct() != null)
 				logger.info("product info from productDetail 1: "+productDetail.getProduct().getName());
 			targetBook.setProductDetail(productDetail);
+			productDetail.setProduct(targetBook);
+			
 			if (productDetail.getProduct() != null)
 				logger.info("product info from productDetail 2: "+productDetail.getProduct().getName());
 			
@@ -130,6 +132,8 @@ public class BookServiceImpl implements BookService {
 				targetBook.setFileName(fileName);
 			}
 			Book savedBook = bookRepository.save(targetBook);
+			ProductDetail savedProductDetail = productDetailRepository.save(productDetail);
+			
 			return savedBook.toBookResponse();
 		} else {
 			throw new RuntimeException("bookId " + bookRequest.bookId() + " already exists");
