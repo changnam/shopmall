@@ -136,6 +136,24 @@
          </div>
       </div>
       <div class="mb-3 row">
+      	<label class="col-sm-2 control-label"><span th:text="#{addBook.form.weight.label}"/></label>
+      	<div class="col-sm-7">
+      		<input type="text" name="weight" class="form-control"  th:field="*{weight}"/>
+      	</div>
+      	 <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{weight}"/>
+         </div>
+      </div>
+      <div class="mb-3 row">
+      	<label class="col-sm-2 control-label"><span th:text="#{addBook.form.height.label}"/></label>
+      	<div class="col-sm-7">
+      		<input type="text" name="height" class="form-control"  th:field="*{height}"/>
+      	</div>
+      	 <div class="col-sm-6">
+         	<p class="text-danger" th:errors="*{height}"/>
+         </div>
+      </div>
+      <div class="mb-3 row">
          <div class="col-sm-offset-2 col-sm-10" >
            <input type="submit" class="btn btn-primary" th:value="#{addBook.form.button.label}"/>
          </div>

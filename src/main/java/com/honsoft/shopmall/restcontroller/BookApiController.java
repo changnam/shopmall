@@ -10,7 +10,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.dto.BookResponse;
+import com.honsoft.shopmall.dto.ProductDetailRequest;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.BookService;
 @CrossOrigin(origins = "http://localhost:3000")
@@ -55,8 +55,9 @@ public class BookApiController {
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<Object> requestBookAdd(@RequestBody BookRequest bookRequest) throws IllegalStateException, IOException{
-		return ResponseHandler.responseBuilder("success", HttpStatus.OK, bookService.insertBook(bookRequest));
+	public ResponseEntity<Object> requestBookAdd(@RequestBody BookRequest bookRequest, @RequestBody ProductDetailRequest productDetailRequest) throws IllegalStateException, IOException{
+		
+		return ResponseHandler.responseBuilder("success", HttpStatus.OK, bookService.insertBook(bookRequest,productDetailRequest));
 	}
 	
 	@GetMapping("/{category}")

@@ -34,11 +34,13 @@ public record BookRequest(
 		LocalDate releaseDate,
 		String productCondition,
 		String fileName,
-		MultipartFile bookImage
+		MultipartFile bookImage,
+		Float weight,
+		Float height
 		) {
 	
 	public BookRequest() {
-		this(null,null,null,null,null,null,null,null,null,null,null,null);
+		this(null,null,null,null,null,null,null,null,null,null,null,null,null,null);
 	}
 
 }

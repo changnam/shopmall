@@ -14,9 +14,12 @@ import org.springframework.stereotype.Service;
 
 import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.dto.BookResponse;
+import com.honsoft.shopmall.dto.ProductDetailRequest;
 import com.honsoft.shopmall.entity.Book;
+import com.honsoft.shopmall.entity.ProductDetail;
 import com.honsoft.shopmall.repository.BookRepository;
 import com.honsoft.shopmall.repository.BookRepositoryContext;
+import com.honsoft.shopmall.repository.ProductDetailRepository;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
@@ -29,6 +32,7 @@ public class BookServiceImpl implements BookService {
 	
 	private final BookRepository bookRepository;
 	private final BookRepositoryContext bookRepositoryContext;
+	private final ProductDetailRepository productDetailRepository;
 	
 	private final Validator validator;
 	
@@ -37,11 +41,12 @@ public class BookServiceImpl implements BookService {
 	@Value("${file.uploadDir}")
 	String fileDir;
 
-	public BookServiceImpl(BookRepository bookRepository,Validator validator, JdbcTemplate jdbcTemplate,BookRepositoryContext bookRepositoryContext) {
+	public BookServiceImpl(BookRepository bookRepository,Validator validator, JdbcTemplate jdbcTemplate,BookRepositoryContext bookRepositoryContext,ProductDetailRepository productDetailRepository) {
 		this.bookRepository = bookRepository;
 		this.validator = validator;
 		this.jdbcTemplate = jdbcTemplate;
 		this.bookRepositoryContext = bookRepositoryContext;
+		this.productDetailRepository = productDetailRepository;
 	}
 
 	@Override
@@ -97,7 +102,7 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	@Transactional
-	public BookResponse insertBook(BookRequest bookRequest) throws IllegalStateException, IOException {
+	public BookResponse insertBook(BookRequest bookRequest, ProductDetailRequest detailRequest) throws IllegalStateException, IOException {
 		
 		Set<ConstraintViolation<BookRequest>> violations = validator.validate(bookRequest);
 		if (!violations.isEmpty()) {
@@ -108,6 +113,9 @@ public class BookServiceImpl implements BookService {
 
 		if (checkBook.isEmpty()) {
 			Book targetBook = Book.from(bookRequest);
+			ProductDetail productDetail = ProductDetail.from(detailRequest);
+			targetBook.setProductDetail(productDetail);
+			
 			if (!bookRequest.bookImage().isEmpty()) {
 				String fileName = bookRequest.bookImage().getOriginalFilename();
 				File savedFile = new File(fileDir, fileName);

@@ -33,6 +33,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.dto.BookResponse;
+import com.honsoft.shopmall.dto.ProductDetailRequest;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.BookService;
 
@@ -118,7 +119,8 @@ public class BookController {
 			return "books/addBook";
         }
 		
-		bookService.insertBook(bookRequest);
+		ProductDetailRequest productDetailRequest = new ProductDetailRequest(bookRequest.weight(),bookRequest.height());
+		bookService.insertBook(bookRequest, productDetailRequest);
 		return "redirect:/books";
 	}
 
