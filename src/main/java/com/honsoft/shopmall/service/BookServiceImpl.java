@@ -56,6 +56,9 @@ public class BookServiceImpl implements BookService {
 		List<Book> list = bookRepositoryContext.selectMethod();
 		
 		list.stream().forEach((book) -> logger.info(book.getId()+","+book.getCreatedDate()));
+		
+		List<ProductDetail> productDetailList = productDetailRepository.findAll();
+		productDetailList.stream().forEach((detail) -> logger.info(detail.getId()+","+detail.getProduct().getName()));
 		return list.stream().map(Book::toBookResponse).toList();
 	}
 
@@ -114,7 +117,11 @@ public class BookServiceImpl implements BookService {
 		if (checkBook.isEmpty()) {
 			Book targetBook = Book.from(bookRequest);
 			ProductDetail productDetail = ProductDetail.from(detailRequest);
+			if (productDetail.getProduct() != null)
+				logger.info("product info from productDetail 1: "+productDetail.getProduct().getName());
 			targetBook.setProductDetail(productDetail);
+			if (productDetail.getProduct() != null)
+				logger.info("product info from productDetail 2: "+productDetail.getProduct().getName());
 			
 			if (!bookRequest.bookImage().isEmpty()) {
 				String fileName = bookRequest.bookImage().getOriginalFilename();
