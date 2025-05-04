@@ -2,33 +2,29 @@ package com.honsoft.shopmall.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data 
 @Entity
-@Table(name = "addresses")
-@NoArgsConstructor
-@ToString(callSuper = true)
-public class Address extends BaseEntity{
+public class Address {
 	
 	//private static final long serialVersionUID = 613846598817670033L;
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)	
+    @GeneratedValue//(strategy = GenerationType.IDENTITY)	
 	private Long id;	
 	 
 	private String country;        //국가명
 	
-	private String zipCode;        //우편번호	
+	private String zipcode;        //우편번호	
 	
-	private String addressName;   //주소 
+	private String addressname;   //주소 
 	
-	private String detailName;     //세부주소	
+	private String detailname;     //세부주소	
 	
 
 	

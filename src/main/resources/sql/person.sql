@@ -2,7 +2,7 @@
 
 --changeset yourname:create-book-table
 
-CREATE TABLE Persons (
+CREATE TABLE IF NOT EXISTS Persons (
   p_id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(45) NOT NULL,
   age int NOT NULL,

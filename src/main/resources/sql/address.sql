@@ -9,3 +9,10 @@ CREATE TABLE IF NOT EXISTS address (
     detailname varchar(40) ,
     primary key(id) 
 ) ;
+
+CREATE TABLE IF NOT EXISTS `address_seq` (
+  `next_val` bigint DEFAULT NULL
+) ;
+
+--changeset yourname:insert-address_seq
+insert into address_seq values(1);

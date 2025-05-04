@@ -2,7 +2,7 @@
 
 --changeset yourname:create-book-table
 
-CREATE TABLE `members` (
+CREATE TABLE IF NOT EXISTS `members` (
   `num` bigint NOT NULL,
   `address` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE `members` (
 ) ;
 
 
-CREATE TABLE `members_seq` (
+CREATE TABLE IF NOT EXISTS `members_seq` (
   `next_val` bigint DEFAULT NULL
 ) ;
 

@@ -9,21 +9,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+
 
 @Entity
 @Data			// Getter Setter
 //@Builder		// DTO -> Entity화
 //@AllArgsConstructor	// 모든 컬럼 생성자 생성
-@NoArgsConstructor	// 기본 생성자
-@Table(name = "shippings")
-@ToString(callSuper = true)
-public class Shipping extends BaseEntity{
+//@NoArgsConstructor	// 기본 생성자
+public class Shipping{
 	
 	 @Id 
 	 @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +27,6 @@ public class Shipping extends BaseEntity{
 	 
 
 	private String name;        //배송고객명	
-	
-	@ManyToOne
-	@JoinColumn(name = "customer_id")
-	private Customer customer;
 	
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
 	private String date;          //배송일

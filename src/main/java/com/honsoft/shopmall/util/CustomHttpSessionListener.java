@@ -22,4 +22,6 @@ public class CustomHttpSessionListener implements HttpSessionListener{
 		// TODO Auto-generated method stub
 		logger.info("SESSION DESTROYED: ID+"+se.getSession().getId());
 	}
+	
+	
 }

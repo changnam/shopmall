@@ -68,7 +68,6 @@ function clearCart(cartId) {
 			<div th:each="item:${cart.cartItems}">
 			<tr>
 				<td th:text="${item.value.book.bookId} + '-' + ${item.value.book.name}"/></td>
-				<td th:text="${item.value.book.bookId} + '-' + ${item.value.book.name}"/></td>
 				<td th:text="${item.value.book.unitPrice}"/></td>
 				<td th:text="${item.value.quantity}"/></td>
 				<td th:text="${item.value.totalPrice}"/></td>					
