@@ -6,15 +6,18 @@
 	<script src="/js/controllers.js"></script>
 </head>
 
- <!-- 
+ 
 <script type="text/javascript">
 
 function removeFromCart(bookid, cartId) {
-	
-	   document.removeForm.action = "/BookMarket/cart/book/"+bookid;		
+	console.log("삭제요청됨"+bookid+","+cartId);
+	if (confirm("해당 도서를 장바구니에서 삭제합니까?")==true){
+	   document.removeForm.action = "/cart/book/"+bookid;		
 	   document.removeForm.submit();	  
 	   setTimeout('location.reload()',10); 
 	}
+}
+	
 function clearCart(cartId) {
 	if (confirm("모든 도서를 장바구니에서 삭제합니까?")==true){
 		
@@ -25,7 +28,7 @@ function clearCart(cartId) {
 }
 </script>
 
- -->
+
 <body>
 <div class="container py-4">
 	 <th:block th:replace="~{/module/header}"></th:block>
@@ -69,7 +72,7 @@ function clearCart(cartId) {
 				<td th:text="${item.value.book.unitPrice}"/></td>
 				<td th:text="${item.value.quantity}"/></td>
 				<td th:text="${item.value.totalPrice}"/></td>					
-		    <td> <a th:href="'javascript:removeFromCart(\'' +${item.value.book.bookId} +'\',\''+${cartId} +'\')'"  ><span class="badge text-bg-danger" th:text ="삭제"></span></a></td>		
+		    <td> <a th:href="'javascript:removeFromCart(\'' +${item.value.book.bookId} +'\',\''+${cartId} +'\')'"  ><span class="badge text-bg-danger" th:text ="제거"></span></a></td>		
 		    </tr>
 			
 			</div>
@@ -85,7 +88,7 @@ function clearCart(cartId) {
 		</b>
 	</div>
 		<br>
-		<a href="/books" class="btn btn-secondary "> &laquo; 쇼핑 계속하기</a>
+		<a href="/books" class="btn btn-secondary "> &laquo; 쇼핑 계속하기1</a>
 	
   	
 	<th:block th:replace="~{/module/footer}"></th:block>

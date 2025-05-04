@@ -69,7 +69,7 @@ public class CartController {
 		return cartService.read(cartId);
 	}
 
-	@PostMapping("/book/{bookId}")   
+	@PutMapping("/book/{bookId}")   
 	@ResponseStatus(value = HttpStatus.NO_CONTENT)
 	public void addCartByNewItem(@PathVariable("bookId") String bookId, HttpServletRequest request) {
 		

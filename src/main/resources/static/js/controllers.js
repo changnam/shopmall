@@ -12,11 +12,12 @@ function addToCart(bookid)
     
 }
 function removeFromCart(bookid, cartId) {
-	
+	console.log("삭제요청됨111"+bookid+","+cartId);
+	if (confirm("도서를 삭제하시겠습니까?")==true){
 	   document.removeForm.action = "/cart/book/"+bookid;		
 	   document.removeForm.submit();	  
-	   setTimeout('location.reload()',10); 
 	}
+}
 function clearCart(cartId) {
 	if (confirm("모든 도서를 장바구니에서 삭제합니까?")==true){
 		
