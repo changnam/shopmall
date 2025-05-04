@@ -20,27 +20,26 @@ import jakarta.validation.Valid;
 @RequestMapping(value = "/members")
 public class MemberController {
 
-	private final MemberService memberService;
+	
+	@Autowired
+    MemberService memberService;
 
-    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     
-    public MemberController(MemberService memberService, PasswordEncoder passwordEncoder) {
-    	this.memberService = memberService;
-    	this.passwordEncoder = passwordEncoder;
-    }
     
     @GetMapping(value = "/add")
     public String requestAddMemberForm(Model model){
     	
         model.addAttribute("memberFormDto", new MemberFormDto());
-        return "members/memberAdd";
+        return "member/addMember";
     }
     
     @PostMapping(value = "/add")
     public String submitAddNewMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
 
         if(bindingResult.hasErrors()){
-            return "members/memberAdd";
+            return "member/addMember";
         }
 
         try {
@@ -49,7 +48,7 @@ public class MemberController {
         } catch (IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());
        
-            return "members/memberAdd";
+            return "member/addMember";
         }
 
         return "redirect:/members";
@@ -60,14 +59,14 @@ public class MemberController {
     public String requestUpdateMemberForm(@PathVariable(name = "memberId") String memberId, Model model){
     	Member member = memberService.getMemberById(memberId);    	
         model.addAttribute("memberFormDto", member);
-        return "members/memberUpdate";
+        return "member/updateMember";
     }
     
     @PostMapping(value = "/update")
     public String submitUpdateMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
 
         if(bindingResult.hasErrors()){
-            return "members/memberUpdate";
+            return "member/updateMember";
         }
 
         try {
@@ -75,7 +74,7 @@ public class MemberController {
             memberService.saveMember(member);
         } catch (IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());
-            return "members/memberAdd";
+            return "member/addMember";
         }
 
         return "redirect:/members";

@@ -16,6 +16,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.honsoft.shopmall.entity.Board;
+
 import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
@@ -45,11 +47,12 @@ public class DataSoureConfig {
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("com.honsoft.shopmall.entity");
+
         factory.setDataSource(dataSource);
         
      // Set additional JPA properties, Hibernate 관련 속성 설정 
         Properties jpaProperties = new Properties();
-        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "none");
+        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "none"); //테이블 구조 DDL 필요시 create-only 로 할것
         jpaProperties.setProperty("hibernate.format_sql", "true");
         jpaProperties.setProperty("hibernate.show_sql", "true"); // Optional: to log SQL to console
         factory.setJpaProperties(jpaProperties);

@@ -17,7 +17,7 @@
 		<a sec:authorize="hasRole('ROLE_ADMIN')"  th:href="@{/books/add}" class="nav-link">도서등록 &nbsp;| &nbsp; </a>
 		<a sec:authorize="isAuthenticated()" th:href="@{/cart}" class="nav-link">장바구니 &nbsp;| &nbsp;  </a>
 		<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/orders/list}" class="nav-link">주문목록 &nbsp;| &nbsp;   </a>
-        <a th:href="@{/boards/list}" class="nav-link">게시판 &nbsp;| &nbsp; </a>  
+        <a th:href="@{/board/list}" class="nav-link">게시판 &nbsp;| &nbsp; </a>  
  	    <a sec:authorize="isAnonymous()"  th:href="@{/members/add}" class="nav-link">회원가입 &nbsp;| &nbsp;</a>
  	   	<a sec:authorize="isAnonymous()" th:href="@{/login}" class="nav-link">로그인 &nbsp;| &nbsp;</a> 	   
  	   	<a sec:authorize="isAuthenticated()" th:href="@{/members/update/{id}(id=${session.userLoginInfo.memberId})}" class="nav-link">회원수정 &nbsp;| &nbsp;</a>

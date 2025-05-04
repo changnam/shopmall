@@ -18,4 +18,5 @@
     <include file="sql/orderitem.sql"/>
     <include file="sql/person.sql"/>
     <include file="sql/shipping.sql"/>
+    <include file="sql/board.sql"/>
 </databaseChangeLog>
