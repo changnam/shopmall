@@ -49,7 +49,7 @@ public class DataSoureConfig {
         
      // Set additional JPA properties, Hibernate 관련 속성 설정 
         Properties jpaProperties = new Properties();
-        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "none");
         jpaProperties.setProperty("hibernate.format_sql", "true");
         jpaProperties.setProperty("hibernate.show_sql", "true"); // Optional: to log SQL to console
         factory.setJpaProperties(jpaProperties);

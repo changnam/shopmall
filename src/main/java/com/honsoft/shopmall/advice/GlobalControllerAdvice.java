@@ -4,7 +4,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import com.honsoft.shopmall.validation.BookRequestValidator;
+import com.honsoft.shopmall.dto.BookRequest;
+import com.honsoft.shopmall.validator.BookRequestValidator;
 
 @ControllerAdvice(basePackages = "com.honsoft.shopmall.controller")
 public class GlobalControllerAdvice {
@@ -16,8 +17,11 @@ public class GlobalControllerAdvice {
 	}
 	
 	
-	@InitBinder("bookRequest")
-	public void initBinder(WebDataBinder binder) {
-		binder.addValidators(bookRequestValidator);
-	}
+	@InitBinder
+    public void initBinder(WebDataBinder binder) {
+        Object target = binder.getTarget();
+        if (target != null && BookRequest.class.isAssignableFrom(target.getClass())) {
+            binder.addValidators(bookRequestValidator);
+        }
+    }
 }

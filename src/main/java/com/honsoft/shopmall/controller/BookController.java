@@ -5,196 +5,235 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.ErrorResponseException;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.MatrixVariable;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.honsoft.shopmall.dto.BookRequest;
-import com.honsoft.shopmall.dto.BookResponse;
-import com.honsoft.shopmall.dto.ProductDetailRequest;
-import com.honsoft.shopmall.response.ResponseHandler;
+import com.honsoft.shopmall.entity.Book;
+import com.honsoft.shopmall.exception.BookIdException;
+import com.honsoft.shopmall.exception.CategoryException;
 import com.honsoft.shopmall.service.BookService;
+import com.honsoft.shopmall.validator.BookValidator;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping("/books")
+@RequestMapping(value = "/books")
 public class BookController {
-	private final BookService bookService;
-	private final MessageSource messageSource;
-//	private final ModelMapper modelMapper;
+
+	@Autowired
+	private BookService bookService;
+
 	@Value("${file.uploadDir}")
-	String fileDir;
-
-	private static Logger logger = LoggerFactory.getLogger(BookController.class);
-
-	public BookController(BookService bookService,MessageSource messageSource) {
-		this.bookService = bookService;
-		this.messageSource = messageSource;
-//		this.modelMapper = modelMapper;
-//		configureModelMapper();
-	}
-//	    private void configureModelMapper() {
-//	        modelMapper.createTypeMap(AddBookRequest.class, Book.class)
-//	            .addMappings(mapper -> mapper.skip(Book::setId));
-//	    }
-
+	 String fileDir;
+	
+	
+	//@Autowired	
+	// private UnitsInStockValidator unitsInStockValidator;
+	
+	@Autowired
+	 private BookValidator bookValidator; // BookValidator 인스턴스 선언
+	
 	@GetMapping
-	public String requestBookList(Model m) {
-		logger.info("requestBookList started.");
-		List<BookResponse> list = bookService.getAllBookList();
-
-		m.addAttribute("bookList", list);
-		return "books/bookList";
-	}
-
-	@GetMapping("/json")
-	public @ResponseBody ResponseEntity<Object> requestBookListJson(Locale locale) {
-		return ResponseHandler.responseBuilder(messageSource.getMessage("success.message",null,locale),HttpStatus.OK,bookService.getAllBookList());
+	public String requestBookList(Model model) {
 		
+		
+		
+	   
+		List<Book> list = bookService.getAllBookList();
+		model.addAttribute("bookList", list);
+		return "books";
+	}	
+	/*
+	@GetMapping("/all")   
+	public String requestAllBooks(Model model) {
+		List<Book> list = bookService.getAllBookList(); 
+		model.addAttribute("bookList", list); 
+		return "books";
 	}
-
-	@GetMapping("/book")
-	public String requestBookById(@RequestParam("id") String bookId, Model m) {
-		BookResponse bookById = bookService.getBookById(bookId);
-		logger.info("after service completed");
-		m.addAttribute("book", bookById);
-		logger.info("before responding to client");
-		return "books/bookDetail";
+	*/
+	
+	@GetMapping("/all")   
+	public ModelAndView requestAllBooks() {
+		ModelAndView modelAndView = new ModelAndView(); 
+		List<Book> list = bookService.getAllBookList();
+		modelAndView.addObject("bookList", list); 
+		modelAndView.setViewName("books"); 
+		return modelAndView;
 	}
-
-	@GetMapping("/{category}")
-	public String requestBooksByCategory(@PathVariable("category") String category, Model m) {
-		logger.info("requestBooksByCategory started.");
-		List<BookResponse> list = bookService.getBooksByCategory(category);
-		m.addAttribute("bookList", list);
-		return "books/bookList";
+	
+	@GetMapping("/{category}") 	
+	public String requestBooksByCategory(
+	           @PathVariable("category") String bookCategory, Model model) {  
+	    List<Book> booksByCategory =bookService.getBookListByCategory(bookCategory); 
+	    
+	    if (booksByCategory == null || booksByCategory.isEmpty()) {
+			throw new CategoryException();
+	    	//throw new IllegalArgumentException("도서ID가 인 해당 도서를 찾을 수 없습니다.");
+	    	
+		}
+	   
+	    model.addAttribute("bookList", booksByCategory); 
+	    return "books"; 
+	 }
+	
+	@GetMapping("/filter/{bookFilter}")
+	public String requestBooksByFilter(
+	    @MatrixVariable(pathVar="bookFilter") Map<String,List<String>> bookFilter, Model model) {
+	    Set<Book> booksByFiter = bookService.getBookListByFilter(bookFilter);
+	    model.addAttribute("bookList", booksByFiter);
+	    return "books";
 	}
-
-	@GetMapping("/add")
-	public String requestAddBookForm(Model m) {
-		m.addAttribute("bookRequest",new BookRequest());
-		return "books/addBook";
+	
+	@GetMapping("/book") 
+	public String requestBookById(@RequestParam("id") String bookId, Model model) {  
+	   Book bookById = bookService.getBookById(bookId);
+	   model.addAttribute("book", bookById );
+	   return "book";
 	}
+	
+	 @GetMapping("/add")
+	 public String requestAddBookForm(Model model) {
+		 model.addAttribute("book", new Book()); //유효검사기 추가
+		 return "addBook";
+	 }
+	 
+	 
+	 @PostMapping("/add")	  
+	 public String submitAddNewBook(@Valid @ModelAttribute Book book,  BindingResult bindingResult) {
+		 
+		 if(bindingResult.hasErrors())		
+			 return "addBook";		
+				 
+		
+		 
+	   MultipartFile bookImage = book.getBookImage();  
 
-	@PostMapping("/add")
-	public String requestAddBook(@Validated @ModelAttribute("bookRequest") BookRequest bookRequest, BindingResult bindingResult) throws Exception {
-		// Book bookTemp = modelMapper.map(addBookRequest, Book.class);
-		/*
-		 * Book bookTemp = new Book(); bookTemp.setAuthor(addBookRequest.author());
-		 * bookTemp.setBookId(addBookRequest.bookId());
-		 * bookTemp.setCategory(addBookRequest.category());
-		 * bookTemp.setCondition(addBookRequest.condition());
-		 * bookTemp.setDescription(addBookRequest.description());
-		 * bookTemp.setName(addBookRequest.name());
-		 * bookTemp.setPublisher(addBookRequest.publisher());
-		 * bookTemp.setReleaseDate(addBookRequest.releaseDate());
-		 * bookTemp.setUnitPrice(addBookRequest.unitPrice());
-		 * bookTemp.setUnitsInStock(addBookRequest.unitsInStock());
-		 */
-		// bookService.insertBook(modelMapper.map(addBookRequest, Book.class));
-		if (bindingResult.hasErrors()) {
-			return "books/addBook";
+		String saveName = bookImage.getOriginalFilename();   
+		File saveFile = new File(fileDir, saveName); 
+			
+			if (bookImage != null && !bookImage.isEmpty()) {
+				try {
+					bookImage.transferTo(saveFile);  
+				} catch (Exception e) {
+					throw new RuntimeException("도서 이미지 업로드가 실패하였습니다", e);
+				}
+			}
+		  book.setFileName(saveName);	
+		 
+	      bookService.setNewBook(book); 
+		 
+		 
+	      
+	  
+	      return "redirect:/books";
+	 }
+	
+	
+	 @GetMapping("/download")
+	 public void downloadBookImage(@RequestParam("file") String paramKey,                         
+		                         HttpServletResponse response) throws IOException {
+
+		
+		 if (paramKey == null) {
+	            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	            return;
+	     }
+		 
+	    File imageFile = new File(fileDir + paramKey );	   
+	    
+	    if (imageFile.exists() == false) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
+	    response.setStatus(HttpServletResponse.SC_OK);    
+	    response.setContentType("application/download");
+	    response.setContentLength((int)imageFile.length());
+	    response.setHeader("Content-disposition", "attachment;filename=\"" + paramKey + "\"");	   
+	    OutputStream os = response.getOutputStream();
+	    FileInputStream fis = new FileInputStream(imageFile);
+	    FileCopyUtils.copy(fis, os);
+	    fis.close();
+	    os.close();
+	        
+    }
+	 
+	 @ModelAttribute 
+	 public void addAttributes(Model model) { 
+	     model.addAttribute("addTitle", "신규 도서 등록");
+	 }
+	 
+	 @InitBinder
+	 public void initBinder(WebDataBinder binder) {
+		 //binder.setValidator(unitsInStockValidator); 
+		binder.setValidator(bookValidator); 
+		 binder.setAllowedFields("bookId","name","unitPrice","author","description","publisher","category",
+	                            "unitsInStock","totalPages", "releaseDate", "condition", "bookImage");
+	 }
+	 
 		
-		ProductDetailRequest productDetailRequest = new ProductDetailRequest(bookRequest.weight(),bookRequest.height());
-		bookService.insertBook(bookRequest, productDetailRequest);
-		return "redirect:/books";
-	}
+	 
+	 
+	 @ExceptionHandler(value={BookIdException.class}) 
+	    public ModelAndView handleError(HttpServletRequest req, BookIdException exception) {
+		   ModelAndView mav = new ModelAndView(); 
+		   mav.addObject("invalidBookId", exception.getBookId()); 
+		   mav.addObject("exception", exception); 
+		   mav.addObject("url", req.getRequestURL()+"?"+req.getQueryString()); 
+		   mav.setViewName("errorBook");
+		   return mav; 
+	   }   
 
-	@GetMapping("/upload")
-	public String requestUploadForm() {
-		return "uploadForm";
-	}
-
-	@PostMapping("/upload")
-	public String processUploadFrom(@RequestParam("name") String name, @RequestParam("file") MultipartFile file,
-			Model m) throws IllegalStateException, IOException {
-		logger.info("name: " + name + ", filename: " + file.getOriginalFilename());
-		m.addAttribute("fileName", file.getOriginalFilename());
-		String fileName = file.getOriginalFilename();
-		File savedFile = new File("c:\\upload\\files\\" + name + "_" + fileName);
-//		try {
-		file.transferTo(savedFile);
-//		}catch(IOException e) {
-//			e.printStackTrace();
-//		}
-		return "uploadResult";
-	}
-
-	@GetMapping("/download")
-	public void downloadBookImage(@RequestParam("file") String paramKey, HttpServletResponse resp) throws IOException {
-		File imageFile = new File(fileDir + paramKey);
-		resp.setContentType("application/download");
-		resp.setContentLength((int) imageFile.length());
-		resp.setHeader("Content-disposition", "attachment;filename=\"" + paramKey + "\"");
-		OutputStream os = resp.getOutputStream();
-		FileInputStream fis = new FileInputStream(imageFile);
-		FileCopyUtils.copy(fis, os);
-		fis.close();
-		os.close();
-	}
-
-	@GetMapping("/error")
-	public String requestBooksByError() {
-		logger.info("requestBooksByError started.");
-		int divideByZero = 40 / 0;
-		throw new ErrorResponseException(HttpStatusCode.valueOf(900));
-	}
 	
-	@GetMapping("/error1")
-	@ResponseStatus(value=HttpStatus.I_AM_A_TEAPOT)
-	public String requestBooksByError1() {
-		logger.info("requestBooksByError started.");
-		int divideByZero = 40 / 0;
-		throw new ErrorResponseException(HttpStatusCode.valueOf(900));
-	}
-	
-	@GetMapping("/error2")
-//	@ResponseStatus(value=HttpStatus.BAD_REQUEST,reason="reason은 error2 입니다.")
-	public String requestBooksByError2() {
-		logger.info("requestBooksByError started.");
-//		int divideByZero = 40 / 0;
-		throw new ResponseStatusException(HttpStatusCode.valueOf(999),"blablabla");
-	}
-	
-	@GetMapping("/error3")
-	@ResponseStatus(value=HttpStatus.I_AM_A_TEAPOT)
-	public String requestBooksByError3() {
-		logger.info("requestBooksByError started.");
-//		int divideByZero = 40 / 0;
-//		throw new ErrorResponseException(HttpStatusCode.valueOf(900));
-		return "books/bookList";
-	}
-	
-	@GetMapping("/error4")
-	@ResponseStatus(value=HttpStatus.I_AM_A_TEAPOT,reason="reason은 error4 입니다.")
-	public String requestBooksByError4() {
-		logger.info("requestBooksByError started.");
-//		int divideByZero = 40 / 0;
-//		throw new ErrorResponseException(HttpStatusCode.valueOf(900));
-		return "books/bookList";
-	}
+	 @GetMapping("/update") 
+		public String getUpdateBookForm(@ModelAttribute("updateBook") Book book, @RequestParam("id") String bookId, Model model) {
+			Book bookById = bookService.getBookById(bookId);
+			model.addAttribute("book", bookById);
+			return "updateForm";
+		} 
+		   
+		@PostMapping("/update") 
+		public String processUpdatewBookForm(@ModelAttribute("updateBook") Book book) {
+			MultipartFile bookImage = book.getBookImage();
+						
+			//String rootDirectory = fileDir;
+			if (bookImage!=null && !bookImage.isEmpty()) {
+				try {
+					String fname = bookImage.getOriginalFilename(); 
+					bookImage.transferTo(new File(fileDir + fname));
+					book.setFileName(fname);
+				} catch (Exception e) {
+					throw new RuntimeException("Book Image saving failed", e);
+				}
+			}
+			bookService.setUpdateBook(book);
+			return "redirect:/books";
+		} 
+		
+		@RequestMapping(value = "/delete") 
+		   public String getDeleteBookForm(Model model, @RequestParam("id") String bookId) {
+		      bookService.setDeleteBook(bookId);
+		      return "redirect:/books";
+		   } 
+	  
 }

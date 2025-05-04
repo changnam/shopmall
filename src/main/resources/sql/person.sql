@@ -1,4 +1,8 @@
-CREATE TABLE Person (
+--liquibase formatted sql
+
+--changeset yourname:create-book-table
+
+CREATE TABLE Persons (
   p_id int(11) NOT NULL AUTO_INCREMENT,
   name varchar(45) NOT NULL,
   age int NOT NULL,

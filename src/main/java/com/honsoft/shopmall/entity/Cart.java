@@ -1,38 +1,82 @@
 package com.honsoft.shopmall.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
+@Data 
+@ToString
+//@Entity
+public class Cart implements Serializable {	
+	
+	private static final long serialVersionUID = 2155125089108199199L;
+	
+	
+   	private String cartId;
+   
+	
+	private Map<String,CartItem> cartItems;
+    
+	private BigDecimal grandTotal;
+	
+	
+	public Cart() {
+		cartItems = new HashMap<String, CartItem>();
+		grandTotal = new BigDecimal(0);
+	}
 
-@Entity
-@Table(name="carts")
-@Data
-@NoArgsConstructor
-public class Cart {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	public Cart(String cartId) {
+		this();
+		this.cartId = cartId;
+	}
+/*
+	public String getCartId() {
+		return cartId;
+	}
 
-    private String userId; // for authenticated user, or session ID for guests
+	public void setCartId(String cartId) {
+		this.cartId = cartId;
+	}
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> items = new ArrayList<>();
+	public Map<String, CartItem> getCartItems() {
+		return cartItems;
+	}
 
-    public BigDecimal getTotalPrice() {
-        return items.stream()
-                    .map(CartItem::getTotalPrice)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
+	public void setCartItems(Map<String, CartItem> cartItems) {
+		this.cartItems = cartItems;
+	}
 
-    // Getters and setters
+	public BigDecimal getGrandTotal() {
+		return grandTotal;
+	}
+	*/
+	
+	public void addCartItem(CartItem item) {
+	     String bookId = item.getBook().getBookId(); 
+
+		 if(cartItems.containsKey(bookId)) {   
+			 CartItem cartItem = cartItems.get(bookId);
+			 cartItem.setQuantity(cartItem.getQuantity()+item.getQuantity()); 
+			 cartItems.put(bookId, cartItem); 
+		 } else {
+			 cartItems.put(bookId, item);  
+		 }
+		 updateGrandTotal(); 
+	}
+	
+	public void removeCartItem(CartItem item) {
+		String bookId = item.getBook().getBookId();
+		cartItems.remove(bookId);
+		updateGrandTotal();
+	}
+	
+	public void updateGrandTotal() {
+		grandTotal= new BigDecimal(0);
+		for(CartItem item : cartItems.values()){
+			grandTotal = grandTotal.add(item.getTotalPrice());
+		}
+	}
 }

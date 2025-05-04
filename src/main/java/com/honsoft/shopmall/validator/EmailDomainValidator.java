@@ -1,4 +1,4 @@
-package com.honsoft.shopmall.validation;
+package com.honsoft.shopmall.validator;
 
 import org.springframework.stereotype.Component;
 

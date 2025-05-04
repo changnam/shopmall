@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.honsoft.shopmall.validation.BookId;
+import com.honsoft.shopmall.validator.BookId;
 
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
