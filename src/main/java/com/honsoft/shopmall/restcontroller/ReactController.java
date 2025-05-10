@@ -1,5 +1,7 @@
 package com.honsoft.shopmall.restcontroller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -7,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,13 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.BoardFormDto;
 import com.honsoft.shopmall.dto.MemberFormDto;
+import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.exception.UserException;
 import com.honsoft.shopmall.response.ResponseHandler;
+import com.honsoft.shopmall.service.BookService;
 
 @RestController
 @RequestMapping("/api")
 public class ReactController {
 	private static Logger logger = LoggerFactory.getLogger(ReactController.class);
+	
+	private final BookService bookService;
+	
+	public ReactController(BookService bookService) {
+		this.bookService = bookService;
+	}
 
 	@CrossOrigin(origins = "http://localhost:3000") // ✅ Allows only this frontend
 	@PostMapping("/register")
@@ -33,6 +44,18 @@ public class ReactController {
 		}
 		return ResponseHandler.responseBuilder("user saved", HttpStatus.OK,
 				BoardFormDto.builder().title("테스트").build());
+
+	}
+	
+	
+	@CrossOrigin(origins = "http://localhost:3000") // ✅ Allows only this frontend
+	@GetMapping("/books")
+	public ResponseEntity<Object> getBooks() {
+		List<Book> list = bookService.getAllBookList();
+		if( Math.random() > 0.5)
+			throw new UserException("blabla");
+		return ResponseHandler.responseBuilder("user saved", HttpStatus.OK,
+				list);
 
 	}
 }
