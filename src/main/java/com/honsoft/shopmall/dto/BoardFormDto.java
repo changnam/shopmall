@@ -12,6 +12,7 @@ import lombok.ToString;
 @Data
 @ToString
 @NoArgsConstructor
+@Builder
 public class BoardFormDto {
 	
 	private Long id;
