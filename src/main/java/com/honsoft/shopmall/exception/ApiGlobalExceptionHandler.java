@@ -5,20 +5,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice(basePackages = "com.honsoft.shopmall.restcontroller")
 public class ApiGlobalExceptionHandler {
-	
+	private static Logger logger = LoggerFactory.getLogger(ApiGlobalExceptionHandler.class);
 	
 	@ExceptionHandler(FileNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
@@ -56,8 +57,18 @@ public class ApiGlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(Exception.class)
-	public ProblemDetail handleException(Exception e) {
-		return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+	public ResponseEntity<ProblemDetail> handleException(Exception e) {
+		Throwable root = e;
+	    while (root.getCause() != null) {
+	        root = root.getCause();
+	    }
+	    logger.error("Root cause: ", root); // or System.out.println
+
+	    ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+	    problemDetail.setDetail(root.getMessage());
+	    return ResponseEntity.badRequest().body(problemDetail);
+	    
+//		return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
 	}
 
 }
