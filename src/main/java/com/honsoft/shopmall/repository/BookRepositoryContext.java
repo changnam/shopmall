@@ -8,19 +8,19 @@ import com.honsoft.shopmall.entity.Book;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 
 @Repository
 public class BookRepositoryContext {
-	 @PersistenceContext
-	    private EntityManager entityManager;
-	    
-	    
-	   	  public List<Book> selectMethod(){
-	   		String jpql = "SELECT entity FROM Book entity";
-	    	Query query = entityManager.createQuery(jpql);
-	    	List<Book>  book = query.getResultList();   
-	    	return book;
-	    }   	  
-	
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	public List<Book> selectMethod() {
+
+		String jpql = "SELECT entity FROM Book entity";
+		TypedQuery<Book> query = entityManager.createQuery(jpql, Book.class);
+		List<Book> book = query.getResultList();
+		return book;
+	}
+
 }
