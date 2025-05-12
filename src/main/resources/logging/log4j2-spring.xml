@@ -40,16 +40,16 @@
         	<AppenderRef ref="File-Appender"/>  
       </Logger>  
 
-	   <Logger name="org.hibernate.SQL" level="DEBUG" additivity="true">
+	   <Logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
 	  		 <AppenderRef ref="Console-Appender"/>    
 	   		<AppenderRef ref="File-Appender"/>
 	   </Logger>
 	   
-	   <Logger name="org.hibernate.type.descriptor.sql" level="TRACE" additivity="true">
+	   <Logger name="org.hibernate.type.descriptor.sql" level="TRACE" additivity="false">
 	  		 <AppenderRef ref="Console-Appender"/>    
 	   		<AppenderRef ref="File-Appender"/>
 	   </Logger>
-	   	   <Logger name="org.springframework.orm.jpa" level="DEBUG" additivity="true">
+	   	   <Logger name="org.springframework.orm.jpa" level="DEBUG" additivity="false">
 	  		 <AppenderRef ref="Console-Appender"/>    
 	   		<AppenderRef ref="File-Appender"/>
 	   </Logger>
