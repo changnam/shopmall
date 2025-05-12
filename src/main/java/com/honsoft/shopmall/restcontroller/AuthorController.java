@@ -30,5 +30,10 @@ public class AuthorController {
 		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, new String("1건 추가됨"));
 	}
 	
+	@GetMapping("/deletelastbook")
+	public ResponseEntity<Object> deleteLastBook(){
+		authorService.deleteLastBook();
+		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, new String("1건 삭제됨"));
+	}
 }
 

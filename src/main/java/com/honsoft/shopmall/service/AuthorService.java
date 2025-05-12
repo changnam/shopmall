@@ -1,6 +1,7 @@
 package com.honsoft.shopmall.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -40,6 +41,16 @@ public class AuthorService {
 		
 		Book book = Book.builder().isbn("004-JN").title("History Details").bookId("ISBN4444").unitPrice(new BigDecimal(10000)).build();
 		author.addBook(book);
+		authorRepository.save(author);
+	}
+	
+	@Transactional
+	public void deleteLastBook() {
+		Author author = authorRepository.findByName("Joana Nimar").orElseThrow();
+		List<Book> books = author.getBooks();
+		
+		author.removeBook(books.get(books.size() - 1)); //마지막 도서 삭제
+		
 		authorRepository.save(author);
 	}
 }
