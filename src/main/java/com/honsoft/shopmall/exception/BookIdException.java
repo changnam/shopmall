@@ -1,9 +1,11 @@
 package com.honsoft.shopmall.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @SuppressWarnings("serial")
+@EqualsAndHashCode(callSuper = false)
 public class BookIdException extends RuntimeException {
 
 	private String bookId;
