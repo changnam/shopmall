@@ -2,6 +2,8 @@ package com.honsoft.shopmall.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -22,15 +24,35 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"books"})
+@ToString(exclude = { "books" })
 public class Author {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private String name;
-	
+	private String genre;
+	private Integer age;
+
+	@Builder.Default
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "eauthor", orphanRemoval = true)
 	private List<Book> books = new ArrayList<>();
+
+	public void addBook(Book book) {
+		this.books.add(book);
+		book.setEauthor(this);
+	}
+
+	public void removeBook(Book book) {
+		book.setEauthor(null);
+		this.books.remove(book);
+	}
+
+	public void removeBooks() {
+		this.books.removeIf(book -> {
+			book.setEauthor(null);
+			return true;
+		});
+	}
 
 }
