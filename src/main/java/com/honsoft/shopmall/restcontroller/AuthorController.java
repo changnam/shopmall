@@ -24,5 +24,11 @@ public class AuthorController {
 		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, new String("3건 추가됨"));
 	}
 	
+	@GetMapping("/insertnewbook")
+	public ResponseEntity<Object> insertNewBook(){
+		authorService.insertNewBook();
+		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, new String("1건 추가됨"));
+	}
+	
 }
 

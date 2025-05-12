@@ -1,17 +1,20 @@
 package com.honsoft.shopmall.service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.honsoft.shopmall.entity.Author;
 import com.honsoft.shopmall.entity.Book;
+import com.honsoft.shopmall.exception.NotFoundException;
 import com.honsoft.shopmall.repository.AuthorRepository;
 
 import jakarta.transaction.Transactional;
 
 @Service
 public class AuthorService {
+	
 	private final AuthorRepository authorRepository;
 	public AuthorService(AuthorRepository authorRepository) {
 		this.authorRepository = authorRepository;
@@ -19,7 +22,7 @@ public class AuthorService {
 
 	@Transactional
 	public void insertAuthorWithBooks() {
-		Author jn = Author.builder().name("Jonna Nimar").age(24).genre("History").build();
+		Author jn = Author.builder().name("Joana Nimar").age(24).genre("History").build();
 		Book jn01 = Book.builder().isbn("001-JN").title("A History of ancient prague").bookId("ISBN1111").unitPrice(new BigDecimal(10000)).build();
 		Book jn02 = Book.builder().isbn("002-JN").title("People's History").bookId("ISBN2222").unitPrice(new BigDecimal(20000)).build();
 		Book jn03 = Book.builder().isbn("003-JN").title("World's History ").bookId("ISBN3333").unitPrice(new BigDecimal(30000)).build();
@@ -29,5 +32,14 @@ public class AuthorService {
 		jn.addBook(jn03);
 		
 		authorRepository.save(jn);
+	}
+	
+	@Transactional
+	public void insertNewBook() {
+		Author author = authorRepository.findByName("Joana Nimar").orElseThrow();
+		
+		Book book = Book.builder().isbn("004-JN").title("History Details").bookId("ISBN4444").unitPrice(new BigDecimal(10000)).build();
+		author.addBook(book);
+		authorRepository.save(author);
 	}
 }
