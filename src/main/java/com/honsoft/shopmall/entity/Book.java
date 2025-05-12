@@ -9,7 +9,10 @@ import com.honsoft.shopmall.validator.BookId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
@@ -17,9 +20,11 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.ToString;
 
 @Data 
 @Entity
+@ToString(exclude = {})
 public class Book  implements Serializable {
 	
 	private static final long serialVersionUID = -7715651009026349175L;
@@ -41,6 +46,10 @@ public class Book  implements Serializable {
 	
 	@Column(name = "b_author")
 	private String author; // 저자	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="author_id")
+	private Author eauthor;
 
 	@Column(name = "b_description")
 	private String description; // 설명
