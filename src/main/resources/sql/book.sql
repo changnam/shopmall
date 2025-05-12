@@ -24,4 +24,10 @@ INSERT INTO book VALUES
 ('ISBN1236', '안드로이드 프로그래밍', 25000, '송미영', '안드로이드의 기본 개념을 체계적으로 익히고, 이를 실습 예제를 통해 익힙니다. 기본 개념과 사용법을 스스로 실전에 적용하는 방법을 학습한 다음 실습 예제와 응용 예제를 통해 실전 프로젝트 응용력을 키웁니다.', '길벗', 'IT교육교재', 1000, '2023/06/30', 'new','ISBN1236.jpg');
 
 --changeset yourname:add-eauthor-column
-ALTER TABLE book ADD COLUMN e_author int(11);
+ALTER TABLE book ADD COLUMN author_id int(11);
+
+--changeset yourname:add-isbn-column
+ALTER TABLE book ADD COLUMN b_isbn varchar(255);
+
+--changeset yourname:add-title-column
+ALTER TABLE book ADD COLUMN b_title varchar(255);

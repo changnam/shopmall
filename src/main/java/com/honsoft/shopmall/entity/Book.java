@@ -19,12 +19,18 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data 
 @Entity
-@ToString(exclude = {})
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 public class Book  implements Serializable {
 	
 	private static final long serialVersionUID = -7715651009026349175L;
@@ -71,6 +77,12 @@ public class Book  implements Serializable {
 
 	@Column(name = "b_fileName")
 	private String fileName; //도서 이미지 파일	
+	
+	@Column(name = "b_isbn")
+	private String isbn;
+	
+	@Column(name = "b_title")
+	private String title;
 	
 	@Transient
 	private MultipartFile bookImage;  //도서 이미지

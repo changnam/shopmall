@@ -6,3 +6,7 @@ CREATE TABLE IF NOT EXISTS  `authors` (
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 )  ;
+
+--changeset yourname:add-jenre-age-column
+ALTER TABLE authors ADD COLUMN genre varchar(255);
+ALTER TABLE authors ADD COLUMN age int(11);
