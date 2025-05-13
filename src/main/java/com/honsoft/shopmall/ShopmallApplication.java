@@ -1,27 +1,29 @@
 package com.honsoft.shopmall;
 
-import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.honsoft.shopmall.entity.Book;
-import com.honsoft.shopmall.entity.Member;
-import com.honsoft.shopmall.entity.Person;
-import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.repository.BookRepositoryManual;
 import com.honsoft.shopmall.repository.MemberRepository;
 import com.honsoft.shopmall.repository.PersonRepository;
+import com.honsoft.shopmall.service.BookService;
+import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
 
 import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class,DataSourceAutoConfiguration.class,UserDetailsServiceAutoConfiguration.class})
+@ComponentScan(nameGenerator = FullyQualifiedBeanNameGenerator.class)
 public class ShopmallApplication implements CommandLineRunner{
 
 	private final BookRepositoryManual bookRepository;
@@ -106,9 +108,15 @@ public class ShopmallApplication implements CommandLineRunner{
 	}
 
 	
+	@Autowired
+	private ApplicationContext context;
+
 	@PostConstruct
-	public void init() {
-	    System.out.println("🔄 Application restarted at " + Instant.now());
+	public void listBeans() {
+		System.out.println("🔄 Application restarted at " + Instant.now());
+	    Map<String, BookService> beans = context.getBeansOfType(BookService.class);
+	    beans.forEach((name, bean) -> System.out.println(name + " → " + bean.getClass().getSimpleName()));
 	}
+
 
 }
