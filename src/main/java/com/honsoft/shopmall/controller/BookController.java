@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.honsoft.shopmall.dto.BookDto;
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.exception.BookIdException;
 import com.honsoft.shopmall.exception.CategoryException;
@@ -43,7 +44,7 @@ import jakarta.validation.Valid;
 public class BookController {
 
 	@Autowired
-	@Qualifier("bookServiceManualImpl")
+	@Qualifier("bookServiceImpl")
 	private BookService bookService;
 
 	@Value("${file.uploadDir}")
@@ -116,7 +117,7 @@ public class BookController {
 	
 	 @GetMapping("/add")
 	 public String requestAddBookForm(Model model) {
-		 model.addAttribute("book", new Book()); //유효검사기 추가
+		 model.addAttribute("book", new BookDto()); //유효검사기 추가
 		 return "addBook";
 	 }
 	 

@@ -65,4 +65,10 @@ public class BookServiceManualImpl implements BookService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<BookDto> saveAllBooks(List<BookDto> books) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

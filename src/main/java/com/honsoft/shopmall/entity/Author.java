@@ -61,35 +61,4 @@ public class Author {
 		});
 	}
 
-	public AuthorDto toDto() {
-		AuthorDto dto = new AuthorDto();
-		dto.setId(this.getId());
-		dto.setName(this.getName());
-
-		List<BookDto> books = this.getBooks().stream().map(book -> {
-			BookDto bd = new BookDto();
-			bd.setBookId(book.getBookId());
-			bd.setTitle(book.getTitle());
-			return bd;
-		}).collect(Collectors.toList());
-
-		dto.setBooks(books);
-		return dto;
-	}
-
-	public static Author toEntity(AuthorDto dto) {
-		Author author = new Author();
-		author.setName(dto.getName()); // dto 의 속성을 entity 속성에 대입
-
-		List<Book> books = dto.getBooks().stream().map(bookDto -> {
-			Book b = new Book();
-			b.setTitle(bookDto.getTitle());
-			b.setEauthor(author); // important for bidirectional setup
-			return b;
-		}).collect(Collectors.toList());
-
-		author.setBooks(books);
-		return author;
-	}
-
 }

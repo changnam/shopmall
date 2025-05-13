@@ -21,4 +21,5 @@ public interface BookService {
 	BookDto createBook(BookDto bookDto);
 	BookDto getBook(String bookId);
 	List<BookDto> getAllBooks();
+	List<BookDto> saveAllBooks(List<BookDto> books);
 }

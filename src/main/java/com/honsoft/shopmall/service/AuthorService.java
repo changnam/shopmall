@@ -15,10 +15,10 @@ import com.honsoft.shopmall.entity.Author;
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.exception.AlreadyExistsException;
 import com.honsoft.shopmall.exception.NotFoundException;
+import com.honsoft.shopmall.mapper.AuthorMapper;
 import com.honsoft.shopmall.repository.AuthorRepository;
 import com.honsoft.shopmall.repository.BookRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -26,10 +26,12 @@ public class AuthorService {
 
 	private final AuthorRepository authorRepository;
 	private final BookRepository bookRepository;
+	private final AuthorMapper authorMapper;
 
-	public AuthorService(AuthorRepository authorRepository, BookRepository bookRepository) {
+	public AuthorService(AuthorRepository authorRepository, BookRepository bookRepository,AuthorMapper authorMapper) {
 		this.authorRepository = authorRepository;
 		this.bookRepository = bookRepository;
+		this.authorMapper = authorMapper;
 	}
 
 	@Transactional
@@ -117,15 +119,17 @@ public class AuthorService {
 	}
 	
 	public AuthorDto createAuthorWithBooks(AuthorDto dto) {
-        Author author = Author.toEntity(dto);
-        Author saved = authorRepository.save(author);
-        return saved.toDto();
+//        Author author = Author.toEntity(dto);
+//        Author saved = authorRepository.save(author);
+//        return saved.toDto();
+        return null;
     }
 
 	public AuthorDto getAuthor(Long id) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Author not found"));
-        return author.toDto();
+//        return author.toDto();
+        return null;
     }
 
 	public AuthorDto updateAuthor(Long id, AuthorDto dto) {
@@ -142,7 +146,8 @@ public class AuthorService {
         }
 
         Author updated = authorRepository.save(existing);
-        return updated.toDto();
+//        return updated.toDto();
+        return null;
     }
 
 	public void deleteAuthor(Long id) {
@@ -150,7 +155,13 @@ public class AuthorService {
 	}
 
     public Page<AuthorDto> getAllAuthors(Pageable pageable) {
-        return authorRepository.findAll(pageable).map(author -> author.toDto());
+//        return authorRepository.findAll(pageable).map(author -> author.toDto());
+        return null;
     }
     
+	public List<AuthorDto> getAllAuthors() {
+//		return bookRepository.findAll().stream().map(book -> book.toDto()).collect(Collectors.toList());
+		return authorMapper.toDtoList(authorRepository.findAll());
+	}
+	
 }

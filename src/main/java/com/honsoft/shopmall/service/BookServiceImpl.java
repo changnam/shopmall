@@ -3,7 +3,6 @@ package com.honsoft.shopmall.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +12,7 @@ import com.honsoft.shopmall.dto.BookDto;
 import com.honsoft.shopmall.entity.Author;
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.exception.NotFoundException;
+import com.honsoft.shopmall.mapper.BookMapper;
 import com.honsoft.shopmall.repository.AuthorRepository;
 import com.honsoft.shopmall.repository.BookRepository;
 
@@ -20,10 +20,13 @@ import com.honsoft.shopmall.repository.BookRepository;
 public class BookServiceImpl implements BookService{
 	private final BookRepository bookRepository;
 	private final AuthorRepository authorRepository;
+	private final BookMapper bookMapper;
 	
-	public BookServiceImpl(BookRepository bookRepository,AuthorRepository authorRepository) {
+	
+	public BookServiceImpl(BookRepository bookRepository,AuthorRepository authorRepository,BookMapper bookMapper) {
 		this.bookRepository = bookRepository;
 		this.authorRepository = authorRepository;
+		this.bookMapper = bookMapper;
 	}
 
 	@Override
@@ -69,30 +72,33 @@ public class BookServiceImpl implements BookService{
 	}
 	
 	 public BookDto createBook(BookDto dto) {
-	        Author author = authorRepository.findById(dto.getAuthorId())
-	                .orElseThrow(() -> new NotFoundException("Author not found"));
+//	        Author author = authorRepository.findById(dto.getAuthorId())
+//	                .orElseThrow(() -> new NotFoundException("Author not found"));
 
-	        Book book = Book.toEntity(dto, author);
-	        return bookRepository.save(book).toDto();
+//	        Book book = Book.toEntity(dto, author);
+//	        return bookRepository.save(book).toDto();
+//	        return bookMapper.toDto(bookRepository.save(book));
+	        return null;
 	    }
 
 	    public BookDto getBook(String bookId) {
 	        Book book = bookRepository.findById(bookId)
 	                .orElseThrow(() -> new NotFoundException("Book not found"));
-	        return book.toDto();
+	        return bookMapper.toDto(book);
 	    }
 
 	    public BookDto updateBook(String bookId, BookDto dto) {
 	        Book existing = bookRepository.findById(bookId)
 	                .orElseThrow(() -> new NotFoundException("Book not found"));
 
-	        Author author = authorRepository.findById(dto.getAuthorId())
-	                .orElseThrow(() -> new NotFoundException("Author not found"));
+//	        Author author = authorRepository.findById(dto.getAuthorId())
+//	                .orElseThrow(() -> new NotFoundException("Author not found"));
 
-	        existing.setTitle(dto.getTitle());
-	        existing.setEauthor(author);
+//	        existing.setTitle(dto.getTitle());
+//	        existing.setEauthor(author);
 
-	        return bookRepository.save(existing).toDto();
+//	        return bookRepository.save(existing).toDto();
+	        return null;
 	    }
 
 	    public void deleteBook(String bookId) {
@@ -100,12 +106,19 @@ public class BookServiceImpl implements BookService{
 	    }
 
 	    public Page<BookDto> getAllBooks(Pageable pageable) {
-	        return bookRepository.findAll(pageable).map(book -> book.toDto());
+//	        return bookRepository.findAll(pageable).map(book -> book.toDto());
+	        return null;
 	    }
 
 		@Override
 		public List<BookDto> getAllBooks() {
-			return bookRepository.findAll().stream().map(book -> book.toDto()).collect(Collectors.toList());
-			
+//			return bookRepository.findAll().stream().map(book -> book.toDto()).collect(Collectors.toList());
+			return bookMapper.toDtoList(bookRepository.findAll());
+		}
+
+		@Override
+		public List<BookDto> saveAllBooks(List<BookDto> books) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 }

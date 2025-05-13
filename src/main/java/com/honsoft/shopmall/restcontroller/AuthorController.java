@@ -1,5 +1,7 @@
 package com.honsoft.shopmall.restcontroller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.AuthorDto;
+import com.honsoft.shopmall.dto.BookDto;
 import com.honsoft.shopmall.entity.Author;
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.response.ResponseHandler;
@@ -78,4 +81,9 @@ public class AuthorController {
         authorService.deleteAuthor(id);
         return ResponseEntity.noContent().build();
     }
+	
+	@GetMapping
+	public ResponseEntity<List<AuthorDto>> getAllAuthors(){
+		return new ResponseEntity<>(authorService.getAllAuthors(), HttpStatus.CREATED);
+	}
 }

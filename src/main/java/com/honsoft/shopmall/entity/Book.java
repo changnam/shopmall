@@ -91,27 +91,6 @@ public class Book  implements Serializable {
 	@Transient
 	private MultipartFile bookImage;  //도서 이미지
 	
-	public BookDto toDto() {
-        BookDto dto = new BookDto();
-        dto.setBookId(this.getBookId());
-        dto.setTitle(this.getTitle());
-
-        if (this.getAuthor() != null) {
-        	dto.setAuthorId(this.getEauthor().getId());
-        	dto.setAuthorName(this.getEauthor().getName());
-        }
-
-        return dto;
-    }
-	
-	public static Book toEntity(BookDto dto, Author author) {
-        Book book = new Book();
-        book.setBookId(dto.getBookId());
-        book.setTitle(dto.getTitle());
-        book.setEauthor(author);
-        return book;
-    }
-	
 /*
 	public Book() {
 		super();

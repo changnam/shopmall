@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class AuthorDto {
     private Long id;
     private String name;
-    private List<BookDto> books = new ArrayList<>();
+    private int age;
+    private String genre;
+    private List<BookDto> books; // optional for bidirectional mapping
 }
 

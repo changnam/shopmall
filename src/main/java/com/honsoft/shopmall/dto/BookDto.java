@@ -1,5 +1,7 @@
 package com.honsoft.shopmall.dto;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +14,6 @@ import lombok.NoArgsConstructor;
 public class BookDto {
     private String bookId;
     private String title;
-    private Long authorId;
-    private String authorName; // optional read-only field
+    private BigDecimal unitPrice;
+    private AuthorDto author; // nested mapping
 }
