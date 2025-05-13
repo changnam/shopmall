@@ -53,13 +53,10 @@ public class Book  implements Serializable {
 	@Column(name = "b_unitPrice")
 	private BigDecimal unitPrice; // 가격	
 	
-	@Column(name = "b_author")
-	private String author; // 저자	
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="author_id")
 	@JsonBackReference
-	private Author eauthor;
+	private Author author;
 
 	@Column(name = "b_description")
 	private String description; // 설명

@@ -13,10 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthorDto {
-    private Long id;
-    private String name;
-    private int age;
-    private String genre;
-    private List<BookDto> books; // optional for bidirectional mapping
-}
+	private Long authorId;
+	private String name;
+	private int age;
+	private String genre;
 
+	@Builder.Default
+	private List<BookDto> books = new ArrayList<>();
+}

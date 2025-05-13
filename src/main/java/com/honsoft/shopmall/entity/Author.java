@@ -32,31 +32,30 @@ import lombok.ToString;
 public class Author {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long authorId;
 
 	@Column(unique = true, nullable = false)
 	private String name;
 	private String genre;
 	private Integer age;
 
-	@Builder.Default
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "eauthor", orphanRemoval = true)
 	@JsonManagedReference
-	private List<Book> books = new ArrayList<>();
+	private List<Book> books;
 
 	public void addBook(Book book) {
 		this.books.add(book);
-		book.setEauthor(this);
+		book.setAuthor(this);
 	}
 
 	public void removeBook(Book book) {
-		book.setEauthor(null);
+		book.setAuthor(null);
 		this.books.remove(book);
 	}
 
 	public void removeBooks() {
 		this.books.removeIf(book -> {
-			book.setEauthor(null);
+			book.setAuthor(null);
 			return true;
 		});
 	}

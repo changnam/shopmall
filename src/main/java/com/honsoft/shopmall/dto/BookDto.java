@@ -15,5 +15,5 @@ public class BookDto {
     private String bookId;
     private String title;
     private BigDecimal unitPrice;
-    private AuthorDto author; // nested mapping
+    private Long authorId; // nested mapping
 }

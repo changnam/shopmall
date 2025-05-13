@@ -1,32 +1,46 @@
 package com.honsoft.shopmall.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Data 
 @Entity
+@Builder
+@Table(name= "addresses")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
 	
 	//private static final long serialVersionUID = 613846598817670033L;
 	
 	@Id
-    @GeneratedValue//(strategy = GenerationType.IDENTITY)	
-	private Long id;	
+    @GeneratedValue(strategy = GenerationType.IDENTITY)	
+	private Long addressId;	
 	 
 	private String country;        //국가명
 	
-	private String zipcode;        //우편번호	
+	private String zipCode;        //우편번호	
 	
-	private String addressname;   //주소 
+	private String addressName;   //주소 
 	
-	private String detailname;     //세부주소	
+	private String detailName;     //세부주소	
 	
-
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "customer_id")
+	@JsonBackReference //bidirectional relationship 에서 serialization 무한루프 방지
+	private Customer customer;
 	
 		
 	/*
