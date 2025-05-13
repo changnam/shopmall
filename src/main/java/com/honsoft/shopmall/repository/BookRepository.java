@@ -15,4 +15,5 @@ public interface BookRepository {
 	void setNewBook(Book book);
 	void setUpdateBook(Book book);	
 	void setDeleteBook(String bookID); 
+	boolean existsByBookId(String bookId);
 }

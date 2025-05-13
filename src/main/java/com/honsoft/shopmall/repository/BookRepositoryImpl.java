@@ -150,4 +150,22 @@ public class BookRepositoryImpl implements BookRepository {
 	     jdbcTemplate.update(SQL, bookID);
 	   }
 
+
+
+	@Override
+	public boolean existsByBookId(String bookId) {
+		// TODO Auto-generated method stub
+		Book bookInfo = null;
+		String sql = "SELECT count(*) FROM book where b_bookId=?"; 
+		int rowCount = jdbcTemplate.queryForObject(sql, Integer.class, bookId);
+		if (rowCount != 0) {
+		    sql = "SELECT * FROM book where b_bookId=?";  
+		    bookInfo = jdbcTemplate.queryForObject(sql, new BookRowMapper(),bookId ); 
+		}
+		if (bookInfo== null)
+			return false;
+	
+	     return true;
+	}
+
 }

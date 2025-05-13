@@ -2,14 +2,13 @@ package com.honsoft.shopmall.service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.honsoft.shopmall.entity.Author;
 import com.honsoft.shopmall.entity.Book;
-import com.honsoft.shopmall.exception.NotFoundException;
 import com.honsoft.shopmall.repository.AuthorRepository;
+import com.honsoft.shopmall.repository.BookRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -17,8 +16,11 @@ import jakarta.transaction.Transactional;
 public class AuthorService {
 	
 	private final AuthorRepository authorRepository;
-	public AuthorService(AuthorRepository authorRepository) {
+	private final BookRepository bookRepository;
+	
+	public AuthorService(AuthorRepository authorRepository,BookRepository bookRepository) {
 		this.authorRepository = authorRepository;
+		this.bookRepository = bookRepository;
 	}
 
 	@Transactional
@@ -40,8 +42,12 @@ public class AuthorService {
 		Author author = authorRepository.findByName("Joana Nimar").orElseThrow();
 		
 		Book book = Book.builder().isbn("004-JN").title("History Details").bookId("ISBN4444").unitPrice(new BigDecimal(10000)).build();
-		author.addBook(book);
+		
+		if(bookRepository.existsByBookId(book.getBookId())) {
+			throw new RuntimeException(book.getBookId()+" already exists");
+		}
 		authorRepository.save(author);
+//		authorRepository.flush();
 	}
 	
 	@Transactional
@@ -52,5 +58,7 @@ public class AuthorService {
 		author.removeBook(books.get(books.size() - 1)); //마지막 도서 삭제
 		
 		authorRepository.save(author);
+		
+		
 	}
 }
