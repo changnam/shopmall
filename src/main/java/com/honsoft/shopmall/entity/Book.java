@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.honsoft.shopmall.validator.BookId;
 
 import jakarta.persistence.Column;
@@ -55,6 +56,7 @@ public class Book  implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="author_id")
+	@JsonBackReference
 	private Author eauthor;
 
 	@Column(name = "b_description")

@@ -3,6 +3,9 @@ package com.honsoft.shopmall.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.honsoft.shopmall.entity.Author;
@@ -74,12 +77,21 @@ public class AuthorService {
 		Author author = authorRepository.findByName("Joana Nimar").orElseThrow();
 		List<Book> books = author.getBooks();
 		if (books.size() > 0) {
-			author.removeBook(books.get(books.size() - 1)); // 마지막 도서 삭제, book의 author_id 를 null 했으므로 orphanRemoval=true 이므로 save 시 해당 book 이 db에서 삭제됨
+			author.removeBook(books.get(books.size() - 1)); // 마지막 도서 삭제, book의 author_id 를 null 했으므로 orphanRemoval=true
+															// 이므로 save 시 해당 book 이 db에서 삭제됨
 
 			authorRepository.save(author);
 			return 1;
 		}
 
 		return 0;
+	}
+
+	public Page<Book> getBooksOfAuthorByName(String name) {
+		Page<Book> books = bookRepository.getBooksByAuthorName(name,
+				PageRequest.of(0, 2, Sort.by(Sort.DEFAULT_DIRECTION.ASC, "title")));
+
+		return books;
+
 	}
 }

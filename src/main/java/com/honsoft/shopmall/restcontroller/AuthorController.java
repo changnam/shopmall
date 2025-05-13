@@ -1,11 +1,14 @@
 package com.honsoft.shopmall.restcontroller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.AuthorService;
 
@@ -34,6 +37,12 @@ public class AuthorController {
 	public ResponseEntity<Object> deleteLastBook(){
 		int result = authorService.deleteLastBook();
 		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, new String(result+" 건 삭제됨"));
+	}
+	
+	@GetMapping("/getbooksbyauthors")
+	public ResponseEntity<Object> getBooksByAuthorName(@RequestParam("name") String name){
+		Page<Book> books = authorService.getBooksOfAuthorByName(name);
+		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, books);
 	}
 }
 

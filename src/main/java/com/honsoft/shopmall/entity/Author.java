@@ -2,8 +2,8 @@ package com.honsoft.shopmall.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -38,6 +38,7 @@ public class Author {
 
 	@Builder.Default
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "eauthor", orphanRemoval = true)
+	@JsonManagedReference
 	private List<Book> books = new ArrayList<>();
 
 	public void addBook(Book book) {
