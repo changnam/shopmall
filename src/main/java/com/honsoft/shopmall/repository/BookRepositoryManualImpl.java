@@ -14,7 +14,7 @@ import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.exception.BookIdException;
 
 @Repository
-public class BookRepositoryImpl implements BookRepository {
+public class BookRepositoryManualImpl implements BookRepositoryManual {
 	
 	
 	@Autowired 

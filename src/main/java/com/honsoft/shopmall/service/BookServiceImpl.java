@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.honsoft.shopmall.entity.Book;
-import com.honsoft.shopmall.repository.BookRepository;
+import com.honsoft.shopmall.repository.BookRepositoryManual;
 
 
 @Service
 public class BookServiceImpl implements BookService {
 
 	@Autowired
-	private BookRepository bookRepository;
+	private BookRepositoryManual bookRepository;
 
 	public List<Book> getAllBookList() {
 		return bookRepository.getAllBookList();

@@ -11,4 +11,5 @@ import com.honsoft.shopmall.entity.Author;
 public interface AuthorRepository extends JpaRepository<Author, Long>{
 	Optional<Author> findByName(String name);
 	Boolean existsByName(String name);
+	
 }

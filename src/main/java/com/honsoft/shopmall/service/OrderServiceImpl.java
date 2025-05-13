@@ -5,14 +5,14 @@ import org.springframework.stereotype.Service;
 
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.entity.Order;
-import com.honsoft.shopmall.repository.BookRepository;
+import com.honsoft.shopmall.repository.BookRepositoryManual;
 import com.honsoft.shopmall.repository.OrderRepository;
 @Service
 public class OrderServiceImpl implements OrderService{
 	
 	
 	@Autowired
-	private BookRepository bookRepository;
+	private BookRepositoryManual bookRepository;
 		
 	@Autowired
 	private OrderRepository orderRepository;

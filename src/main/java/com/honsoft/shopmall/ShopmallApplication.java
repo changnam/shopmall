@@ -15,7 +15,7 @@ import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.entity.Member;
 import com.honsoft.shopmall.entity.Person;
 import com.honsoft.shopmall.entity.Role;
-import com.honsoft.shopmall.repository.BookRepository;
+import com.honsoft.shopmall.repository.BookRepositoryManual;
 import com.honsoft.shopmall.repository.MemberRepository;
 import com.honsoft.shopmall.repository.PersonRepository;
 
@@ -24,12 +24,12 @@ import jakarta.annotation.PostConstruct;
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class,DataSourceAutoConfiguration.class,UserDetailsServiceAutoConfiguration.class})
 public class ShopmallApplication implements CommandLineRunner{
 
-	private final BookRepository bookRepository;
+	private final BookRepositoryManual bookRepository;
 	private final PersonRepository personRepository;
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
 	
-	public ShopmallApplication(BookRepository bookRepository,PersonRepository personRepository,MemberRepository memberRepository,PasswordEncoder passwordEncoder) {
+	public ShopmallApplication(BookRepositoryManual bookRepository,PersonRepository personRepository,MemberRepository memberRepository,PasswordEncoder passwordEncoder) {
 		this.bookRepository = bookRepository;
 		this.personRepository = personRepository;
 		this.memberRepository = memberRepository;
