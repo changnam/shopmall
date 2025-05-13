@@ -1,6 +1,7 @@
 package com.honsoft.shopmall.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +33,7 @@ public class CartController {
 	private CartService cartService;
 
 	@Autowired
+	@Qualifier("bookServiceManualImpl")
 	private BookService bookService;
 	
 	@GetMapping

@@ -5,15 +5,20 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.honsoft.shopmall.dto.AuthorDto;
+import com.honsoft.shopmall.dto.BookDto;
 import com.honsoft.shopmall.entity.Author;
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.exception.AlreadyExistsException;
+import com.honsoft.shopmall.exception.NotFoundException;
 import com.honsoft.shopmall.repository.AuthorRepository;
 import com.honsoft.shopmall.repository.BookRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -94,4 +99,58 @@ public class AuthorService {
 		return books;
 
 	}
+
+	@Transactional
+	public int fetchAllBooksByAuthorNameAndAddNewBook(String name) {
+		List<Book> books = bookRepository.getBooksByAuthorName(name);
+		int result = 0;
+		if (!bookRepository.existsById("ISBN5555")) {
+			Book book = Book.builder().isbn("005-JN").title("A History facts").bookId("ISBN5555")
+					.unitPrice(new BigDecimal(10000)).build();
+			result++;
+			book.setAuthor(books.get(0).getAuthor());
+			books.add(bookRepository.save(book));
+		}
+
+		return result;
+
+	}
+	
+	public AuthorDto createAuthorWithBooks(AuthorDto dto) {
+        Author author = Author.toEntity(dto);
+        Author saved = authorRepository.save(author);
+        return saved.toDto();
+    }
+
+	public AuthorDto getAuthor(Long id) {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Author not found"));
+        return author.toDto();
+    }
+
+	public AuthorDto updateAuthor(Long id, AuthorDto dto) {
+        Author existing = authorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Author not found"));
+
+        existing.setName(dto.getName()); //dto 의 항목들을 entity 의 항목에 업데이트
+        existing.getBooks().clear();
+        for (BookDto bookDto : dto.getBooks()) {
+            Book book = new Book();
+            book.setTitle(bookDto.getTitle());  //book dto 의 내용을 book entity 로 셋팅
+            book.setEauthor(existing);
+            existing.getBooks().add(book);
+        }
+
+        Author updated = authorRepository.save(existing);
+        return updated.toDto();
+    }
+
+	public void deleteAuthor(Long id) {
+		authorRepository.deleteById(id);
+	}
+
+    public Page<AuthorDto> getAllAuthors(Pageable pageable) {
+        return authorRepository.findAll(pageable).map(author -> author.toDto());
+    }
+    
 }

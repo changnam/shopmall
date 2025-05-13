@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.honsoft.shopmall.dto.BookDto;
 import com.honsoft.shopmall.entity.Book;
 
 public interface BookService {
@@ -17,5 +18,7 @@ public interface BookService {
 	void setUpdateBook(Book book);
 	void setDeleteBook(String bookID);
 	
-	
+	BookDto createBook(BookDto bookDto);
+	BookDto getBook(String bookId);
+	List<BookDto> getAllBooks();
 }

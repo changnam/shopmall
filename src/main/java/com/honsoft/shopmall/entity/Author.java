@@ -2,8 +2,11 @@ package com.honsoft.shopmall.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.honsoft.shopmall.dto.AuthorDto;
+import com.honsoft.shopmall.dto.BookDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,7 +34,7 @@ public class Author {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(unique = true,nullable = false)
+	@Column(unique = true, nullable = false)
 	private String name;
 	private String genre;
 	private Integer age;
@@ -56,6 +59,37 @@ public class Author {
 			book.setEauthor(null);
 			return true;
 		});
+	}
+
+	public AuthorDto toDto() {
+		AuthorDto dto = new AuthorDto();
+		dto.setId(this.getId());
+		dto.setName(this.getName());
+
+		List<BookDto> books = this.getBooks().stream().map(book -> {
+			BookDto bd = new BookDto();
+			bd.setBookId(book.getBookId());
+			bd.setTitle(book.getTitle());
+			return bd;
+		}).collect(Collectors.toList());
+
+		dto.setBooks(books);
+		return dto;
+	}
+
+	public static Author toEntity(AuthorDto dto) {
+		Author author = new Author();
+		author.setName(dto.getName()); // dto 의 속성을 entity 속성에 대입
+
+		List<Book> books = dto.getBooks().stream().map(bookDto -> {
+			Book b = new Book();
+			b.setTitle(bookDto.getTitle());
+			b.setEauthor(author); // important for bidirectional setup
+			return b;
+		}).collect(Collectors.toList());
+
+		author.setBooks(books);
+		return author;
 	}
 
 }

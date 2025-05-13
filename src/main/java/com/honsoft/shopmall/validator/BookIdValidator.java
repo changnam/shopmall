@@ -1,6 +1,7 @@
 package com.honsoft.shopmall.validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.service.BookService;
@@ -11,6 +12,7 @@ import jakarta.validation.ConstraintValidatorContext;
 public class BookIdValidator implements ConstraintValidator<BookId, String>{
 
 	@Autowired
+//	@Qualifier("bookServiceManualImpl")
 	private BookService bookService;
 	   
 	

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,6 +50,7 @@ public class OrderController {
 	private OrderProService orderProService;	
 	
 	@Autowired
+	@Qualifier("bookServiceManualImpl")
    private BookService bookService;
 	
 	Order order;	 

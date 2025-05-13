@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -29,7 +30,7 @@ public class ReactController {
 	
 	private final BookService bookService;
 	
-	public ReactController(BookService bookService) {
+	public ReactController(@Qualifier("bookServiceManualImpl") BookService bookService) {
 		this.bookService = bookService;
 	}
 
@@ -49,7 +50,7 @@ public class ReactController {
 	
 	
 	@CrossOrigin(origins = "http://localhost:3000") // ✅ Allows only this frontend
-	@GetMapping("/books")
+	@GetMapping("/bookstest")
 	public ResponseEntity<Object> getBooks() {
 		List<Book> list = bookService.getAllBookList();
 		if( Math.random() > 0.5)
