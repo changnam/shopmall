@@ -42,7 +42,7 @@ public class DataSoureConfig {
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true); // vendor 에 관계없이 ddl 생성 기능을 쓸것인지 설정
-        vendorAdapter.setShowSql(true); 
+        vendorAdapter.setShowSql(false); 
         
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
@@ -54,7 +54,7 @@ public class DataSoureConfig {
         Properties jpaProperties = new Properties();
         jpaProperties.setProperty("hibernate.hbm2ddl.auto", "none"); //테이블 구조 DDL 필요시 create-only 로 할것
         jpaProperties.setProperty("hibernate.format_sql", "true");
-        jpaProperties.setProperty("hibernate.show_sql", "true"); // Optional: to log SQL to console
+        jpaProperties.setProperty("hibernate.show_sql", "false"); // Optional: to log SQL to console
         factory.setJpaProperties(jpaProperties);
 
 
