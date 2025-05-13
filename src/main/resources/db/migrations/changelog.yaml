@@ -18,7 +18,17 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             stripComments: true
-            
+           
+  - changeSet:
+      id: 3
+      author: yourname
+      changes:
+        - sqlFile:
+            path: sql/book_modify.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            stripComments: true
+                      
 #  - changeSet:
 #      id: 2
 #      author: yourname
