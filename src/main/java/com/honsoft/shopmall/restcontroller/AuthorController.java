@@ -20,8 +20,8 @@ public class AuthorController {
 	
 	@GetMapping("/insertwithbooks")
 	public ResponseEntity<Object> insertWithBooks(){
-		authorService.insertAuthorWithBooks();
-		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, new String("3건 추가됨"));
+		int result = authorService.insertAuthorWithBooks();
+		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, new String(result+" 건 추가됨"));
 	}
 	
 	@GetMapping("/insertnewbook")
@@ -32,8 +32,8 @@ public class AuthorController {
 	
 	@GetMapping("/deletelastbook")
 	public ResponseEntity<Object> deleteLastBook(){
-		authorService.deleteLastBook();
-		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, new String("1건 삭제됨"));
+		int result = authorService.deleteLastBook();
+		return ResponseHandler.responseBuilder("OK", HttpStatus.OK, new String(result+" 건 삭제됨"));
 	}
 }
 
