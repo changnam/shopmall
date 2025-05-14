@@ -90,8 +90,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public void deleteCustomerById(String customerId) {
-		// TODO Auto-generated method stub
-
+		customerRepository.deleteById(customerId);
 	}
 
 }
