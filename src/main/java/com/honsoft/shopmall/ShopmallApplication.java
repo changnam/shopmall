@@ -15,14 +15,18 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.honsoft.shopmall.dto.CustomerDto;
+import com.honsoft.shopmall.dto.UserDto;
 import com.honsoft.shopmall.entity.Address;
 import com.honsoft.shopmall.entity.Customer;
+import com.honsoft.shopmall.entity.User;
 import com.honsoft.shopmall.mapper.CustomerMapper;
+import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.AddressRepository;
 import com.honsoft.shopmall.repository.BookRepositoryManual;
 import com.honsoft.shopmall.repository.CustomerRepository;
 import com.honsoft.shopmall.repository.MemberRepository;
 import com.honsoft.shopmall.repository.PersonRepository;
+import com.honsoft.shopmall.repository.UserRepository;
 import com.honsoft.shopmall.service.BookService;
 import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
 
@@ -40,10 +44,13 @@ public class ShopmallApplication implements CommandLineRunner {
 	private final CustomerRepository customerRepository;
 	private final AddressRepository addressRepository;
 	private final CustomerMapper customerMapper;
+	private final UserRepository userRepository;
+	private final UserMapper userMapper;
 
 	public ShopmallApplication(BookRepositoryManual bookRepository, PersonRepository personRepository,
 			MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomerRepository customerRepository,
-			AddressRepository addressRepository, CustomerMapper customerMapper) {
+			AddressRepository addressRepository, CustomerMapper customerMapper, UserRepository userRepository,
+			UserMapper userMapper) {
 		this.bookRepository = bookRepository;
 		this.personRepository = personRepository;
 		this.memberRepository = memberRepository;
@@ -51,6 +58,8 @@ public class ShopmallApplication implements CommandLineRunner {
 		this.customerRepository = customerRepository;
 		this.addressRepository = addressRepository;
 		this.customerMapper = customerMapper;
+		this.userRepository = userRepository;
+		this.userMapper = userMapper;
 	}
 
 	public static void main(String[] args) {
@@ -142,6 +151,13 @@ public class ShopmallApplication implements CommandLineRunner {
 			customerRepository.save(customer2);
 		}
 
+		User user = userRepository.findById("cngoh").orElse(null);
+		if (user == null) {
+			UserDto userDto = UserDto.builder().userId("cngoh").password(passwordEncoder.encode("pass")).build();
+			user = userMapper.toEntity(userDto);
+			userRepository.save(user);
+		}
+		
 	}
 
 	@Autowired

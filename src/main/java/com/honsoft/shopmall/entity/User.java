@@ -1,41 +1,37 @@
 package com.honsoft.shopmall.entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 	@Id
-	@GeneratedValue(strategy =GenerationType.IDENTITY)
-	private long id;
-	
+//	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	private String userId;
+
 	private String password;
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	
+	private String name;
+	private String email;
+	private Boolean enabled;
+
+	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+	@JsonManagedReference
+	private List<UserRole> userRoles;
 
 }
