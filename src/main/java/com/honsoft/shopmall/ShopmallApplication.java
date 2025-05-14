@@ -14,8 +14,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.honsoft.shopmall.dto.CustomerDto;
 import com.honsoft.shopmall.entity.Address;
 import com.honsoft.shopmall.entity.Customer;
+import com.honsoft.shopmall.mapper.CustomerMapper;
 import com.honsoft.shopmall.repository.AddressRepository;
 import com.honsoft.shopmall.repository.BookRepositoryManual;
 import com.honsoft.shopmall.repository.CustomerRepository;
@@ -37,16 +39,18 @@ public class ShopmallApplication implements CommandLineRunner {
 	private final PasswordEncoder passwordEncoder;
 	private final CustomerRepository customerRepository;
 	private final AddressRepository addressRepository;
+	private final CustomerMapper customerMapper;
 
 	public ShopmallApplication(BookRepositoryManual bookRepository, PersonRepository personRepository,
 			MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomerRepository customerRepository,
-			AddressRepository addressRepository) {
+			AddressRepository addressRepository, CustomerMapper customerMapper) {
 		this.bookRepository = bookRepository;
 		this.personRepository = personRepository;
 		this.memberRepository = memberRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.customerRepository = customerRepository;
 		this.addressRepository = addressRepository;
+		this.customerMapper = customerMapper;
 	}
 
 	public static void main(String[] args) {
@@ -118,7 +122,8 @@ public class ShopmallApplication implements CommandLineRunner {
 
 		Customer customer1 = customerRepository.findById("cngoh").orElse(null);
 		if (customer1 == null) {
-			customer1 = Customer.builder().customerId("cngoh").name("changnamgo").build();
+			CustomerDto customerDto = CustomerDto.builder().customerId("cngoh").name("changnam").build();
+			customer1 = customerMapper.toEntity(customerDto);
 			Address address1 = Address.builder().addressName("home").country("seoul").customer(customer1).build();
 			customer1.getAddresses().add(address1);
 			Address address2 = Address.builder().addressName("office").country("jeju").customer(customer1).build();
@@ -128,7 +133,8 @@ public class ShopmallApplication implements CommandLineRunner {
 		
 		Customer customer2 = customerRepository.findById("ykgoh").orElse(null);
 		if (customer2 == null) {
-			customer2 = Customer.builder().customerId("ykgoh").name("youngkyung").build();
+			CustomerDto customerDto = CustomerDto.builder().customerId("ykgoh").name("youngkyung").build();
+			customer2 = customerMapper.toEntity(customerDto);
 			Address address1 = Address.builder().addressName("home").country("seoul").customer(customer2).build();
 			customer2.getAddresses().add(address1);
 			Address address2 = Address.builder().addressName("office").country("seoul").customer(customer2).build();

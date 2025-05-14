@@ -22,7 +22,7 @@ import lombok.ToString;
 
 @Entity
 @Data			// Getter Setter
-@Builder		// DTO -> Entity화
+//@Builder		// DTO -> Entity화
 @AllArgsConstructor	// 모든 컬럼 생성자 생성
 @NoArgsConstructor	// 기본 생성자
 @Table(name = "customers")
@@ -40,8 +40,8 @@ public class Customer {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
 	@JsonManagedReference //serialization 할때 Customer -> Address -> Customer -> 무한반복 방지
-	@Builder.Default
-	private List<Address> addresses = new ArrayList<>();
+//	@Builder.Default
+	private List<Address> addresses;;
 	
 	
 }
