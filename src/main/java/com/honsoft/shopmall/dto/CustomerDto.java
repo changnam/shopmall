@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Builder
 public class CustomerDto {
-	private Long customerId;
+	private String customerId;
 	private String name;
 	@Builder.Default
 	private List<AddressDto> addresses = new ArrayList<>();

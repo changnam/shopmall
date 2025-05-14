@@ -26,9 +26,10 @@ import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
 
 import jakarta.annotation.PostConstruct;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class,DataSourceAutoConfiguration.class,UserDetailsServiceAutoConfiguration.class})
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class,
+		UserDetailsServiceAutoConfiguration.class })
 @ComponentScan(nameGenerator = FullyQualifiedBeanNameGenerator.class)
-public class ShopmallApplication implements CommandLineRunner{
+public class ShopmallApplication implements CommandLineRunner {
 
 	private final BookRepositoryManual bookRepository;
 	private final PersonRepository personRepository;
@@ -36,8 +37,10 @@ public class ShopmallApplication implements CommandLineRunner{
 	private final PasswordEncoder passwordEncoder;
 	private final CustomerRepository customerRepository;
 	private final AddressRepository addressRepository;
-	
-	public ShopmallApplication(BookRepositoryManual bookRepository,PersonRepository personRepository,MemberRepository memberRepository,PasswordEncoder passwordEncoder,CustomerRepository customerRepository,AddressRepository addressRepository) {
+
+	public ShopmallApplication(BookRepositoryManual bookRepository, PersonRepository personRepository,
+			MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomerRepository customerRepository,
+			AddressRepository addressRepository) {
 		this.bookRepository = bookRepository;
 		this.personRepository = personRepository;
 		this.memberRepository = memberRepository;
@@ -45,7 +48,7 @@ public class ShopmallApplication implements CommandLineRunner{
 		this.customerRepository = customerRepository;
 		this.addressRepository = addressRepository;
 	}
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(ShopmallApplication.class, args);
 	}
@@ -112,24 +115,25 @@ public class ShopmallApplication implements CommandLineRunner{
 //		member.setRole(Role.USER);s
 //		
 //		memberRepository.save(member);
-		
-		Customer customer1 = Customer.builder().customerId("cngoh").name("changnamgo").build();
-		Address address1 = Address.builder().addressName("home").country("seoul").customer(customer1).build();
-		customer1.getAddresses().add(address1);
-		customerRepository.save(customer1);
-		
+
+		Customer customer1 = customerRepository.findById("cngoh").orElse(null);
+		if (customer1 == null) {
+			customer1 = Customer.builder().customerId("cngoh").name("changnamgo").build();
+			Address address1 = Address.builder().addressName("home").country("seoul").customer(customer1).build();
+			customer1.getAddresses().add(address1);
+			customerRepository.save(customer1);
+		}
+
 	}
 
-	
 	@Autowired
 	private ApplicationContext context;
 
 	@PostConstruct
 	public void listBeans() {
 		System.out.println("🔄 Application restarted at " + Instant.now());
-	    Map<String, BookService> beans = context.getBeansOfType(BookService.class);
-	    beans.forEach((name, bean) -> System.out.println(name + " → " + bean.getClass().getSimpleName()));
+		Map<String, BookService> beans = context.getBeansOfType(BookService.class);
+		beans.forEach((name, bean) -> System.out.println(name + " → " + bean.getClass().getSimpleName()));
 	}
-
 
 }

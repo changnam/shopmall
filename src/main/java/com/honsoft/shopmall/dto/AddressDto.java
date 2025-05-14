@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class AddressDto {
 	private Long addressId;
+	private String addressName;
 	private String country;
 	private String customerId;
 }
