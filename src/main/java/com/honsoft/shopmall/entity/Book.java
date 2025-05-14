@@ -6,8 +6,6 @@ import java.math.BigDecimal;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.honsoft.shopmall.dto.AuthorDto;
-import com.honsoft.shopmall.dto.BookDto;
 import com.honsoft.shopmall.validator.BookId;
 
 import jakarta.persistence.Column;
@@ -16,7 +14,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -34,6 +34,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "author_id", "b_name" }))
 public class Book  implements Serializable {
 	
 	private static final long serialVersionUID = -7715651009026349175L;
@@ -44,7 +45,7 @@ public class Book  implements Serializable {
 	private String bookId; //도서ID
 	
 	@Size(min=4, max=50, message="{Size.book.name}")
-	@Column(name = "b_name", unique = true, nullable = false)
+	@Column(name = "b_name", nullable = false)
 	private String name; // 도서명
 	
 	@Min(value=0, message="{Min.book.unitPrice}")	

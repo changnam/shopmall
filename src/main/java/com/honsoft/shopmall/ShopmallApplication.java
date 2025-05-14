@@ -121,7 +121,19 @@ public class ShopmallApplication implements CommandLineRunner {
 			customer1 = Customer.builder().customerId("cngoh").name("changnamgo").build();
 			Address address1 = Address.builder().addressName("home").country("seoul").customer(customer1).build();
 			customer1.getAddresses().add(address1);
+			Address address2 = Address.builder().addressName("office").country("jeju").customer(customer1).build();
+			customer1.getAddresses().add(address2);
 			customerRepository.save(customer1);
+		}
+		
+		Customer customer2 = customerRepository.findById("ykgoh").orElse(null);
+		if (customer2 == null) {
+			customer2 = Customer.builder().customerId("ykgoh").name("youngkyung").build();
+			Address address1 = Address.builder().addressName("home").country("seoul").customer(customer2).build();
+			customer2.getAddresses().add(address1);
+			Address address2 = Address.builder().addressName("office").country("seoul").customer(customer2).build();
+			customer2.getAddresses().add(address2);
+			customerRepository.save(customer2);
 		}
 
 	}

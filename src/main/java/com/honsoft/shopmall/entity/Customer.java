@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +31,7 @@ public class Customer {
 //	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String customerId;
 	
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	private String name;              //고객명
 	    
 	private String phone;             //고객전화번호

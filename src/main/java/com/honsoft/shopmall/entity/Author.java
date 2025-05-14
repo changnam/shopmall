@@ -16,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +35,7 @@ public class Author {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long authorId;
 
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	private String name;
 	private String genre;
 	private Integer age;
