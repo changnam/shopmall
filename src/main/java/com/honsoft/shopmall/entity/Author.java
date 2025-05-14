@@ -41,7 +41,8 @@ public class Author {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "author", orphanRemoval = true)
 	@JsonManagedReference
-	private List<Book> books;
+	@Builder.Default
+	private List<Book> books = new ArrayList<>();
 
 	public void addBook(Book book) {
 		this.books.add(book);

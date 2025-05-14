@@ -38,7 +38,8 @@ public class Customer {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "customer", orphanRemoval = true)
 	@JsonManagedReference //serialization 할때 Customer -> Address -> Customer -> 무한반복 방지
-	private List<Address> addresses;
+	@Builder.Default
+	private List<Address> addresses = new ArrayList<>();
 	
 	
 }
