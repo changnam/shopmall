@@ -2,6 +2,7 @@ package com.honsoft.shopmall.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,7 @@ public class Address {
 	
 	private String zipCode;        //우편번호	
 	
+	@Column(unique = true,nullable = false)
 	private String addressName;   //주소 
 	
 	private String detailName;     //세부주소	

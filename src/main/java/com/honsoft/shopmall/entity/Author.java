@@ -39,7 +39,7 @@ public class Author {
 	private String genre;
 	private Integer age;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "eauthor", orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "author", orphanRemoval = true)
 	@JsonManagedReference
 	private List<Book> books;
 

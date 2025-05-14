@@ -38,10 +38,10 @@ public interface BookMapper {
 //        }
 //    }
 	
-	@Mapping(source = "eauthor", target="author")
+	@Mapping(source = "author.authorId", target="authorId")
 	BookDto toDto(Book book);
 	
-	@Mapping(source = "author", target="eauthor")
+//	@Mapping(source = "authorId", target="author")
 	@Mapping(target = "author", ignore = true)
 	Book toEntity(BookDto bookDto);
 	

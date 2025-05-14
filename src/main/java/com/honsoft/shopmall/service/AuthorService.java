@@ -141,7 +141,7 @@ public class AuthorService {
         for (BookDto bookDto : dto.getBooks()) {
             Book book = new Book();
             book.setTitle(bookDto.getTitle());  //book dto 의 내용을 book entity 로 셋팅
-            book.setEauthor(existing);
+            book.setAuthor(existing);
             existing.getBooks().add(book);
         }
 

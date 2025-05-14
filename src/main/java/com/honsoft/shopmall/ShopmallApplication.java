@@ -14,7 +14,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.honsoft.shopmall.entity.Address;
+import com.honsoft.shopmall.entity.Customer;
+import com.honsoft.shopmall.repository.AddressRepository;
 import com.honsoft.shopmall.repository.BookRepositoryManual;
+import com.honsoft.shopmall.repository.CustomerRepository;
 import com.honsoft.shopmall.repository.MemberRepository;
 import com.honsoft.shopmall.repository.PersonRepository;
 import com.honsoft.shopmall.service.BookService;
@@ -30,12 +34,16 @@ public class ShopmallApplication implements CommandLineRunner{
 	private final PersonRepository personRepository;
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final CustomerRepository customerRepository;
+	private final AddressRepository addressRepository;
 	
-	public ShopmallApplication(BookRepositoryManual bookRepository,PersonRepository personRepository,MemberRepository memberRepository,PasswordEncoder passwordEncoder) {
+	public ShopmallApplication(BookRepositoryManual bookRepository,PersonRepository personRepository,MemberRepository memberRepository,PasswordEncoder passwordEncoder,CustomerRepository customerRepository,AddressRepository addressRepository) {
 		this.bookRepository = bookRepository;
 		this.personRepository = personRepository;
 		this.memberRepository = memberRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.customerRepository = customerRepository;
+		this.addressRepository = addressRepository;
 	}
 	
 	public static void main(String[] args) {
@@ -101,9 +109,14 @@ public class ShopmallApplication implements CommandLineRunner{
 //		member.setName("changnam go");
 //		member.setPassword(passwordEncoder.encode("password"));
 //		member.setPhone("010");
-//		member.setRole(Role.USER);
+//		member.setRole(Role.USER);s
 //		
 //		memberRepository.save(member);
+		
+		Customer customer1 = Customer.builder().customerId("cngoh").name("changnamgo").build();
+		Address address1 = Address.builder().addressName("home").country("seoul").customer(customer1).build();
+		customerRepository.save(customer1);
+		addressRepository.save(address1);
 		
 	}
 

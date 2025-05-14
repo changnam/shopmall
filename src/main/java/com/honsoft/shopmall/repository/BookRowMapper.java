@@ -19,7 +19,7 @@ public class BookRowMapper implements RowMapper<Book>{
 		   book.setBookId(rs.getString(1));
 		   book.setName(rs.getString(2));
 		   book.setUnitPrice(new BigDecimal(rs.getInt(3)));
-		   book.setAuthor(rs.getString(4));
+//		   book.setAuthor(rs.getString(4));
 		   book.setDescription(rs.getString(5));
 		   book.setPublisher(rs.getString(6));
 		   book.setCategory(rs.getString(7));

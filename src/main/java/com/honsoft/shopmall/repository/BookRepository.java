@@ -14,10 +14,10 @@ import com.honsoft.shopmall.entity.Book;
 public interface BookRepository extends JpaRepository<Book, String>{
 	Boolean existsByBookId(String bookId);
 	
-	@Query("select b from Book b join b.eauthor a where a.name = :name")
+	@Query("select b from Book b join b.author a where a.name = :name")
 	Page<Book> getBooksByAuthorName(@Param("name") String name, Pageable pageable);
 	
-	@Query("select b from Book b join b.eauthor a where a.name = :name")
+	@Query("select b from Book b join b.author a where a.name = :name")
 	List<Book> getBooksByAuthorName(@Param("name") String name);
 
 }

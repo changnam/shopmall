@@ -44,7 +44,7 @@ public class Book  implements Serializable {
 	private String bookId; //도서ID
 	
 	@Size(min=4, max=50, message="{Size.book.name}")
-	@Column(name = "b_name")
+	@Column(name = "b_name", unique = true, nullable = false)
 	private String name; // 도서명
 	
 	@Min(value=0, message="{Min.book.unitPrice}")	

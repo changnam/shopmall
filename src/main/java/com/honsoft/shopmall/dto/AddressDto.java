@@ -8,5 +8,5 @@ import lombok.Data;
 public class AddressDto {
 	private Long addressId;
 	private String country;
-	private Long customerId;
+	private String customerId;
 }
