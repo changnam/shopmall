@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "addresses", uniqueConstraints = @UniqueConstraint(columnNames = { "customer_id", "addressName" }))
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"customer"})
 public class Address {
 
 	// private static final long serialVersionUID = 613846598817670033L;

@@ -29,7 +29,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = { "books" })
+@ToString
 public class Author {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

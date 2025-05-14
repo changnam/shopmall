@@ -32,7 +32,7 @@ import lombok.ToString;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"author"})
 @Builder
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "author_id", "b_name" }))
 public class Book  implements Serializable {
