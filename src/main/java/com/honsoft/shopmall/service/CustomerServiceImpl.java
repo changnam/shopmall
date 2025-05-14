@@ -6,12 +6,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.honsoft.shopmall.dto.AddressDto;
 import com.honsoft.shopmall.dto.CustomerDto;
 import com.honsoft.shopmall.entity.Address;
 import com.honsoft.shopmall.entity.Customer;
 import com.honsoft.shopmall.exception.NotFoundException;
+import com.honsoft.shopmall.mapper.AddressMapper;
 import com.honsoft.shopmall.mapper.CustomerMapper;
 import com.honsoft.shopmall.repository.CustomerRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -19,10 +24,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 	private final CustomerRepository customerRepository;
 	private final CustomerMapper customerMapper;
+	private final AddressMapper addressMapper;
 
-	public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+	public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper,AddressMapper addressMapper) {
 		this.customerRepository = customerRepository;
 		this.customerMapper = customerMapper;
+		this.addressMapper = addressMapper;
 	}
 
 	@Override
@@ -60,9 +67,25 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
+	@Transactional
 	public CustomerDto updateCustomer(String customerId, CustomerDto customerDto) {
-		// TODO Auto-generated method stub
-		return null;
+		Customer customer = customerRepository.findById(customerId)
+				.orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+		// Update basic fields
+		customer.setName(customerDto.getName());
+
+		// Clear and repopulate addresses (simple but safe way)
+		customer.getAddresses().clear();  //주소만 따로 변경할지 여부에 따라서 적용 고려해야 함
+
+		for (AddressDto addressDto : customerDto.getAddresses()) {
+			Address address = addressMapper.toEntity(addressDto);
+			address.setCustomer(customer); // very important
+			customer.getAddresses().add(address);
+		}
+
+		Customer updatedCustomer = customerRepository.save(customer);
+		return customerMapper.toDto(updatedCustomer);
 	}
 
 	@Override
