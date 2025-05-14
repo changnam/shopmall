@@ -15,17 +15,21 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.honsoft.shopmall.dto.CustomerDto;
+import com.honsoft.shopmall.dto.RoleDto;
 import com.honsoft.shopmall.dto.UserDto;
 import com.honsoft.shopmall.entity.Address;
 import com.honsoft.shopmall.entity.Customer;
+import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
 import com.honsoft.shopmall.mapper.CustomerMapper;
+import com.honsoft.shopmall.mapper.RoleMapper;
 import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.AddressRepository;
 import com.honsoft.shopmall.repository.BookRepositoryManual;
 import com.honsoft.shopmall.repository.CustomerRepository;
 import com.honsoft.shopmall.repository.MemberRepository;
 import com.honsoft.shopmall.repository.PersonRepository;
+import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
 import com.honsoft.shopmall.service.BookService;
 import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
@@ -46,11 +50,13 @@ public class ShopmallApplication implements CommandLineRunner {
 	private final CustomerMapper customerMapper;
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
+	private final RoleRepository roleRepository;
+	private final RoleMapper roleMapper;
 
 	public ShopmallApplication(BookRepositoryManual bookRepository, PersonRepository personRepository,
 			MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomerRepository customerRepository,
 			AddressRepository addressRepository, CustomerMapper customerMapper, UserRepository userRepository,
-			UserMapper userMapper) {
+			UserMapper userMapper, RoleRepository roleRepositoy, RoleMapper roleMapper) {
 		this.bookRepository = bookRepository;
 		this.personRepository = personRepository;
 		this.memberRepository = memberRepository;
@@ -60,6 +66,8 @@ public class ShopmallApplication implements CommandLineRunner {
 		this.customerMapper = customerMapper;
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
+		this.roleRepository = roleRepositoy;
+		this.roleMapper = roleMapper;
 	}
 
 	public static void main(String[] args) {
@@ -139,7 +147,7 @@ public class ShopmallApplication implements CommandLineRunner {
 			customer1.getAddresses().add(address2);
 			customerRepository.save(customer1);
 		}
-		
+
 		Customer customer2 = customerRepository.findById("ykgoh").orElse(null);
 		if (customer2 == null) {
 			CustomerDto customerDto = CustomerDto.builder().customerId("ykgoh").name("youngkyung").build();
@@ -158,6 +166,20 @@ public class ShopmallApplication implements CommandLineRunner {
 			userRepository.save(user);
 		}
 		
+		User admin = userRepository.findById("admin").orElse(null);
+		if (admin == null) {
+			UserDto adminDto = UserDto.builder().userId("admin").password(passwordEncoder.encode("pass")).build();
+			admin = userMapper.toEntity(adminDto);
+			userRepository.save(admin);
+		}
+
+		Role role = roleRepository.findById("admin").orElse(null);
+		if (role == null) {
+			RoleDto roleDto = RoleDto.builder().roleId("admin").name("어드민롤").build();
+			role = roleMapper.toEntity(roleDto);
+			roleRepository.save(role);
+		}
+
 	}
 
 	@Autowired
