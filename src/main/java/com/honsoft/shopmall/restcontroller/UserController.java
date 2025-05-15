@@ -4,6 +4,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +37,13 @@ public class UserController {
 		return ResponseEntity.ok(list);
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/page")
+	public ResponseEntity<Page<UserDto>> getPageUsers( @PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable){
+		Page<UserDto> list = userService.getPageUsers(pageable);
+		return ResponseEntity.ok(list);
+	}
+	
+	@GetMapping("/id/{id}")
 	public ResponseEntity<UserDto> getUserById(@PathVariable("id") String UserId){
 		UserDto UserDto = userService.getUserById(UserId);
 		return ResponseEntity.ok(UserDto);

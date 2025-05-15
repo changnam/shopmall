@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.honsoft.shopmall.dto.UserDto;
@@ -114,6 +116,13 @@ public class UserServiceImpl implements UserService {
 
 	    user.getUserRoles().removeIf(userRole -> userRole.getRole().getRoleId().equals(roleId));
 	    userRepository.save(user);
+	}
+
+	@Override
+	public Page<UserDto> getPageUsers(Pageable pageable) {
+		Page<User> users = userRepository.findAll(pageable);
+		Page<UserDto> dtos = userMapper.toPage(users);
+		return dtos;
 	}
 
 

@@ -10,10 +10,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
-import com.honsoft.shopmall.dto.PermissionDto;
 import com.honsoft.shopmall.dto.UserDto;
-import com.honsoft.shopmall.entity.Permission;
 import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
 import com.honsoft.shopmall.entity.UserRole;
@@ -35,6 +34,10 @@ public abstract class UserMapper {
     public abstract List<UserDto> toDtoList(List<User> users);
     
     public abstract List<User> toEntityList(List<UserDto> userDtos);
+    
+    public Page<UserDto> toPage(Page<User> users) {
+        return users.map(this::toDto);
+    }
 	
     @AfterMapping
     protected void mapRoles(UserDto dto, @MappingTarget User user) {
