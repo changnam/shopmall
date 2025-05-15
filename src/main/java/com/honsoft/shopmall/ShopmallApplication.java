@@ -1,6 +1,8 @@
 package com.honsoft.shopmall;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +16,21 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.honsoft.shopmall.dto.CustomerDto;
+import com.honsoft.shopmall.dto.PermissionDto;
 import com.honsoft.shopmall.dto.RoleDto;
 import com.honsoft.shopmall.dto.UserDto;
-import com.honsoft.shopmall.entity.Address;
-import com.honsoft.shopmall.entity.Customer;
+import com.honsoft.shopmall.entity.Permission;
 import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
 import com.honsoft.shopmall.mapper.CustomerMapper;
+import com.honsoft.shopmall.mapper.PermissionMapper;
 import com.honsoft.shopmall.mapper.RoleMapper;
 import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.AddressRepository;
 import com.honsoft.shopmall.repository.BookRepositoryManual;
 import com.honsoft.shopmall.repository.CustomerRepository;
 import com.honsoft.shopmall.repository.MemberRepository;
+import com.honsoft.shopmall.repository.PermissionRepository;
 import com.honsoft.shopmall.repository.PersonRepository;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
@@ -52,11 +55,13 @@ public class ShopmallApplication implements CommandLineRunner {
 	private final UserMapper userMapper;
 	private final RoleRepository roleRepository;
 	private final RoleMapper roleMapper;
+	private final PermissionRepository permissionRepository;
+	private final PermissionMapper permissionMapper;
 
 	public ShopmallApplication(BookRepositoryManual bookRepository, PersonRepository personRepository,
 			MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomerRepository customerRepository,
 			AddressRepository addressRepository, CustomerMapper customerMapper, UserRepository userRepository,
-			UserMapper userMapper, RoleRepository roleRepositoy, RoleMapper roleMapper) {
+			UserMapper userMapper, RoleRepository roleRepositoy, RoleMapper roleMapper,PermissionRepository permissionRepository,PermissionMapper permissionMapper) {
 		this.bookRepository = bookRepository;
 		this.personRepository = personRepository;
 		this.memberRepository = memberRepository;
@@ -68,6 +73,8 @@ public class ShopmallApplication implements CommandLineRunner {
 		this.userMapper = userMapper;
 		this.roleRepository = roleRepositoy;
 		this.roleMapper = roleMapper;
+		this.permissionRepository = permissionRepository;
+		this.permissionMapper = permissionMapper;
 	}
 
 	public static void main(String[] args) {
@@ -137,48 +144,70 @@ public class ShopmallApplication implements CommandLineRunner {
 //		
 //		memberRepository.save(member);
 
-		Customer customer1 = customerRepository.findById("cngoh").orElse(null);
-		if (customer1 == null) {
-			CustomerDto customerDto = CustomerDto.builder().customerId("cngoh").name("changnam").build();
-			customer1 = customerMapper.toEntity(customerDto);
-			Address address1 = Address.builder().addressName("home").country("seoul").customer(customer1).build();
-			customer1.getAddresses().add(address1);
-			Address address2 = Address.builder().addressName("office").country("jeju").customer(customer1).build();
-			customer1.getAddresses().add(address2);
-			customerRepository.save(customer1);
-		}
-
-		Customer customer2 = customerRepository.findById("ykgoh").orElse(null);
-		if (customer2 == null) {
-			CustomerDto customerDto = CustomerDto.builder().customerId("ykgoh").name("youngkyung").build();
-			customer2 = customerMapper.toEntity(customerDto);
-			Address address1 = Address.builder().addressName("home").country("seoul").customer(customer2).build();
-			customer2.getAddresses().add(address1);
-			Address address2 = Address.builder().addressName("office").country("seoul").customer(customer2).build();
-			customer2.getAddresses().add(address2);
-			customerRepository.save(customer2);
-		}
-
-		User user = userRepository.findById("cngoh").orElse(null);
-		if (user == null) {
-			UserDto userDto = UserDto.builder().userId("cngoh").password(passwordEncoder.encode("pass")).build();
-			user = userMapper.toEntity(userDto);
-			userRepository.save(user);
-		}
+//		Customer customer1 = customerRepository.findById("cngoh").orElse(null);
+//		if (customer1 == null) {
+//			CustomerDto customerDto = CustomerDto.builder().customerId("cngoh").name("changnam").build();
+//			customer1 = customerMapper.toEntity(customerDto);
+//			Address address1 = Address.builder().addressName("home").country("seoul").customer(customer1).build();
+//			customer1.getAddresses().add(address1);
+//			Address address2 = Address.builder().addressName("office").country("jeju").customer(customer1).build();
+//			customer1.getAddresses().add(address2);
+//			customerRepository.save(customer1);
+//		}
+//
+//		Customer customer2 = customerRepository.findById("ykgoh").orElse(null);
+//		if (customer2 == null) {
+//			CustomerDto customerDto = CustomerDto.builder().customerId("ykgoh").name("youngkyung").build();
+//			customer2 = customerMapper.toEntity(customerDto);
+//			Address address1 = Address.builder().addressName("home").country("seoul").customer(customer2).build();
+//			customer2.getAddresses().add(address1);
+//			Address address2 = Address.builder().addressName("office").country("seoul").customer(customer2).build();
+//			customer2.getAddresses().add(address2);
+//			customerRepository.save(customer2);
+//		}
+//		api_admin_001, /api/admin/**, "api admin get", "GET"
+//		Permission permission = permissionRepository.findById("api_admin_001").orElse(null);
+//		if (permission == null) {
+//			PermissionDto permissionDto = PermissionDto.builder().permissionId("api_admin_001").path("/api/admin/**").name("api admin get").httpMethod("GET").build();
+//			permission = permissionMapper.toEntity(permissionDto);
+//			permissionRepository.save(permission);
+//		}
+//		
+//		Role role = roleRepository.findById("admin").orElse(null);
+//		if (role == null) {
+//			RoleDto roleDto = new RoleDto();
+//			roleDto.setRoleId("admin");
+//			roleDto.setName("어드민롤");
+//			role = roleMapper.toEntity(roleDto);
+//			roleRepository.save(role);
+//		}
 		
-		User admin = userRepository.findById("admin").orElse(null);
-		if (admin == null) {
-			UserDto adminDto = UserDto.builder().userId("admin").password(passwordEncoder.encode("pass")).build();
-			admin = userMapper.toEntity(adminDto);
-			userRepository.save(admin);
-		}
+//		User user = userRepository.findById("cngoh").orElse(null);
+//		if (user == null) {
+//			UserDto userDto = UserDto.builder().userId("cngoh").password(passwordEncoder.encode("pass")).build();
+//			user = userMapper.toEntity(userDto);
+//			userRepository.save(user);
+//		}
+		
+//		User admin = userRepository.findById("admin").orElse(null);
+//		if (admin == null) {
+//			UserDto adminDto = new UserDto();
+//			adminDto.setUserId("admin");
+//			adminDto.setPassword(passwordEncoder.encode("pass"));
+//			adminDto.setRoleIds(new ArrayList<>(List.of("admin", "banana", "cherry")));
+//			admin = userMapper.toEntity(adminDto);
+//			
+//			// Optionally add this user to each role.users set if bidirectional
+//			List<Role> adminRoles = admin.getRoles();
+//			for (Role adminRole : adminRoles) {
+//				adminRole.getUsers().add(admin); // Needed for bidirectional sync
+//			}
+//			
+//			userRepository.save(admin);
+//		}
 
-		Role role = roleRepository.findById("admin").orElse(null);
-		if (role == null) {
-			RoleDto roleDto = RoleDto.builder().roleId("admin").name("어드민롤").build();
-			role = roleMapper.toEntity(roleDto);
-			roleRepository.save(role);
-		}
+		
+		
 
 	}
 

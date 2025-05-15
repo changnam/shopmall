@@ -1,15 +1,12 @@
 package com.honsoft.shopmall.entity;
 
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -28,9 +25,13 @@ public class Role {
 	
 	private String name;
 	
-	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+//	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+//	@JoinTable(name="role_permissions",joinColumns = @JoinColumn(name="role_id"),inverseJoinColumns = @JoinColumn(name = "permission_id"))
+//	private List<Permission> permissions;
+//	
+	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
 	@JsonManagedReference
-	private List<Permission> permissions;
+    private List<RolePermission> rolePermissions;
 	
 	@ManyToMany(mappedBy = "roles")
     private List<User> users;

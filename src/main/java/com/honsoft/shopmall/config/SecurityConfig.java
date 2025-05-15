@@ -83,6 +83,28 @@ public class SecurityConfig {
 		return http.build();
 
 	}
+	
+//	List<Permission> permissions = permissionRepository.findAll();
+//
+//    ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry authorize = http
+//        .csrf(csrf -> csrf.disable())
+//        .authorizeHttpRequests(authz -> {
+//            for (Permission permission : permissions) {
+//                authz
+//                    .requestMatchers(HttpMethod.valueOf(permission.getHttpMethod().toUpperCase()), permission.getPath())
+//                    .hasRole(permission.getRole().getName());
+//            }
+//
+//            authz
+//                .anyRequest().authenticated();
+//        });
+//
+//    http
+//        .userDetailsService(userDetailsService)
+//        .formLogin(withDefaults());
+//
+//    return http.build();
+    
 
 	@Bean
 	public WebSecurityCustomizer webSecurity() {
