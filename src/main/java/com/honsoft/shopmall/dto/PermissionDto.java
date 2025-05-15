@@ -1,5 +1,6 @@
 package com.honsoft.shopmall.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PermissionDto {
@@ -17,5 +18,7 @@ public class PermissionDto {
 	private String name;
 	private String path;
 	private String httpMethod;
+	
+	private List<String> roleIds = new ArrayList<>();
 
 }

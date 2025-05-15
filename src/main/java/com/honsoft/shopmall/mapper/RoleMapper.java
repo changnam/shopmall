@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,8 +24,10 @@ public abstract class RoleMapper {
     @Autowired
     protected PermissionRepository permissionRepository;
 
+    @Mapping(target = "permissionIds", ignore = true)
     public abstract RoleDto toDto(Role role);
 
+    @Mapping(target = "rolePermissions", ignore = true)
     public abstract Role toEntity(RoleDto roleDto);
     
     public abstract List<RoleDto> toDtoList(List<Role> roles);

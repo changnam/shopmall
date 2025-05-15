@@ -39,8 +39,10 @@ public class PermissionServiceImpl implements PermissionService{
 
 	@Override
 	public List<PermissionDto> getAllPermissions() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Permission> permissions = permissionRepository.findAll();
+		List<PermissionDto> dtos = permissionMapper.toDtoList(permissions);
+		
+		return dtos;
 	}
 
 	@Override
