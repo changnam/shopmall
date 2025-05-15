@@ -16,6 +16,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.PostConstruct;
+import net.coobird.thumbnailator.Thumbnails;
 
 @Component
 public class FileUploadUtil {
@@ -54,6 +55,9 @@ public class FileUploadUtil {
 			try (InputStream in = file.getInputStream();
 					OutputStream out = new FileOutputStream(uploadPath + File.separator + savedFileName)) {
 				FileCopyUtils.copy(in, out);
+
+				Thumbnails.of(new File(uploadPath + File.separator + savedFileName)).size(100, 100)
+						.toFile(uploadPath + File.separator + "s_" + savedFileName);
 				result.add(savedFileName);
 			} catch (Exception e) {
 				logger.error(e.getMessage());

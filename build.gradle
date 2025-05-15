@@ -50,6 +50,7 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
     
+    implementation group: 'net.coobird',name: 'thumbnailator', version: '0.4.20'
 }
 
 tasks.named('test') {
