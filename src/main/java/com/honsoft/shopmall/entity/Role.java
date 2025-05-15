@@ -32,8 +32,8 @@ public class Role {
 	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
 	@JsonManagedReference
     private List<RolePermission> rolePermissions;
-	
-	@ManyToMany(mappedBy = "roles")
-    private List<User> users;
     
+	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+	@JsonManagedReference
+    private List<UserRole> userRoles;
 }

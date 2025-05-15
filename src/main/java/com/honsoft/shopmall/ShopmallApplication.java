@@ -173,14 +173,14 @@ public class ShopmallApplication implements CommandLineRunner {
 //			permissionRepository.save(permission);
 //		}
 //		
-//		Role role = roleRepository.findById("admin").orElse(null);
-//		if (role == null) {
-//			RoleDto roleDto = new RoleDto();
-//			roleDto.setRoleId("admin");
-//			roleDto.setName("어드민롤");
-//			role = roleMapper.toEntity(roleDto);
-//			roleRepository.save(role);
-//		}
+		Role role = roleRepository.findById("admin").orElse(null);
+		if (role == null) {
+			RoleDto roleDto = new RoleDto();
+			roleDto.setRoleId("admin");
+			roleDto.setName("어드민롤");
+			role = roleMapper.toEntity(roleDto);
+			roleRepository.save(role);
+		}
 		
 //		User user = userRepository.findById("cngoh").orElse(null);
 //		if (user == null) {
@@ -194,7 +194,7 @@ public class ShopmallApplication implements CommandLineRunner {
 			UserDto adminDto = new UserDto();
 			adminDto.setUserId("admin");
 			adminDto.setPassword(passwordEncoder.encode("pass"));
-			adminDto.setRoleIds(new ArrayList<>(List.of("admin", "banana", "cherry")));
+			adminDto.setRoleIds(new ArrayList<>(List.of("admin")));
 			admin = userMapper.toEntity(adminDto);
 			
 			// Optionally add this user to each role.users set if bidirectional

@@ -53,7 +53,7 @@ public class PermissionServiceImpl implements PermissionService{
 
 	@Override
 	public void deletePermissionById(String permissionId) {
-		// TODO Auto-generated method stub
+		permissionRepository.deleteById(permissionId);
 		
 	}
 

@@ -1,5 +1,6 @@
 package com.honsoft.shopmall.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.honsoft.shopmall.dto.UserDto;
 import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
+import com.honsoft.shopmall.entity.UserRole;
+import com.honsoft.shopmall.entity.UserRoleId;
 import com.honsoft.shopmall.mapper.RoleMapper;
 import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.RoleRepository;
@@ -76,7 +79,13 @@ public class UserServiceImpl implements UserService {
 	    Role role = roleRepository.findById(roleId)
 	        .orElseThrow(() -> new RuntimeException("Role not found"));
 
-	    user.getRoles().add(role);
+	    UserRole userRole = new UserRole();
+        userRole.setRole(role);
+        userRole.setUser(user);
+        userRole.setId(new UserRoleId(role.getRoleId(), user.getUserId()));
+        userRole.setAssignedAt(LocalDateTime.now());
+        
+	    user.getUserRoles().add(userRole);
 	    userRepository.save(user);  // Handles join table automatically
 	}
 	
@@ -85,7 +94,7 @@ public class UserServiceImpl implements UserService {
 	    User user = userRepository.findById(userId)
 	        .orElseThrow(() -> new RuntimeException("User not found"));
 
-	    user.getRoles().removeIf(role -> role.getRoleId().equals(roleId));
+	    user.getUserRoles().removeIf(userRole -> userRole.getRole().getRoleId().equals(roleId));
 	    userRepository.save(user);
 	}
 

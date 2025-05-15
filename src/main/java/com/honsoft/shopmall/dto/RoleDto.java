@@ -13,5 +13,8 @@ import lombok.NoArgsConstructor;
 public class RoleDto {
 	private String roleId;
 	private String name;
+	
+	private List<String> userIds; // Optional if needed
+	
 	private List<String> permissionIds; // Optional if needed
 }
