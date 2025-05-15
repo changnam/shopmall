@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import com.honsoft.shopmall.dto.BookRequest;
+import com.honsoft.shopmall.exception.UploadNotSupportedException;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.validator.BookRequestValidator;
 
@@ -43,6 +44,10 @@ public class GlobalApiControllerAdvice {
 		return ResponseHandler.responseBuilder("file max size error", HttpStatus.BAD_REQUEST, e);
 	}
 	
+	@ExceptionHandler(UploadNotSupportedException.class)
+	public ResponseEntity<Object> handleUploadNotSupportedException(UploadNotSupportedException e){
+		return ResponseHandler.responseBuilder("upload file not supported", HttpStatus.BAD_REQUEST, e);
+	}
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		Object target = binder.getTarget();
