@@ -10,4 +10,6 @@ public interface PermissionService {
 	List<PermissionDto> getAllPermissions();
 	PermissionDto updatePermission(String permissionId, PermissionDto permissionDto);
 	void deletePermissionById(String permissionId);
+	void assignRoleToPermission(String permissionId, String roleId);
+	void removeRoleFromPermission(String permissionId, String roleId);
 }
