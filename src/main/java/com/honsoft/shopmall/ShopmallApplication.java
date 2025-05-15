@@ -189,22 +189,22 @@ public class ShopmallApplication implements CommandLineRunner {
 //			userRepository.save(user);
 //		}
 		
-//		User admin = userRepository.findById("admin").orElse(null);
-//		if (admin == null) {
-//			UserDto adminDto = new UserDto();
-//			adminDto.setUserId("admin");
-//			adminDto.setPassword(passwordEncoder.encode("pass"));
-//			adminDto.setRoleIds(new ArrayList<>(List.of("admin", "banana", "cherry")));
-//			admin = userMapper.toEntity(adminDto);
-//			
-//			// Optionally add this user to each role.users set if bidirectional
+		User admin = userRepository.findById("admin").orElse(null);
+		if (admin == null) {
+			UserDto adminDto = new UserDto();
+			adminDto.setUserId("admin");
+			adminDto.setPassword(passwordEncoder.encode("pass"));
+			adminDto.setRoleIds(new ArrayList<>(List.of("admin", "banana", "cherry")));
+			admin = userMapper.toEntity(adminDto);
+			
+			// Optionally add this user to each role.users set if bidirectional
 //			List<Role> adminRoles = admin.getRoles();
 //			for (Role adminRole : adminRoles) {
 //				adminRole.getUsers().add(admin); // Needed for bidirectional sync
 //			}
-//			
-//			userRepository.save(admin);
-//		}
+			
+			userRepository.save(admin);
+		}
 
 		
 		
