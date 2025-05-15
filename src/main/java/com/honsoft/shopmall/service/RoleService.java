@@ -11,4 +11,8 @@ public interface RoleService {
 	RoleDto getRoleById(String id);
 	RoleDto updateRole(String id, RoleDto roleDto);
 	void deleteRoleById(String id);
+	void assignUserToRole(String roleId, String userId);
+	void removeUserFromRole(String roleId, String userId);
+	void assignPermissionToRole(String roleId, String permissionId);
+	void removePermissionFromRole(String roleId, String permissionId);
 }
