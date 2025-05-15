@@ -50,8 +50,9 @@ public class PermissionServiceImpl implements PermissionService {
 
 	@Override
 	public PermissionDto getPermissionById(String permissionId) {
-		// TODO Auto-generated method stub
-		return null;
+		Permission permission = permissionRepository.findById(permissionId).orElseThrow(() -> new EntityNotFoundException(permissionId));
+		PermissionDto dto = permissionMapper.toDto(permission);
+		return dto;
 	}
 
 	@Override
