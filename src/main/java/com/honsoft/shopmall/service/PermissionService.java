@@ -12,4 +12,5 @@ public interface PermissionService {
 	void deletePermissionById(String permissionId);
 	void assignRoleToPermission(String permissionId, String roleId);
 	void removeRoleFromPermission(String permissionId, String roleId);
+	Integer deleteAllPermissionsByRoleId(String roleId);
 }

@@ -120,4 +120,11 @@ public class PermissionServiceImpl implements PermissionService {
 		permissionRepository.save(permission);
 	}
 
+	@Transactional
+	@Override
+	public Integer deleteAllPermissionsByRoleId(String roleId) {
+		Integer result = permissionRepository.deleteAllPermissionsByRoleId(roleId);
+		return result;
+	}
+
 }

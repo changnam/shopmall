@@ -34,20 +34,20 @@ public class PermissionController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<PermissionDto> getPermissionById(@PathVariable("id") String PermissionId){
-		PermissionDto PermissionDto = permissionService.getPermissionById(PermissionId);
-		return ResponseEntity.ok(PermissionDto);
+	public ResponseEntity<PermissionDto> getPermissionById(@PathVariable("id") String permissionId){
+		PermissionDto permissionDto = permissionService.getPermissionById(permissionId);
+		return ResponseEntity.ok(permissionDto);
 	}
 	
 	@PostMapping
-	public ResponseEntity<PermissionDto> createPermission(@RequestBody PermissionDto PermissionDto){
-		PermissionDto createdPermissionDto = permissionService.createPermission(PermissionDto);
+	public ResponseEntity<PermissionDto> createPermission(@RequestBody PermissionDto permissionDto){
+		PermissionDto createdPermissionDto = permissionService.createPermission(permissionDto);
 		return ResponseEntity.ok(createdPermissionDto);
 	}
 	
 	@PutMapping
-	public ResponseEntity<PermissionDto> updatePermission(@RequestBody PermissionDto PermissionDto){
-		PermissionDto updatedPermissionDto = permissionService.updatePermission(PermissionDto.getPermissionId(),PermissionDto);
+	public ResponseEntity<PermissionDto> updatePermission(@RequestBody PermissionDto permissionDto){
+		PermissionDto updatedPermissionDto = permissionService.updatePermission(permissionDto.getPermissionId(),permissionDto);
 		return ResponseEntity.ok(updatedPermissionDto);
 	}
 	
@@ -55,5 +55,11 @@ public class PermissionController {
 	public ResponseEntity<String> deletePermission(@RequestBody PermissionDto permissionDto){
 		permissionService.deletePermissionById(permissionDto.getPermissionId());
 		return ResponseEntity.ok(permissionDto.getPermissionId()+"  deleted");
+	}
+	
+	@GetMapping("/deleteallbyroleid/{id}")
+	public ResponseEntity<Integer> deleteAllPermissionsByRoleId(@PathVariable("id") String roleId){
+		int result = permissionService.deleteAllPermissionsByRoleId(roleId);
+		return ResponseEntity.ok(result);
 	}
 }
