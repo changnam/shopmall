@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,7 @@ public class PermissionController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<PermissionDto> createPermission(@RequestBody PermissionDto permissionDto){
+	public ResponseEntity<PermissionDto> createPermission(@Validated @RequestBody PermissionDto permissionDto){
 		PermissionDto createdPermissionDto = permissionService.createPermission(permissionDto);
 		return ResponseEntity.ok(createdPermissionDto);
 	}

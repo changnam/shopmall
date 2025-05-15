@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
@@ -21,6 +22,8 @@ public class Permission {
 	
 	private String name;
 	private String path;
+	
+	@Pattern(regexp = "GET|POST|DELETE|PUT")
 	private String httpMethod;
 	
 //	@ManyToMany(mappedBy = "permissions")
