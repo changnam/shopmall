@@ -16,6 +16,9 @@ import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
@@ -30,12 +33,14 @@ public class UserServiceImpl implements UserService {
 		this.roleMapper = roleMapper;
 	}
 
+	@Transactional
 //	@Override
 	public User signup(User user) {
 		// TODO Auto-generated method stub
 		return userRepository.save(user);
 	}
 
+	@Transactional
 	@Override
 	public UserDto createUser(UserDto userDto) {
 		User user = userMapper.toEntity(userDto);
@@ -55,22 +60,34 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto getUserById(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId));
+		UserDto userDto = userMapper.toDto(user);
+		return userDto;
 	}
 
+	@Transactional
 	@Override
 	public UserDto updateUser(String userId, UserDto userDto) {
-		// TODO Auto-generated method stub
-		return null;
+		User existingUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId));
+		User updatingUser = userMapper.toEntity(userDto);
+		existingUser.getUserRoles().clear();
+		existingUser.setEmail(updatingUser.getEmail());
+		existingUser.setEnabled(updatingUser.getEnabled());
+		existingUser.setName(updatingUser.getName());
+		//existingUser.setPassword(updatingUser.getPassword());
+		existingUser.setUserRoles(updatingUser.getUserRoles());
+		User updatedUser = userRepository.save(existingUser);
+		return userMapper.toDto(updatedUser);
 	}
 
+	@Transactional
 	@Override
 	public void deleteUserById(String userId) {
-		// TODO Auto-generated method stub
-		
+		User existingUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId));
+		userRepository.deleteById(userId);		
 	}
 
+	@Transactional
 	@Override
 	public void assignRoleToUser(String userId, String roleId) {
 	    User user = userRepository.findById(userId)
@@ -89,6 +106,7 @@ public class UserServiceImpl implements UserService {
 	    userRepository.save(user);  // Handles join table automatically
 	}
 	
+	@Transactional
 	@Override
 	public void removeRoleFromUser(String userId, String roleId) {
 	    User user = userRepository.findById(userId)
