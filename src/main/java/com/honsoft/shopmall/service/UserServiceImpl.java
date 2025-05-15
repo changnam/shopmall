@@ -6,18 +6,25 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.honsoft.shopmall.dto.UserDto;
+import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
+import com.honsoft.shopmall.mapper.RoleMapper;
 import com.honsoft.shopmall.mapper.UserMapper;
+import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
+	private final RoleRepository roleRepository;
 	private final UserMapper userMapper;
+	private final RoleMapper roleMapper;
 
-	public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, RoleMapper roleMapper) {
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
+		this.roleRepository = roleRepository;
+		this.roleMapper = roleMapper;
 	}
 
 //	@Override
@@ -60,5 +67,27 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void assignRoleToUser(String userId, String roleId) {
+	    User user = userRepository.findById(userId)
+	        .orElseThrow(() -> new RuntimeException("User not found"));
+
+	    Role role = roleRepository.findById(roleId)
+	        .orElseThrow(() -> new RuntimeException("Role not found"));
+
+	    user.getRoles().add(role);
+	    userRepository.save(user);  // Handles join table automatically
+	}
+	
+	@Override
+	public void removeRoleFromUser(String userId, String roleId) {
+	    User user = userRepository.findById(userId)
+	        .orElseThrow(() -> new RuntimeException("User not found"));
+
+	    user.getRoles().removeIf(role -> role.getRoleId().equals(roleId));
+	    userRepository.save(user);
+	}
+
 
 }

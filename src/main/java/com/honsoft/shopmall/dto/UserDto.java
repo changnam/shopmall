@@ -13,7 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 @Data
-@Builder
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
@@ -24,6 +24,6 @@ public class UserDto {
 	private String email;
 	private Boolean enabled;
 
-	@Builder.Default
-	private List<UserRole> userRoles = new ArrayList<>();
+//    @Builder.Default
+    private List<String> roleIds = new ArrayList<>(); // avoid exposing full Role entity
 }

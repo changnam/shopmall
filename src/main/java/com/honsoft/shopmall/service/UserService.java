@@ -10,4 +10,6 @@ public interface UserService {
 	UserDto getUserById(String userId);
 	UserDto updateUser(String userId, UserDto userDto);
 	void deleteUserById(String userId);
+	void assignRoleToUser(String userId, String roleId);
+	void removeRoleFromUser(String userId, String roleId);
 }
