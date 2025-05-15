@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,6 +48,14 @@ public class FileController {
 		return ResponseHandler.responseBuilder("file upload success", HttpStatus.OK, result);
 	}
 
+	@DeleteMapping("/delete/{fileName}")
+	public ResponseEntity<Object> deleteFile(@PathVariable("fileName") String fileName){
+		logger.info("delete file: {}",fileName);
+		
+		fileUploadUtil.deleteFile(fileName);
+		
+		return ResponseHandler.responseBuilder("file delete success",HttpStatus.OK, fileName);
+	}
 	private void checkFileType(String fileName) {
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
 		String regExp = "^(jpg|jpeg|JPG|JPEG|png|PNG|gif|GIF|bmp|BMP)";

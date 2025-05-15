@@ -65,4 +65,21 @@ public class FileUploadUtil {
 		}
 		return result;
 	}
+
+	public void deleteFile(String fileName) {
+		File file = new File(uploadPath + File.separator + fileName);
+		File thumbFile = new File(uploadPath + File.separator + "s_" + fileName);
+
+		try {
+			if (file.exists()) {
+				file.delete();
+			}
+
+			if (thumbFile.exists()) {
+				thumbFile.delete();
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+	}
 }
