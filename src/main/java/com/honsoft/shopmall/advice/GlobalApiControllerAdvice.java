@@ -10,6 +10,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.response.ResponseHandler;
@@ -25,18 +26,23 @@ public class GlobalApiControllerAdvice {
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	private ResponseEntity<Object> handleValidationError(MethodArgumentNotValidException e) {
+	public ResponseEntity<Object> handleValidationError(MethodArgumentNotValidException e) {
 		Map<String, Object> errors = new HashMap<>();
 		e.getBindingResult().getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(),fieldError.getDefaultMessage()));
 		return  ResponseHandler.responseBuilder("error occured", HttpStatus.BAD_REQUEST, errors);
 	}
 
 	@ExceptionHandler(RuntimeException.class)
-	private ResponseEntity<Object> handleErrorCommon(Exception e) {
+	public ResponseEntity<Object> handleErrorCommon(Exception e) {
 
 		return ResponseHandler.responseBuilder("error occured", HttpStatus.BAD_REQUEST, e);
 	}
 
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<?> handleMaxSizeException(MaxUploadSizeExceededException e){
+		return ResponseHandler.responseBuilder("file max size error", HttpStatus.BAD_REQUEST, e);
+	}
+	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		Object target = binder.getTarget();
