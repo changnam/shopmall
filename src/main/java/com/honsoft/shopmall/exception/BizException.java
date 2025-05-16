@@ -1,14 +1,21 @@
 package com.honsoft.shopmall.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public class BizException extends RuntimeException {
+    private final String code;
+    private final int status;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class BizException extends RuntimeException{
-	private String message;
-	private int code;
-	
+    public BizException(String code, String message, int status) {
+        super(message);
+        this.code = code;
+        this.status = status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public int getStatus() {
+        return status;
+    }
 }
+

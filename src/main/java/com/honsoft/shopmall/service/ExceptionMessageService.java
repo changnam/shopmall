@@ -17,7 +17,7 @@ public class ExceptionMessageService {
 
 	public BizException getException(String code) {
 		ExceptionMessage exceptionMessage = repository.findById(code)
-				.orElseThrow(() -> new BizException("Unknown error code: " + code, 500));
-		return new BizException(exceptionMessage.getMessage(), exceptionMessage.getHttpStatus());
+				.orElseThrow(() -> new BizException(code, "code not found", 500));
+		return new BizException(code, exceptionMessage.getMessage(), exceptionMessage.getHttpStatus());
 	}
 }

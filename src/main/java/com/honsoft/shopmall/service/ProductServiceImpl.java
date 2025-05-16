@@ -35,15 +35,17 @@ public class ProductServiceImpl implements ProductService {
 	private final ProductDetailMapper productDetailMapper;
 	private final ComputerMapper computerMapper;
 	private final CleanerMapper cleanerMapper;
+	private final BizExceptionMessageService bizExceptionMessageService;
 
 	public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper,
-			ProductImageMapper productImageMapper, ProductDetailMapper productDetailMapper,ComputerMapper computerMapper, CleanerMapper cleanerMapper) {
+			ProductImageMapper productImageMapper, ProductDetailMapper productDetailMapper,ComputerMapper computerMapper, CleanerMapper cleanerMapper,BizExceptionMessageService bizExceptionMessageService) {
 		this.productRepository = productRepository;
 		this.productMapper = productMapper;
 		this.productImageMapper = productImageMapper;
 		this.productDetailMapper = productDetailMapper;
 		this.computerMapper = computerMapper;
 		this.cleanerMapper = cleanerMapper;
+		this.bizExceptionMessageService = bizExceptionMessageService;
 	}
 
 	@Override
@@ -105,9 +107,8 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional
 	@Override
 	public void deleteProduct(Long productId) {
-		Product existing = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException(productId+" not found"));
+		Product existing = productRepository.findById(productId).orElseThrow(() -> bizExceptionMessageService.createLocalizedException("PRODUCT_NOT_FOUND"));
 		productRepository.delete(existing);
-		
 	}
 
 }
