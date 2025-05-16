@@ -9,10 +9,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.honsoft.shopmall.dto.ComputerDto;
 import com.honsoft.shopmall.dto.ProductDto;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.ProductService;
@@ -38,5 +39,11 @@ public class ProductController {
 			@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
 		Page<ProductDto> page = productService.getPageProducts(pageable);
 		return ResponseHandler.responseBuilder("ok", HttpStatus.OK, page);
+	}
+	
+	@PutMapping
+	public ResponseEntity<Object> updateProduct(@RequestBody ProductDto productDto){
+		ProductDto updated = productService.updateProduct(productDto.getProductId(), productDto);
+		return ResponseHandler.responseBuilder("update success", HttpStatus.OK, updated);
 	}
 }

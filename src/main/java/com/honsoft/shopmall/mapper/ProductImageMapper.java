@@ -8,7 +8,7 @@ import com.honsoft.shopmall.dto.ProductImageDto;
 import com.honsoft.shopmall.entity.ProductImage;
 
 @Mapper(componentModel = "spring")
-interface ProductImageMapper {
+public interface ProductImageMapper {
     ProductImageDto toDto(ProductImage image);
     ProductImage toEntity(ProductImageDto dto);
     

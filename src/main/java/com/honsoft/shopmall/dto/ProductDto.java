@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class ProductDto extends BaseEntityDto {
+public class ProductDto extends BaseEntityDto {
     protected Long productId;
     protected String name;
     protected BigDecimal unitPrice;

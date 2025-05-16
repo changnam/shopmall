@@ -16,5 +16,6 @@ public interface ProductService {
 	List<ComputerDto> getAllComputers();
 	List<CleanerDto> getAllCleaners();
 //	ProductDto getProductById(Long productId);
+	ProductDto updateProduct(Long productId,ProductDto productDto);
 	
 }
