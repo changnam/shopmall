@@ -1,5 +1,6 @@
 package com.honsoft.shopmall.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.honsoft.shopmall.dto.ProductDetailRequest;
 
 import jakarta.persistence.Entity;
@@ -34,6 +35,7 @@ public class ProductDetail {
 	@OneToOne
 	@JoinColumn(name = "product_id")
 	@MapsId
+	@JsonBackReference
 	private Product product;
 	
 	public ProductDetail(Float weight,Float height) {
