@@ -11,7 +11,7 @@ import com.honsoft.shopmall.entity.Cleaner;
 import com.honsoft.shopmall.entity.User;
 
 //And for your subclass:
-@Mapper(componentModel = "spring", uses = { ProductDetailMapper.class, ProductImageMapper.class })
+@Mapper(componentModel = "spring")
 public interface CleanerMapper {
 	CleanerDto toDto(Cleaner cleaner);
 

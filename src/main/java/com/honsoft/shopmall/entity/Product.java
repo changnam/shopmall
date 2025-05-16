@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -52,6 +53,10 @@ public abstract class Product extends BaseEntity{
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "product_images",joinColumns = @JoinColumn(name = "product_id"))
     private List<ProductImage> images;
+    
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonManagedReference
+    private List<Review> reviews;
     
     public void addImage(String fileName) {
     	ProductImage productImage = new ProductImage();

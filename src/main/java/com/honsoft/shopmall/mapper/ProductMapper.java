@@ -12,7 +12,7 @@ import com.honsoft.shopmall.entity.Cleaner;
 import com.honsoft.shopmall.entity.Computer;
 import com.honsoft.shopmall.entity.Product;
 
-@Mapper(componentModel = "spring", uses = { ProductDetailMapper.class, ProductImageMapper.class })
+@Mapper(componentModel = "spring", uses = { ProductDetailMapper.class, ProductImageMapper.class , ReviewMapper.class})
 public abstract class ProductMapper {
 
 	@Autowired

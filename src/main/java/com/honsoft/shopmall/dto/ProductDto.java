@@ -3,7 +3,7 @@ package com.honsoft.shopmall.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.honsoft.shopmall.entity.BaseEntity;
+import com.honsoft.shopmall.entity.Review;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +22,7 @@ public class ProductDto extends BaseEntityDto {
     protected ProductDetailDto productDetail;
 
     protected List<ProductImageDto> images;
+    
+    protected List<ReviewDto> reviews;
 }
 
