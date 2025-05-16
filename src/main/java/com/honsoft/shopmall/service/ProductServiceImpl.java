@@ -102,4 +102,12 @@ public class ProductServiceImpl implements ProductService {
 		return dto;
 	}
 
+	@Transactional
+	@Override
+	public void deleteProduct(Long productId) {
+		Product existing = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException(productId+" not found"));
+		productRepository.delete(existing);
+		
+	}
+
 }

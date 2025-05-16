@@ -17,5 +17,6 @@ public interface ProductService {
 	List<CleanerDto> getAllCleaners();
 //	ProductDto getProductById(Long productId);
 	ProductDto updateProduct(Long productId,ProductDto productDto);
+	void deleteProduct(Long productId);
 	
 }
