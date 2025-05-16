@@ -1,7 +1,7 @@
 package com.honsoft.shopmall.entity;
 
 import java.math.BigDecimal;
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -51,7 +51,7 @@ public abstract class Product extends BaseEntity{
     
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "product_images",joinColumns = @JoinColumn(name = "product_id"))
-    private Set<ProductImage> images;
+    private List<ProductImage> images;
     
     public void addImage(String fileName) {
     	ProductImage productImage = new ProductImage();
