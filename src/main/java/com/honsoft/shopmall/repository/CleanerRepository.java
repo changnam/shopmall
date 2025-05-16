@@ -5,10 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.honsoft.shopmall.entity.Computer;
+import com.honsoft.shopmall.entity.Cleaner;
 
 @Repository
-public interface ComputerRepository extends JpaRepository<Computer, Long>{
-
-	List<Computer> findByBrand(String brand);
+public interface CleanerRepository extends JpaRepository<Cleaner, Long>{
+	List<Cleaner> findByPowerRatingGreaterThan(int rating);
 }

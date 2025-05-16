@@ -18,6 +18,6 @@ public class Cleaner extends Product {
 	@Column(unique = true, nullable = false)
 	private String cleanerId;
     private String brand;
-    private Double power;
+    private Integer powerRating;
     
 }

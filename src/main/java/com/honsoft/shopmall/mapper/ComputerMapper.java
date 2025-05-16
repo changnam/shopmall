@@ -3,6 +3,7 @@ package com.honsoft.shopmall.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
 
 import com.honsoft.shopmall.dto.CleanerDto;
 import com.honsoft.shopmall.dto.ComputerDto;
@@ -19,4 +20,8 @@ public interface ComputerMapper {
 	List<ComputerDto> toDtoList(List<Computer> computers);
 
 	List<Computer> toEntityList(List<ComputerDto> computerDtos);
+	
+	default Page<ComputerDto> toPage(Page<Computer> computers) {
+		return computers.map(this::toDto);
+	}
 }

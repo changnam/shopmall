@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 public class CleanerDto extends ProductDto{
 	private String cleanerId;
     private String brand;
-    private Double power;
+    private Integer powerRating;
 }
