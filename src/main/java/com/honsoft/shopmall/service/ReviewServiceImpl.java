@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.honsoft.shopmall.dto.ReviewDto;
 import com.honsoft.shopmall.entity.Product;
 import com.honsoft.shopmall.entity.Review;
+import com.honsoft.shopmall.exception.BizExceptions;
 import com.honsoft.shopmall.mapper.ReviewMapper;
 import com.honsoft.shopmall.repository.ProductRepository;
 import com.honsoft.shopmall.repository.ReviewRepository;
@@ -96,7 +97,7 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public ReviewDto getReviewById(Long reviewId) {
 		Review existing = reviewRepository.findById(reviewId)
-				.orElseThrow(() -> new EntityNotFoundException(reviewId + " not found"));
+				.orElseThrow(BizExceptions.REVIEW_NOT_FOUND::get);
 		ReviewDto dto = reviewMapper.toDto(existing);
 		return dto;
 	}
