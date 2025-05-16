@@ -88,8 +88,17 @@ public class ReviewServiceImpl implements ReviewService {
 	@Transactional
 	@Override
 	public void deleteReview(Long reviewId) {
-		Review existing = reviewRepository.findById(reviewId).orElseThrow(()->new EntityNotFoundException(reviewId+" not found"));
+		Review existing = reviewRepository.findById(reviewId)
+				.orElseThrow(() -> new EntityNotFoundException(reviewId + " not found"));
 		reviewRepository.delete(existing);
+	}
+
+	@Override
+	public ReviewDto getReviewById(Long reviewId) {
+		Review existing = reviewRepository.findById(reviewId)
+				.orElseThrow(() -> new EntityNotFoundException(reviewId + " not found"));
+		ReviewDto dto = reviewMapper.toDto(existing);
+		return dto;
 	}
 
 }

@@ -32,9 +32,15 @@ public class ReviewController {
 	}
 
 	@PostMapping("/{id}")
-	public ResponseEntity<Object> addReviewToProduct(@PathVariable("id") Long productId,
+	public ResponseEntity<Object> addReviewToProductWithId(@PathVariable("id") Long productId,
 			@RequestBody ReviewDto reviewDto) {
 		ReviewDto created = reviewService.addReviewToProduct(productId, reviewDto);
+		return ResponseHandler.responseBuilder("review created", HttpStatus.OK, created);
+	}
+	
+	@PostMapping
+	public ResponseEntity<Object> addReviewToProduct(@RequestBody ReviewDto reviewDto) {
+		ReviewDto created = reviewService.addReviewToProduct(reviewDto.getProductId(), reviewDto);
 		return ResponseHandler.responseBuilder("review created", HttpStatus.OK, created);
 	}
 
@@ -50,15 +56,27 @@ public class ReviewController {
 		return ResponseHandler.responseBuilder("review get success", HttpStatus.OK, page);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/byproduct/{id}")
 	public ResponseEntity<Object> getReviewsByProductId(@PathVariable("id") Long productId) {
 		List<ReviewDto> reviewDtos = reviewService.getReviewsByProductId(productId);
 		return ResponseHandler.responseBuilder("review get success", HttpStatus.OK, reviewDtos);
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<Object> getReviewsById(@PathVariable("id") Long reviewId) {
+		ReviewDto reviewDto = reviewService.getReviewById(reviewId);
+		return ResponseHandler.responseBuilder("review get success", HttpStatus.OK, reviewDto);
+	}
+	
 	@PutMapping("/{id}")
-	public ResponseEntity<Object> updateReview(@PathVariable("id") Long reviewId,@RequestBody ReviewDto reviewDto){
+	public ResponseEntity<Object> updateReviewWithId(@PathVariable("id") Long reviewId,@RequestBody ReviewDto reviewDto){
 		ReviewDto updated = reviewService.updateReview(reviewId, reviewDto);
+		return ResponseHandler.responseBuilder("update success", HttpStatus.OK, updated);
+	}
+	
+	@PutMapping
+	public ResponseEntity<Object> updateReview(@RequestBody ReviewDto reviewDto){
+		ReviewDto updated = reviewService.updateReview(reviewDto.getProductId(), reviewDto);
 		return ResponseHandler.responseBuilder("update success", HttpStatus.OK, updated);
 	}
 	
