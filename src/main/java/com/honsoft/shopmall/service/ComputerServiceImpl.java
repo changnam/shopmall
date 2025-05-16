@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.honsoft.shopmall.dto.CleanerDto;
 import com.honsoft.shopmall.dto.ComputerDto;
-import com.honsoft.shopmall.entity.Cleaner;
 import com.honsoft.shopmall.entity.Computer;
 import com.honsoft.shopmall.mapper.ComputerMapper;
 import com.honsoft.shopmall.repository.ComputerRepository;
+
 
 @Service
 public class ComputerServiceImpl implements ComputerService {
@@ -34,6 +34,7 @@ public class ComputerServiceImpl implements ComputerService {
 		return dtos;
 	}
 
+	@Transactional
 	@Override
 	public ComputerDto createComputer(ComputerDto computerDto) {
 		Computer computer = computerMapper.toEntity(computerDto);

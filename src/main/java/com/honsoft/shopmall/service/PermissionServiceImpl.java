@@ -6,21 +6,19 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.honsoft.shopmall.dto.PermissionDto;
 import com.honsoft.shopmall.entity.Permission;
 import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.RolePermission;
 import com.honsoft.shopmall.entity.RolePermissionId;
-import com.honsoft.shopmall.entity.UserRole;
-import com.honsoft.shopmall.entity.UserRoleId;
 import com.honsoft.shopmall.mapper.PermissionMapper;
 import com.honsoft.shopmall.mapper.RoleMapper;
 import com.honsoft.shopmall.repository.PermissionRepository;
 import com.honsoft.shopmall.repository.RoleRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {

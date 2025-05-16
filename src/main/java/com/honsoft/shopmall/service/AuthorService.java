@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.honsoft.shopmall.dto.AuthorDto;
 import com.honsoft.shopmall.dto.BookDto;
@@ -18,8 +19,6 @@ import com.honsoft.shopmall.exception.NotFoundException;
 import com.honsoft.shopmall.mapper.AuthorMapper;
 import com.honsoft.shopmall.repository.AuthorRepository;
 import com.honsoft.shopmall.repository.BookRepository;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class AuthorService {

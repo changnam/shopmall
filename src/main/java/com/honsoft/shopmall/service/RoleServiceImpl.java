@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.honsoft.shopmall.dto.RoleDto;
 import com.honsoft.shopmall.entity.Permission;
@@ -22,7 +23,6 @@ import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 
 @Service
 public class RoleServiceImpl implements RoleService {

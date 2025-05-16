@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.honsoft.shopmall.dto.UserDto;
 import com.honsoft.shopmall.entity.Role;
@@ -19,7 +20,6 @@ import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {

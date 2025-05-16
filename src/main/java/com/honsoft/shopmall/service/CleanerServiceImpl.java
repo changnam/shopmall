@@ -7,11 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.honsoft.shopmall.dto.CleanerDto;
 import com.honsoft.shopmall.entity.Cleaner;
 import com.honsoft.shopmall.mapper.CleanerMapper;
 import com.honsoft.shopmall.repository.CleanerRepository;
+
 
 @Service
 public class CleanerServiceImpl implements CleanerService {
@@ -25,6 +27,7 @@ public class CleanerServiceImpl implements CleanerService {
 		this.cleanerMapper = cleanerMapper;
 	}
 
+	@Transactional
 	@Override
 	public CleanerDto createCleaner(CleanerDto cleanerDto) {
 		Cleaner cleaner = cleanerMapper.toEntity(cleanerDto);

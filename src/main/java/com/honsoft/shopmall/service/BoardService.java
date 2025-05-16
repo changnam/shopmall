@@ -9,12 +9,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.honsoft.shopmall.dto.BoardFormDto;
 import com.honsoft.shopmall.entity.Board;
 import com.honsoft.shopmall.repository.BoardRepository;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class BoardService  {
