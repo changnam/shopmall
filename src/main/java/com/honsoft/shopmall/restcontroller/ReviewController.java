@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.ReviewDto;
 import com.honsoft.shopmall.response.ResponseHandler;
+import com.honsoft.shopmall.service.ExceptionMessageService;
 import com.honsoft.shopmall.service.ReviewService;
 
 @RestController
@@ -26,9 +27,11 @@ import com.honsoft.shopmall.service.ReviewService;
 public class ReviewController {
 
 	private final ReviewService reviewService;
-
-	public ReviewController(ReviewService reviewService) {
+	private final ExceptionMessageService exceptionMessageService;
+	
+	public ReviewController(ReviewService reviewService,ExceptionMessageService exceptionMessageService) {
 		this.reviewService = reviewService;
+		this.exceptionMessageService = exceptionMessageService;
 	}
 
 	@PostMapping("/{id}")

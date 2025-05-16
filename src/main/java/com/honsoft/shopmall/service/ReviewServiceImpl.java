@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.honsoft.shopmall.dto.ReviewDto;
 import com.honsoft.shopmall.entity.Product;
 import com.honsoft.shopmall.entity.Review;
+import com.honsoft.shopmall.exception.BizExceptionCode;
 import com.honsoft.shopmall.exception.BizExceptions;
 import com.honsoft.shopmall.mapper.ReviewMapper;
 import com.honsoft.shopmall.repository.ProductRepository;
@@ -26,12 +27,14 @@ public class ReviewServiceImpl implements ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final ProductRepository productRepository;
 	private final ReviewMapper reviewMapper;
+	private final ExceptionMessageService exceptionMessageService;
 
 	public ReviewServiceImpl(ReviewRepository reviewRepository, ProductRepository productRepository,
-			ReviewMapper reviewMapper) {
+			ReviewMapper reviewMapper, ExceptionMessageService exceptionMessageService) {
 		this.reviewRepository = reviewRepository;
 		this.productRepository = productRepository;
 		this.reviewMapper = reviewMapper;
+		this.exceptionMessageService = exceptionMessageService;
 	}
 
 	@Transactional
@@ -90,14 +93,13 @@ public class ReviewServiceImpl implements ReviewService {
 	@Override
 	public void deleteReview(Long reviewId) {
 		Review existing = reviewRepository.findById(reviewId)
-				.orElseThrow(() -> new EntityNotFoundException(reviewId + " not found"));
+				.orElseThrow(() -> exceptionMessageService.getException(BizExceptionCode.REVIEW_NOT_FOUND.name()));
 		reviewRepository.delete(existing);
 	}
 
 	@Override
 	public ReviewDto getReviewById(Long reviewId) {
-		Review existing = reviewRepository.findById(reviewId)
-				.orElseThrow(BizExceptions.REVIEW_NOT_FOUND::get);
+		Review existing = reviewRepository.findById(reviewId).orElseThrow(BizExceptions.REVIEW_NOT_FOUND::get);
 		ReviewDto dto = reviewMapper.toDto(existing);
 		return dto;
 	}
