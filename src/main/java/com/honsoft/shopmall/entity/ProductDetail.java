@@ -1,12 +1,13 @@
 package com.honsoft.shopmall.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.honsoft.shopmall.dto.ProductDetailRequest;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
@@ -22,7 +23,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ProductDetail {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class ProductDetail {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -41,10 +43,6 @@ public class ProductDetail {
 	public ProductDetail(Float weight,Float height) {
 		this.weight = weight;
 		this.height = height;
-	}
-	
-	public static ProductDetail from(ProductDetailRequest productDetailRequest) {
-		return new ProductDetail(productDetailRequest.weight(), productDetailRequest.height());
 	}
 
 }
