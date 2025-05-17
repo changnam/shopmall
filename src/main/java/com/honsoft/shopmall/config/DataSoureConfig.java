@@ -4,6 +4,8 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -16,7 +18,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.honsoft.shopmall.entity.Board;
+import com.zaxxer.hikari.HikariDataSource;
 
 import jakarta.persistence.EntityManagerFactory;
 
@@ -24,6 +26,7 @@ import jakarta.persistence.EntityManagerFactory;
 @EnableJpaAuditing
 @EnableJpaRepositories(basePackages = "com.honsoft.shopmall.repository", entityManagerFactoryRef = "mysqlEntityManagerFactory", transactionManagerRef = "mysqlTransactionManager")
 public class DataSoureConfig {
+	private static final Logger logger = LoggerFactory.getLogger(DataSoureConfig.class);
 	
 	@Bean
 	@ConfigurationProperties("mysql.datasource")
@@ -33,7 +36,25 @@ public class DataSoureConfig {
 	
 	@Bean
 	public DataSource mysqlDataSource(@Qualifier("mysqlProperties") DataSourceProperties mysqlProperties) {
-		return mysqlProperties.initializeDataSourceBuilder().build();
+		HikariDataSource dataSource =  mysqlProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+		
+		dataSource.setMaximumPoolSize(10);
+		dataSource.setMinimumIdle(2);
+		
+//		springboot log 에 나타나는 아래 정보는 hibernate 가 connection 의 DatabaseMetaData 정보를 읽어서 보여주는 것임. hikari driver 정보가 아님
+//		HHH10001005: Database info:
+//			Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+//			Database driver: undefined/unknown
+//			Database version: 8.0.32
+//			Autocommit mode: undefined/unknown
+//			Isolation level: undefined/unknown
+//			Minimum pool size: undefined/unknown
+//			Maximum pool size: undefined/unknown
+			
+		logger.info("Max Pool Size: {}",dataSource.getMaximumPoolSize());
+		logger.info("Min Idle Size: {}",dataSource.getMinimumIdle());
+		
+		return dataSource;
 	}
 	
 	@Bean
