@@ -10,11 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDetailDto {
+	private Long productDetailId;
 	private String description;
 	private Float weight;
 	private Float height;
 	private Float width;
     // Add more fields based on ProductDetail entity
 	
-	private String productId;
+	private Long productId;
 }

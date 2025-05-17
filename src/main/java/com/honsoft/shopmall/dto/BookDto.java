@@ -2,6 +2,23 @@ package com.honsoft.shopmall.dto;
 
 import java.math.BigDecimal;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.honsoft.shopmall.entity.Author;
+import com.honsoft.shopmall.validator.BookId;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,5 +32,15 @@ public class BookDto {
     private String bookId;
     private String title;
     private BigDecimal unitPrice;
+	private String name; // 도서명
+	private String description; // 설명
+	private String publisher; // 출판사
+	private String category; // 분류	
+	private long unitsInStock; // 재고수	
+	private String releaseDate; // 출판일	
+	private String condition; // 상태 : 신규도서/E-Book/중고도서
+	private String fileName; //도서 이미지 파일	
+	private String isbn;
     private Long authorId; // nested mapping
+    
 }

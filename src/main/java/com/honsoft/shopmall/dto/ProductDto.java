@@ -3,14 +3,15 @@ package com.honsoft.shopmall.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.honsoft.shopmall.entity.Review;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class ProductDto extends BaseEntityDto {
     protected Long productId;
     protected String name;

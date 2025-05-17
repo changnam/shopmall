@@ -4,9 +4,6 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import com.honsoft.shopmall.dto.BookDto;
 import com.honsoft.shopmall.entity.Book;
@@ -43,6 +40,7 @@ public interface BookMapper {
 	
 //	@Mapping(source = "authorId", target="author")
 	@Mapping(target = "author", ignore = true)
+	@Mapping(target = "bookImage", ignore = true)
 	Book toEntity(BookDto bookDto);
 	
 	List<BookDto> toDtoList(List<Book> books);

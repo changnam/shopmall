@@ -14,4 +14,6 @@ public class AddressDto {
 	private String addressName;
 	private String country;
 	private String customerId;
+	private String zipCode;
+	private String detailName;
 }

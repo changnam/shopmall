@@ -2,6 +2,7 @@ package com.honsoft.shopmall.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,10 +25,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class ProductDetail {
+public class ProductDetail {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Column(name = "product_detail_id")
+	private Long productDetailId;
 	
 	private String description;
 	private Float weight;

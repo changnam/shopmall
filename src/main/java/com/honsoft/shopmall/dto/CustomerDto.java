@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class CustomerDto {
 	private String customerId;
 	private String name;
+	private String phone;
 	
 	@Builder.Default
 	private List<AddressDto> addresses = new ArrayList<>();

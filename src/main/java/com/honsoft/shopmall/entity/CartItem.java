@@ -1,20 +1,15 @@
 package com.honsoft.shopmall.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.ToString;
-import java.io.Serializable;
 @Data
 @ToString
-
+@Table(name = "cart_items")
 public class CartItem  implements Serializable {
     private static final long serialVersionUID = 3636831123198280235L;
     
