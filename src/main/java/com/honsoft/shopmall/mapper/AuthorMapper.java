@@ -23,5 +23,5 @@ public interface AuthorMapper {
 
     List<AuthorDto> toDtoList(List<Author> authors);
 
-    List<Author> toEntityList(List<AuthorDto> authorDtos);
+//    List<Author> toEntityList(List<AuthorDto> authorDtos);
 }

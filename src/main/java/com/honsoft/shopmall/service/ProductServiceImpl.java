@@ -19,6 +19,7 @@ import com.honsoft.shopmall.entity.Computer;
 import com.honsoft.shopmall.entity.Product;
 import com.honsoft.shopmall.mapper.CleanerMapper;
 import com.honsoft.shopmall.mapper.ComputerMapper;
+import com.honsoft.shopmall.mapper.MappingContext;
 import com.honsoft.shopmall.mapper.ProductDetailMapper;
 import com.honsoft.shopmall.mapper.ProductImageMapper;
 import com.honsoft.shopmall.mapper.ProductMapper;
@@ -94,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
 		product.setLastModifiedDate(LocalDateTime.now());
 		product.setName(productDto.getName());
 		product.setProductCondition(productDto.getProductCondition());
-		product.setProductDetail(productDetailMapper.toEntity(productDto.getProductDetail()));
+		product.setProductDetail(productDetailMapper.toEntity(productDto.getProductDetail(),new MappingContext(true)));
 		product.setUnitPrice(productDto.getUnitPrice());
 		product.setUnitsInStock(productDto.getUnitsInStock());
 		product.setUpdatedAt(Instant.now());

@@ -35,7 +35,7 @@ public abstract class ReviewMapper {
 
 	public abstract List<ReviewDto> toDtoList(List<Review> reviews);
 
-	public abstract List<Review> toEntityList(List<ReviewDto> reviewDtos);
+//	public abstract List<Review> toEntityList(List<ReviewDto> reviewDtos);
 
 	public Page<ReviewDto> toPage(Page<Review> reviews) {
 		return reviews.map(this::toDto);

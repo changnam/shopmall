@@ -19,7 +19,7 @@ public interface CustomerMapper {
 
 	List<CustomerDto> toDtoList(List<Customer> customers);
 
-	List<Customer> toEntityList(List<CustomerDto> customerDtos);
+//	List<Customer> toEntityList(List<CustomerDto> customerDtos);
 
 	@AfterMapping
 	default void afterToEntity(CustomerDto customerDto, @MappingTarget Customer customer) {

@@ -32,7 +32,7 @@ public abstract class PermissionMapper {
 	public abstract Permission toEntity(PermissionDto permissionDto);
 	
 	public abstract List<PermissionDto> toDtoList(List<Permission> permissions);
-	public abstract List<Permission> toEntityList(List<PermissionDto> permissionDtos);
+//	public abstract List<Permission> toEntityList(List<PermissionDto> permissionDtos);
 	
 	  @AfterMapping
 	    protected void mapRoles(PermissionDto dto, @MappingTarget Permission permission) {

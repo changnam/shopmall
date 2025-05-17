@@ -33,7 +33,7 @@ public abstract class UserMapper {
     
     public abstract List<UserDto> toDtoList(List<User> users);
     
-    public abstract List<User> toEntityList(List<UserDto> userDtos);
+//    public abstract List<User> toEntityList(List<UserDto> userDtos);
     
     public Page<UserDto> toPage(Page<User> users) {
         return users.map(this::toDto);

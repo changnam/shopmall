@@ -19,6 +19,6 @@ public interface AddressMapper {
 	
 	List<AddressDto> toDtoList(List<Address> addresses);
 	
-	List<Address> toEntityList(List<AddressDto> addressDtos);
+//	List<Address> toEntityList(List<AddressDto> addressDtos);
 
 }

@@ -41,7 +41,7 @@ public abstract class RoleMapper {
 
 	public abstract List<RoleDto> toDtoList(List<Role> roles);
 
-	public abstract List<Role> toEntityList(List<RoleDto> roleDto);
+//	public abstract List<Role> toEntityList(List<RoleDto> roleDto);
 
 	@AfterMapping
 	protected void mapPermissions(RoleDto dto, @MappingTarget Role role) {

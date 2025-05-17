@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.honsoft.shopmall.dto.CleanerDto;
 import com.honsoft.shopmall.entity.Cleaner;
 import com.honsoft.shopmall.mapper.CleanerMapper;
+import com.honsoft.shopmall.mapper.MappingContext;
 import com.honsoft.shopmall.repository.CleanerRepository;
 
 
@@ -30,7 +31,8 @@ public class CleanerServiceImpl implements CleanerService {
 	@Transactional
 	@Override
 	public CleanerDto createCleaner(CleanerDto cleanerDto) {
-		Cleaner cleaner = cleanerMapper.toEntity(cleanerDto);
+		Cleaner cleaner = cleanerMapper.toEntity(cleanerDto, new MappingContext(false));
+        
 		Cleaner saved = cleanerRepository.save(cleaner);
 		CleanerDto savedDto = cleanerMapper.toDto(saved);
 		return savedDto;

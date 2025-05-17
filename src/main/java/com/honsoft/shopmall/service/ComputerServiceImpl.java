@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.honsoft.shopmall.dto.ComputerDto;
 import com.honsoft.shopmall.entity.Computer;
 import com.honsoft.shopmall.mapper.ComputerMapper;
+import com.honsoft.shopmall.mapper.MappingContext;
 import com.honsoft.shopmall.repository.ComputerRepository;
 
 
@@ -37,7 +38,7 @@ public class ComputerServiceImpl implements ComputerService {
 	@Transactional
 	@Override
 	public ComputerDto createComputer(ComputerDto computerDto) {
-		Computer computer = computerMapper.toEntity(computerDto);
+		Computer computer = computerMapper.toEntity(computerDto,new MappingContext(false));
 		Computer saved = computerRepository.save(computer);
 		ComputerDto savedDto = computerMapper.toDto(saved);
 		return savedDto;
