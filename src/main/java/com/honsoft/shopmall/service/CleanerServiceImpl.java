@@ -32,7 +32,7 @@ public class CleanerServiceImpl implements CleanerService {
 	@Override
 	public CleanerDto createCleaner(CleanerDto cleanerDto) {
 		Cleaner cleaner = cleanerMapper.toEntity(cleanerDto, new MappingContext(false));
-        
+        cleaner.getProductDetail().setProduct(cleaner); //cleaner 객체가 생성되었으므로 onetoone 에도 셋팅해줘야함
 		Cleaner saved = cleanerRepository.save(cleaner);
 		CleanerDto savedDto = cleanerMapper.toDto(saved);
 		return savedDto;
