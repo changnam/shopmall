@@ -25,6 +25,12 @@ public abstract class ReviewMapper {
 	public abstract ReviewDto toDto(Review review);
 
 	@Mapping(target = "product", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "createdBy", ignore = true)
+	@Mapping(target = "createdDate", ignore = true)
+	@Mapping(target = "lastModifiedBy", ignore = true)
+	@Mapping(target = "lastModifiedDate", ignore = true)
+	@Mapping(target = "updatedAt", ignore = true)
 	public abstract Review toEntity(ReviewDto reviewDto);
 
 	public abstract List<ReviewDto> toDtoList(List<Review> reviews);
