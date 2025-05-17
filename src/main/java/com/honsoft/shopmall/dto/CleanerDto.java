@@ -13,4 +13,5 @@ public class CleanerDto extends ProductDto{
 	private String cleanerId;
     private String brand;
     private Integer powerRating;
+    private CleanerDetailDto productDetail; // subclass of ProductDetailDto
 }

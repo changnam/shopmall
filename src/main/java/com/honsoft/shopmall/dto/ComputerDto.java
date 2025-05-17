@@ -15,4 +15,5 @@ public class ComputerDto extends ProductDto{
     private String processor;
     private String ram;
     private String storage;
+    private ComputerDetailDto productDetail; // subclass of ProductDetailDto
 }
