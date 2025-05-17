@@ -31,8 +31,8 @@ public class ComputerController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> createProduct(@RequestBody ComputerDto computerDto){
-		ProductDto created = computerService.createComputer(computerDto);
+	public ResponseEntity<Object> createComputer(@RequestBody ComputerDto computerDto){
+		ComputerDto created = computerService.createComputer(computerDto);
 		return ResponseHandler.responseBuilder("computer created", HttpStatus.OK, created);
 	}
 	
