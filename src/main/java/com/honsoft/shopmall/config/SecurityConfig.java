@@ -87,7 +87,7 @@ public class SecurityConfig {
     public SecurityFilterChain formLoginSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/login").permitAll()
+                .requestMatchers("/login","/books").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

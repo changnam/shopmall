@@ -39,7 +39,7 @@ import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
 import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class,
-		UserDetailsServiceAutoConfiguration.class, ServletComponentScan.class} )
+		UserDetailsServiceAutoConfiguration.class} )
 @ComponentScan(nameGenerator = FullyQualifiedBeanNameGenerator.class)
 public class ShopmallApplication implements CommandLineRunner {
 
