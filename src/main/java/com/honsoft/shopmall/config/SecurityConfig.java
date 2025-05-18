@@ -21,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.honsoft.shopmall.security.JwtAuthenticationEntryPoint;
 import com.honsoft.shopmall.security.JwtAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,9 +32,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthFilter;
+	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	
-	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
+	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
 		this.jwtAuthFilter = jwtAuthFilter;
+		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 	}
 	
 //	@Bean
@@ -80,7 +83,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .exceptionHandling(ex -> ex
-                    .authenticationEntryPoint(jwtAuthenticationEntryPoint())  // <--- here
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)  // <--- here
                 )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         
@@ -141,14 +144,14 @@ public class SecurityConfig {
 //
 //    return http.build();
     
-    @Bean
-    public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
-        return (request, response, authException) -> {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Unauthorized access\"}");
-        };
-    }
+//    @Bean
+//    public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+//        return (request, response, authException) -> {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.setContentType("application/json");
+//            response.getWriter().write("{\"error\": \"Unauthorized access\"}");
+//        };
+//    }
     
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
