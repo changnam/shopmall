@@ -16,12 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.honsoft.shopmall.security.JwtAuthenticationFilter;
 
-import lombok.AllArgsConstructor;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -77,7 +78,13 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .anyRequest().authenticated()
             )
+            .exceptionHandling(ex -> ex
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint())  // <--- here
+                )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        
+//        http.formLogin(formLogin -> formLogin.disable());
+        http.logout(logout -> logout.disable());
 
         return http.build();
      }
@@ -131,6 +138,15 @@ public class SecurityConfig {
 //        .formLogin(withDefaults());
 //
 //    return http.build();
+    
+    @Bean
+    public AuthenticationEntryPoint jwtAuthenticationEntryPoint() {
+        return (request, response, authException) -> {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Unauthorized access\"}");
+        };
+    }
     
 
 	@Bean
