@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -103,20 +104,23 @@ public class SecurityConfig {
     	
         http
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/home","/login","/books","/members/add").permitAll()
+                .requestMatchers("/home","/books","/members/add","/login").permitAll()
                 .anyRequest().authenticated()
             ).userDetailsService(userDetailsService)
             .authenticationManager(authenticationManager)
+//            .formLogin(Customizer.withDefaults());
+//            .formLogin(form -> form.loginPage("/login").permitAll());
             .formLogin(form -> form
                 .loginPage("/login")
-                .failureHandler(authenticationFailureHandler)  // <--- here
-                .successHandler(authenticationSuccessHandler)
+                .loginProcessingUrl("/login")
+//                .failureHandler(authenticationFailureHandler)  // <--- here
+//                .successHandler(authenticationSuccessHandler)
                 .permitAll()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
             );
+//            .logout(logout -> logout
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/login?logout")
+//            );
 
         return http.build();
     }
