@@ -32,14 +32,14 @@ public class MemberController {
     public String requestAddMemberForm(Model model){
     	
         model.addAttribute("memberFormDto", new MemberFormDto());
-        return "member/addMember";
+        return "members/memberAdd";
     }
     
     @PostMapping(value = "/add")
     public String submitAddNewMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
 
         if(bindingResult.hasErrors()){
-            return "member/addMember";
+            return "members/memberAdd";
         }
 
         try {
@@ -48,7 +48,7 @@ public class MemberController {
         } catch (IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());
        
-            return "member/addMember";
+            return "members/memberAdd";
         }
 
         return "redirect:/members";
@@ -59,14 +59,14 @@ public class MemberController {
     public String requestUpdateMemberForm(@PathVariable(name = "memberId") String memberId, Model model){
     	Member member = memberService.getMemberById(memberId);    	
         model.addAttribute("memberFormDto", member);
-        return "member/updateMember";
+        return "members/updateMember";
     }
     
     @PostMapping(value = "/update")
     public String submitUpdateMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
 
         if(bindingResult.hasErrors()){
-            return "member/updateMember";
+            return "members/memberUpdate";
         }
 
         try {
@@ -74,7 +74,7 @@ public class MemberController {
             memberService.saveMember(member);
         } catch (IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());
-            return "member/addMember";
+            return "members/memberAdd";
         }
 
         return "redirect:/members";
