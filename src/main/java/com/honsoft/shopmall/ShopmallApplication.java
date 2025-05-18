@@ -12,14 +12,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.honsoft.shopmall.dto.PermissionDto;
 import com.honsoft.shopmall.dto.RoleDto;
 import com.honsoft.shopmall.dto.UserDto;
-import com.honsoft.shopmall.entity.Permission;
 import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
 import com.honsoft.shopmall.mapper.CustomerMapper;
@@ -40,7 +39,7 @@ import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
 import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class,
-		UserDetailsServiceAutoConfiguration.class })
+		UserDetailsServiceAutoConfiguration.class, ServletComponentScan.class} )
 @ComponentScan(nameGenerator = FullyQualifiedBeanNameGenerator.class)
 public class ShopmallApplication implements CommandLineRunner {
 

@@ -1,24 +1,39 @@
 package com.honsoft.shopmall.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.honsoft.shopmall.security.JwtAuthenticationFilter;
 
 import lombok.AllArgsConstructor;
 
 @Configuration
 @EnableWebSecurity(debug = true)
-@AllArgsConstructor
+//@AllArgsConstructor
 public class SecurityConfig {
 
+	private final JwtAuthenticationFilter jwtAuthFilter;
+	
+	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
+		this.jwtAuthFilter = jwtAuthFilter;
+	}
+	
 //	@Bean
 //	protected PasswordEncoder passwordEncoder() {
 //        return new BCryptPasswordEncoder();
@@ -51,38 +66,50 @@ public class SecurityConfig {
 	 */
 
 	@Bean
-	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .securityMatcher("/api/**")
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-		http.csrf(AbstractHttpConfigurer::disable)
+        return http.build();
+     }
 
-				// 특정 URL에 대한 권한 설정.
-				.authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/books/add")
-						.hasRole("ADMIN").requestMatchers("/orders/list").hasRole("ADMIN")
-						// .requestMatchers("/members").hasRole("USER" )
-						// .requestMatchers("/order/**").hasAnyRole("USER", "ADMIN" )
-						.anyRequest().permitAll())
-				// .formLogin(Customizer.withDefaults());
-				.formLogin(formLogin -> formLogin
+    @Bean
+    @Order(2)
+    public SecurityFilterChain formLoginSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/login").permitAll()
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/login")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+            );
 
-						.loginPage("/login") // 사용자 정의 로그인 페이지
-						.loginProcessingUrl("/login").defaultSuccessUrl("/books/add")// 로그인 성공 후 이동 페이지
-						.defaultSuccessUrl("/orders/list")// 로그인 성공 후 이동 페이지
-						.defaultSuccessUrl("/").failureUrl("/loginfailed") // 로그인 실패 후 이동 페이지
-						.usernameParameter("username")
-						// .usernameParameter("email")
-						.passwordParameter("password")
+        return http.build();
+    }
 
-				)
+    @Bean
+    public AuthenticationManager authenticationManager(@Qualifier("customerUserDetailsService") UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
 
-				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login")
-				// .deleteCookies("JSESSIONID") // 로그아웃 시 JSESSIONID 제거
-				// .invalidateHttpSession(true) // 로그아웃 시 세션 종료
-				// .clearAuthentication(true) // 로그아웃 시 권한 제거
-				);
-
-		return http.build();
-
-	}
+        return new ProviderManager(authenticationProvider);
+    }
 	
 //	List<Permission> permissions = permissionRepository.findAll();
 //
