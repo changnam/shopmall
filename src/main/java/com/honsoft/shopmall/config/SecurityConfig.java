@@ -113,14 +113,14 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-//                .failureHandler(authenticationFailureHandler)  // <--- here
-//                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)  // <--- here
+                .successHandler(authenticationSuccessHandler)
                 .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
             );
-//            .logout(logout -> logout
-//                .logoutUrl("/logout")
-//                .logoutSuccessUrl("/login?logout")
-//            );
 
         return http.build();
     }
