@@ -16,15 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.honsoft.shopmall.security.CustomAuthenticationFailureHandler;
+import com.honsoft.shopmall.security.CustomSavedRequestAwareAuthenticationSuccessHandler;
 import com.honsoft.shopmall.security.JwtAuthenticationEntryPoint;
 import com.honsoft.shopmall.security.JwtAuthenticationFilter;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -33,10 +31,15 @@ public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	private final CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
+	private final CustomAuthenticationFailureHandler authenticationFailureHandler;
 	
-	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
+	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint
+			,CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler,CustomAuthenticationFailureHandler authenticationFailureHandler) {
 		this.jwtAuthFilter = jwtAuthFilter;
 		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+		this.authenticationSuccessHandler = authenticationSuccessHandler;
+		this.authenticationFailureHandler = authenticationFailureHandler;
 	}
 	
 //	@Bean
@@ -98,12 +101,13 @@ public class SecurityConfig {
     public SecurityFilterChain formLoginSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/login","/books").permitAll()
+                .requestMatchers("/home","/login","/books","/members/add").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .failureHandler(authenticationFailureHandler())  // <--- here
+                .failureHandler(authenticationFailureHandler)  // <--- here
+                .successHandler(authenticationSuccessHandler)
                 .permitAll()
             )
             .logout(logout -> logout
@@ -153,13 +157,13 @@ public class SecurityConfig {
 //        };
 //    }
     
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return (request, response, exception) -> {
-            response.sendRedirect("/login?error=true");
-        };
-    }
-    
+//    @Bean
+//    public AuthenticationFailureHandler authenticationFailureHandler() {
+//        return (request, response, exception) -> {
+//            response.sendRedirect("/login?error=true");
+//        };
+//    }
+//    
 
 	@Bean
 	public WebSecurityCustomizer webSecurity() {
