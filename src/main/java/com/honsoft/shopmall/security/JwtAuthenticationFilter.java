@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,50 +24,57 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-    
-    private final JwtService jwtService;
-    private final CustomUserDetailsService customUserDetailsService;
-    
-    public JwtAuthenticationFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService) {
-        this.jwtService = jwtService;
-        this.customUserDetailsService = customUserDetailsService;
-    }
-    
+	private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
+	private final JwtService jwtService;
+	private final CustomUserDetailsService customUserDetailsService;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+	public JwtAuthenticationFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService) {
+		this.jwtService = jwtService;
+		this.customUserDetailsService = customUserDetailsService;
+	}
 
-        try {
-            String jwt = jwtService.getJwtFromCookie(request);
-            jwtService.validateToken(jwt);
-            String userEmail = jwtService.extractEmail();
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
+		try {
+			String jwt = jwtService.getJwtFromCookie(request);
+			jwtService.validateToken(jwt);
+			String userEmail = jwtService.extractEmail();
 
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+			UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
 
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            context.setAuthentication(authToken);
-            SecurityContextHolder.setContext(context);
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null,
+					userDetails.getAuthorities());
+			authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+			SecurityContext context = SecurityContextHolder.createEmptyContext();
+			context.setAuthentication(authToken);
+			SecurityContextHolder.setContext(context);
 
-        } catch (Exception e) {
-//            logger.error("Invalid JWT token: {}", e.getMessage());
-            
-        }
-        filterChain.doFilter(request, response);
-    }
-    
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-    	// TODO Auto-generated method stub
-    	return !request.getServletPath().startsWith("/api");
-    }
-    @PostConstruct
-    public void logPostMessage() {
-    	logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ JwtAuthenticationFilter constructed");
-    }
+		} catch (Exception e) {
+			logger.error("Invalid JWT token: {}", e.getMessage());
+//			handleException(response, new Exception("Access token error"));
+//			return;
+		}
+		filterChain.doFilter(request, response);
+	}
+
+	private void handleException(HttpServletResponse response, Exception exception) throws IOException {
+		response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		response.setContentType("application/json");
+		response.getWriter().println("{\"error\": \"" + exception.getMessage() + "\"}");
+	}
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		// TODO Auto-generated method stub
+		return !request.getServletPath().startsWith("/api");
+	}
+
+	@PostConstruct
+	public void logPostMessage() {
+		logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ JwtAuthenticationFilter constructed");
+	}
 }
