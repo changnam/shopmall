@@ -3,6 +3,7 @@ package com.honsoft.shopmall.config;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -98,12 +99,14 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain formLoginSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain formLoginSecurityFilterChain(HttpSecurity http, @Qualifier("formAuthenticationManager") AuthenticationManager authenticationManager, @Qualifier("memberUserDetailsService") UserDetailsService userDetailsService) throws Exception {
+    	
         http
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/home","/login","/books","/members/add").permitAll()
                 .anyRequest().authenticated()
-            )
+            ).userDetailsService(userDetailsService)
+            .authenticationManager(authenticationManager)
             .formLogin(form -> form
                 .loginPage("/login")
                 .failureHandler(authenticationFailureHandler)  // <--- here
@@ -118,8 +121,18 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(@Qualifier("customerUserDetailsService") UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    @Bean("jwtAuthenticationManager")
+    @Primary
+    public AuthenticationManager jwtAuthenticationManager(@Qualifier("customerUserDetailsService") UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+
+        return new ProviderManager(authenticationProvider);
+    }
+    
+    @Bean("formAuthenticationManager")
+    public AuthenticationManager formAuthenticationManager(@Qualifier("memberUserDetailsService") UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);

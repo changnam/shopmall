@@ -2,6 +2,7 @@ package com.honsoft.shopmall.service;
 
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,7 +31,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AccountRoleRepository accountRoleRepository;
 
-    public AuthenticationService(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, AccountRepository accountRepository,  JwtService jwtService, AccountRoleRepository accountRoleRepository) {
+    public AuthenticationService(@Qualifier("jwtAuthenticationManager") AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, AccountRepository accountRepository,  JwtService jwtService, AccountRoleRepository accountRoleRepository) {
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.accountRepository = accountRepository;

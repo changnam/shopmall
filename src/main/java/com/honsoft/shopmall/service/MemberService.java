@@ -14,7 +14,7 @@ import com.honsoft.shopmall.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Service("memberUserDetailsService")
 @Transactional
 @RequiredArgsConstructor
 @Primary
