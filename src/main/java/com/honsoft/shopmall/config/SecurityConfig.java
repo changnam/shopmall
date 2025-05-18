@@ -102,6 +102,7 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain formLoginSecurityFilterChain(HttpSecurity http, @Qualifier("formAuthenticationManager") AuthenticationManager authenticationManager, @Qualifier("memberUserDetailsService") UserDetailsService userDetailsService) throws Exception {
     	
+    	http.csrf(csrf -> csrf.disable());
         http
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/home","/books","/members/add","/login").permitAll()
