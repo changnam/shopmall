@@ -8,15 +8,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.honsoft.shopmall.dto.CleanerDto;
 import com.honsoft.shopmall.dto.ComputerDto;
-import com.honsoft.shopmall.dto.ProductDto;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.ComputerService;
 
@@ -42,6 +41,7 @@ public class ComputerController {
 		return ResponseHandler.responseBuilder("ok", HttpStatus.OK, list);
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/page")
 	public ResponseEntity<Object> getPageComputers(
 			@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
