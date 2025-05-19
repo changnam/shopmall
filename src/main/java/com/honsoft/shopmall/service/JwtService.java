@@ -50,7 +50,7 @@ public class JwtService {
 				.signWith(getSignInKey()).compact();
 
 		// Access Token cookie
-		Cookie accessTokenCookie = new Cookie(JwtName.JWT.name(), jwt);
+		Cookie accessTokenCookie = new Cookie(JwtName.accessToken.name(), jwt);
 		accessTokenCookie.setHttpOnly(true);
 		accessTokenCookie.setSecure(false); // Set to true in production (HTTPS)
 		accessTokenCookie.setPath("/");
@@ -58,7 +58,7 @@ public class JwtService {
 		response.addCookie(accessTokenCookie);
 
 		// Refresh Token cookie
-		Cookie refreshTokenCookie = new Cookie(JwtName.REFRESH.name(), refreshToken);
+		Cookie refreshTokenCookie = new Cookie(JwtName.refreshToken.name(), refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setSecure(false); // Set to true in production (HTTPS)
 		refreshTokenCookie.setPath("/");
@@ -100,7 +100,7 @@ public class JwtService {
 				.signWith(getSignInKey()).compact();
 
 		// Access Token cookie
-		Cookie accessTokenCookie = new Cookie(JwtName.JWT.name(), newAccessToken);
+		Cookie accessTokenCookie = new Cookie(JwtName.accessToken.name(), newAccessToken);
 		accessTokenCookie.setHttpOnly(true);
 		accessTokenCookie.setSecure(false); // Set to true in production (HTTPS)
 		accessTokenCookie.setPath("/");
@@ -108,7 +108,7 @@ public class JwtService {
 		response.addCookie(accessTokenCookie);
 
 		// Refresh Token cookie
-		Cookie refreshTokenCookie = new Cookie(JwtName.REFRESH.name(), newRefreshToken);
+		Cookie refreshTokenCookie = new Cookie(JwtName.refreshToken.name(), newRefreshToken);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setSecure(false); // Set to true in production (HTTPS)
 		refreshTokenCookie.setPath("/");
@@ -118,7 +118,7 @@ public class JwtService {
 	}
 
 	public void removeTokenFromCookie(HttpServletResponse response) {
-		Cookie cookie = new Cookie(JwtName.JWT.name(), null);
+		Cookie cookie = new Cookie(JwtName.accessToken.name(), null);
 		cookie.setPath("/");
 
 		response.addCookie(cookie);

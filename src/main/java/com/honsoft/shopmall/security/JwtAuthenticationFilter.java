@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		try {
-			String jwt = jwtService.getJwtFromCookie(request,JwtName.JWT.name());
+			String jwt = jwtService.getJwtFromCookie(request,JwtName.accessToken.name());
 			jwtService.validateToken(jwt);
 			String userEmail = jwtService.extractEmail();
 

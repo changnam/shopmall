@@ -1,7 +1,7 @@
 package com.honsoft.shopmall.service;
 
 public enum JwtName {
-	JWT("JWT"), REFRESH("Refresh");
+	accessToken("accessToken"), refreshToken("refreshToken");
 
 	private final String value;
 

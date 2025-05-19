@@ -81,7 +81,7 @@ public class AuthenticationService {
 	}
 
 	public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
-		String refreshToken = jwtService.getJwtFromCookie(request, JwtName.REFRESH.name());
+		String refreshToken = jwtService.getJwtFromCookie(request, JwtName.refreshToken.name());
 
 		if (refreshToken != null && jwtService.validateToken(refreshToken)) {
 			String email = jwtService.extractEmail();
@@ -94,7 +94,7 @@ public class AuthenticationService {
 
 	public Authentication authenticateWithRefreshToken(HttpServletRequest request) {
 		// 1. Extract refresh token from cookies
-		String refreshToken = jwtService.getJwtFromCookie(request, JwtName.REFRESH.name());
+		String refreshToken = jwtService.getJwtFromCookie(request, JwtName.refreshToken.name());
 
 		// 2. Validate refresh token
 		if (refreshToken == null || !jwtService.validateToken(refreshToken)) {
