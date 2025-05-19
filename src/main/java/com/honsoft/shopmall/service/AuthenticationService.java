@@ -68,7 +68,7 @@ public class AuthenticationService {
 			throw new EntityExistsException("Email already used");
 		}
 		// create user object
-		Account account = new Account(signupRequest.getName(), signupRequest.getEmail(),
+		Account account = new Account(signupRequest.getNickname(), signupRequest.getEmail(),
 				passwordEncoder.encode(signupRequest.getPassword()));
 		AccountRole accountRole = accountRoleRepository.findByErole(ERole.ROLE_USER).orElse(null);
 		account.setRoles(Collections.singleton(accountRole));
