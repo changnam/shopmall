@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.honsoft.shopmall.service.CustomUserDetailsService;
+import com.honsoft.shopmall.service.JwtName;
 import com.honsoft.shopmall.service.JwtService;
 
 import jakarta.annotation.PostConstruct;
@@ -39,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		try {
-			String jwt = jwtService.getJwtFromCookie(request);
+			String jwt = jwtService.getJwtFromCookie(request,JwtName.JWT.name());
 			jwtService.validateToken(jwt);
 			String userEmail = jwtService.extractEmail();
 

@@ -1,9 +1,15 @@
 package com.honsoft.shopmall.restcontroller;
 
+import java.net.http.HttpHeaders;
+import java.time.Duration;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,5 +61,11 @@ public class AuthController {
         return new ResponseEntity("You've been signed out!", HttpStatus.OK);
     }
 	
+	@PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
 
+        authenticationService.refreshToken(request, response);
+		return new ResponseEntity<>("Token refreshed.", HttpStatus.OK);
+	
+    }
 }
