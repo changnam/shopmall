@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.exception.BizException;
@@ -19,6 +22,7 @@ import com.honsoft.shopmall.exception.UploadNotSupportedException;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.validator.BookRequestValidator;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice(basePackages = "com.honsoft.shopmall.restcontroller")
@@ -36,13 +40,19 @@ public class GlobalApiControllerAdvice {
 		e.getBindingResult().getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(),fieldError.getDefaultMessage()));
 		return  ResponseHandler.responseBuilder("error occured", HttpStatus.BAD_REQUEST, errors);
 	}
-
+	
 	@ExceptionHandler(RuntimeException.class)
 	public ResponseEntity<Object> handleErrorCommon(Exception e) {
 
-		return ResponseHandler.responseBuilder("error occured", HttpStatus.BAD_REQUEST, e);
+		return ResponseHandler.responseBuilder("runtime error occured", HttpStatus.BAD_REQUEST, e);
 	}
 
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> handleExcetion(Exception e) {
+
+		return ResponseHandler.responseBuilder("error occured", HttpStatus.BAD_REQUEST, e);
+	}
+	
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
 	public ResponseEntity<?> handleMaxSizeException(MaxUploadSizeExceededException e){
 		return ResponseHandler.responseBuilder("file max size error", HttpStatus.BAD_REQUEST, e);
