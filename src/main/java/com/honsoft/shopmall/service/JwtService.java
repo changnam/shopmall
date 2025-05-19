@@ -39,7 +39,7 @@ public class JwtService {
 
         Cookie cookie = new Cookie("JWT", jwt);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(24 * 60 * 60);
         response.addCookie(cookie);
