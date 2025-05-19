@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.honsoft.shopmall.entity.Member;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping("/")
 public class HomeController {
 
 	private static Logger logger = LoggerFactory.getLogger(HomeController.class);
@@ -27,7 +29,13 @@ public class HomeController {
 		this.memberService = memberService;
 	}
 	
-	@RequestMapping("/")
+	@GetMapping("/home")
+	public String home(Model model, Authentication authentication, HttpServletRequest httpServletRequest) {
+		return welcome(model,authentication,httpServletRequest);
+	}
+	
+	
+	@GetMapping
 	public String welcome(Model model, Authentication authentication, HttpServletRequest httpServletRequest) {
 
 		if (authentication==null) {

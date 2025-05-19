@@ -59,7 +59,7 @@ public class MemberController {
     public String requestUpdateMemberForm(@PathVariable(name = "memberId") String memberId, Model model){
     	Member member = memberService.getMemberById(memberId);    	
         model.addAttribute("memberFormDto", member);
-        return "members/updateMember";
+        return "members/MemberUpdate";
     }
     
     @PostMapping(value = "/update")

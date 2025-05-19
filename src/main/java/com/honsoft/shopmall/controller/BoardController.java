@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping(value = "/board")
+@RequestMapping(value = "/boards")
 public class BoardController {
 	
 	@Autowired
