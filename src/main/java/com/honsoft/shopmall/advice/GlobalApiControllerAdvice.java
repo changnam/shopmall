@@ -2,6 +2,7 @@ package com.honsoft.shopmall.advice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import com.honsoft.shopmall.exception.BizException;
 import com.honsoft.shopmall.exception.UploadNotSupportedException;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.validator.BookRequestValidator;
+
+import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice(basePackages = "com.honsoft.shopmall.restcontroller")
 public class GlobalApiControllerAdvice {
@@ -58,6 +61,23 @@ public class GlobalApiControllerAdvice {
         error.put("status", e.getStatus());
 		return ResponseHandler.responseBuilder(e.getMessage(), HttpStatus.BAD_REQUEST, error);
 	}
+	
+	@ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException ex) {
+        // Collect field errors into a map
+        Map<String, String> errors = ex.getConstraintViolations().stream()
+                .collect(Collectors.toMap(
+                        v -> v.getPropertyPath().toString(),
+                        v -> v.getMessage(),
+                        (existing, replacement) -> existing // In case of duplicate keys
+                ));
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "Validation failed");
+        body.put("errors", errors);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
