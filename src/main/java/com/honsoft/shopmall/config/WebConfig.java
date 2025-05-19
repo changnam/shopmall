@@ -1,5 +1,6 @@
 package com.honsoft.shopmall.config;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,6 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -96,5 +100,17 @@ public class WebConfig implements WebMvcConfigurer {
         return new HiddenHttpMethodFilter();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+    	CorsConfiguration config = new CorsConfiguration();
+    	config.setAllowedOrigins(List.of("http://localhost:3000", "https://myapp.com"));
+    	config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","HEAD","OPTIONS"));
+    	config.setAllowedHeaders(List.of("Authorization","Cache-Control","Content-Type"));
+    	config.setAllowCredentials(true);
+
+    	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    	source.registerCorsConfiguration("/**", config);
+    	return source;
+    }
     
 }
