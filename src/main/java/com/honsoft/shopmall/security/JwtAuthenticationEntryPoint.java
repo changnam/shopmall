@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.honsoft.shopmall.exception.TokenExpiredException;
+import com.honsoft.shopmall.service.JwtName;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +41,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 			String errorCode = "UNAUTHORIZED";
 
 			if (authException instanceof TokenExpiredException) {
-				errorCode = "TOKEN_EXPIRED";
+				if (JwtName.accessToken.name().equals(authException.getMessage())) {
+					errorCode = "ACCESS_TOKEN_EXPIRED";
+				} else {
+					errorCode = "REFRESH_TOKEN_EXPIRED";
+				}
 			}
 
 			Map<String, Object> body = new HashMap<>();

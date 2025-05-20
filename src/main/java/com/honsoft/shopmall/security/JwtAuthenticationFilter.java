@@ -44,12 +44,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String jwt = "";
+		String jwtName = "";
 		if (request.getServletPath().startsWith("/api/v1/auth")) {
 			if (request.getServletPath().startsWith("/api/v1/auth/refresh")) {
 				jwt = jwtService.getJwtFromCookie(request, JwtName.refreshToken.name());
+				jwtName = JwtName.refreshToken.name();
 			}
 		} else {
 			jwt = jwtService.getJwtFromCookie(request, JwtName.accessToken.name());
+			jwtName = JwtName.accessToken.name();
 		}
 		try {
 			if (StringUtils.hasText(jwt)) {
@@ -73,7 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		} catch (ExpiredJwtException ex) {
 			// Delegate to the AuthenticationEntryPoint manually
 			SecurityContextHolder.clearContext();
-			jwtAuthenticationEntryPoint.commence(request, response, new TokenExpiredException("JWT error"));
+			jwtAuthenticationEntryPoint.commence(request, response, new TokenExpiredException(jwtName));
 		}
 	}
 
