@@ -68,8 +68,10 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public List<AccountDto> getAllAccounts() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Account> list = accountRepository.findAll();
+		List<AccountDto> dtoList = accountMapper.toDtoList(list);
+		
+		return dtoList;
 	}
 
 	@Override
