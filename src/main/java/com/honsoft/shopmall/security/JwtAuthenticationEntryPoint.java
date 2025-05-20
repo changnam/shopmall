@@ -38,9 +38,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 	        String message = "Unauthorized access";
 
 	        Map<String, Object> body = new HashMap<>();
-	        body.put("message", message);
+	        body.put("message", authException.getLocalizedMessage());
 	        body.put("httpStatus", httpStatus.value()); // or .value()
-	        body.put("error", "error");
+	        body.put("error", "Unauthorized access");
 	        body.put("data", null);
 
 	        response.setStatus(httpStatus.value());

@@ -30,8 +30,10 @@ public class GlobalAdvice {
 		if (path.startsWith("/api/v")) {
 			// API request
 			Map<String, Object> error = new HashMap<>();
-			error.put("error", "API endpoint not found");
+			error.put("error", "NoHandlerFoundException exception");
 			error.put("status", HttpStatus.NOT_FOUND.value());
+			error.put("message", ex.getLocalizedMessage());
+			error.put("data", null);
 			error.put("path", ex.getRequestURL());
 			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
 //			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
@@ -58,8 +60,10 @@ public class GlobalAdvice {
 		if (path.startsWith("/api/v")) {
 			// API request
 			Map<String, Object> error = new HashMap<>();
-			error.put("error", "static resource not found");
+			error.put("error", "NoResourceFoundException error");
 			error.put("status", HttpStatus.NOT_FOUND.value());
+			error.put("message", ex.getLocalizedMessage());
+			error.put("data", null);
 			error.put("path", request.getRequestURL());
 			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
 //			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
@@ -86,11 +90,13 @@ public class GlobalAdvice {
 		if (path.startsWith("/api/v")) {
 			// API request
 			Map<String, Object> error = new HashMap<>();
-			error.put("error", "AuthorizationDeniedException occured");
-			error.put("status", HttpStatus.NOT_FOUND.value());
+			error.put("error", "AuthorizationDeniedException error");
+			error.put("status", HttpStatus.UNAUTHORIZED.value());
+			error.put("message", ex.getLocalizedMessage());
+			error.put("data", null);
 			error.put("path", request.getRequestURL());
 			
-			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
+			return ResponseHandler.responseBuilder("error occured", HttpStatus.UNAUTHORIZED, error);
 //			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 		} else {
 			// Browser request (Accept: text/html or default)
@@ -115,8 +121,10 @@ public class GlobalAdvice {
 		if (path.startsWith("/api/v")) {
 			// API request
 			Map<String, Object> error = new HashMap<>();
-			error.put("error", "UsernameNotFoundException occured");
+			error.put("error", "UsernameNotFoundException error");
 			error.put("status", HttpStatus.NOT_FOUND.value());
+			error.put("message", ex.getLocalizedMessage());
+			error.put("data", null);
 			error.put("path", request.getRequestURL());
 			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
 //			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
