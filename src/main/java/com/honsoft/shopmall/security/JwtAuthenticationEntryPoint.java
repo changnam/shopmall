@@ -10,6 +10,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.honsoft.shopmall.exception.TokenExpiredException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,10 +36,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 //			response.getWriter()
 //					.write("{\"error\": \"Unauthorized access\",\"message\": \"Unauthorized access\",\"data\":}");
 //		
-			Throwable cause = authException.getCause();
+//			Throwable cause = authException.getCause();
 			String errorCode = "UNAUTHORIZED";
 
-			if (cause instanceof ExpiredJwtException) {
+			if (authException instanceof TokenExpiredException) {
 				errorCode = "TOKEN_EXPIRED";
 			}
 

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,11 +13,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.honsoft.shopmall.exception.TokenExpiredException;
 import com.honsoft.shopmall.service.CustomUserDetailsService;
 import com.honsoft.shopmall.service.JwtName;
 import com.honsoft.shopmall.service.JwtService;
 
-import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,17 +31,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;
 	private final CustomUserDetailsService customUserDetailsService;
+	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	public JwtAuthenticationFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService) {
+	public JwtAuthenticationFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService,
+			JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
 		this.jwtService = jwtService;
 		this.customUserDetailsService = customUserDetailsService;
+		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-
-		String jwt = jwtService.getJwtFromCookie(request, JwtName.accessToken.name());
+		String jwt = "";
+		if (request.getServletPath().startsWith("/api/v1/auth")) {
+			if (request.getServletPath().startsWith("/api/v1/auth/refresh")) {
+				jwt = jwtService.getJwtFromCookie(request, JwtName.refreshToken.name());
+			}
+		} else {
+			jwt = jwtService.getJwtFromCookie(request, JwtName.accessToken.name());
+		}
 		try {
 			if (StringUtils.hasText(jwt)) {
 
@@ -58,13 +67,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				context.setAuthentication(authToken);
 				SecurityContextHolder.setContext(context);
 			}
+
 			filterChain.doFilter(request, response);
-//		} catch (ExpiredJwtException ex) {
-//			// ❗ Set cause for AuthenticationException
-//			throw new ExpiredJwtException("Token expired", ex);
-		} catch (JwtException ex) {
-			logger.error("Invalid JWT token: {}", ex.getMessage());
-			throw new BadCredentialsException("Invalid token", ex);
+
+		} catch (ExpiredJwtException ex) {
+			// Delegate to the AuthenticationEntryPoint manually
+			SecurityContextHolder.clearContext();
+			jwtAuthenticationEntryPoint.commence(request, response, new TokenExpiredException("JWT error"));
 		}
 	}
 

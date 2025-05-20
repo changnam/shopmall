@@ -77,13 +77,13 @@ public class JwtService {
 
 	public boolean validateToken(String token) throws JwtException {
 
-		try {
+//		try {
 			claims = Jwts.parser().verifyWith(getSignInKey()).build().parseSignedClaims(token).getPayload();
 
-		} catch (JwtException e) {
+//		} catch (JwtException e) {
 // catch null, wrong token, expired token
-			throw new JwtException(e.getMessage());
-		}
+//			throw new JwtException(e.getMessage());
+//		}
 
 		return true;
 	}
