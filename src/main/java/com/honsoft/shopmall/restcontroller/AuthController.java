@@ -1,15 +1,9 @@
 package com.honsoft.shopmall.restcontroller;
 
-import java.net.http.HttpHeaders;
-import java.time.Duration;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.LoginRequest;
 import com.honsoft.shopmall.dto.SignupRequest;
+import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.AuthenticationService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +32,8 @@ public class AuthController {
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
 		try {
 			String email = authenticationService.login(loginRequest, response);
-			return new ResponseEntity<>(email + " signed in", HttpStatus.OK);
+			return ResponseHandler.responseBuilder(email + " signed in", HttpStatus.OK, email);
+//			return new ResponseEntity<>(email + " signed in", HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);

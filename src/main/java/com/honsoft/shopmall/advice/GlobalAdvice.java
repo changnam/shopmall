@@ -13,6 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import com.honsoft.shopmall.response.ResponseHandler;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
@@ -31,7 +33,8 @@ public class GlobalAdvice {
 			error.put("error", "API endpoint not found");
 			error.put("status", HttpStatus.NOT_FOUND.value());
 			error.put("path", ex.getRequestURL());
-			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
+//			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 		} else {
 			// Browser request (Accept: text/html or default)
 //            ModelAndView modelAndView = new ModelAndView("error/404");
@@ -58,7 +61,8 @@ public class GlobalAdvice {
 			error.put("error", "static resource not found");
 			error.put("status", HttpStatus.NOT_FOUND.value());
 			error.put("path", request.getRequestURL());
-			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
+//			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 		} else {
 			// Browser request (Accept: text/html or default)
 //            ModelAndView modelAndView = new ModelAndView("error/404");
@@ -85,7 +89,9 @@ public class GlobalAdvice {
 			error.put("error", "AuthorizationDeniedException occured");
 			error.put("status", HttpStatus.NOT_FOUND.value());
 			error.put("path", request.getRequestURL());
-			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+			
+			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
+//			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 		} else {
 			// Browser request (Accept: text/html or default)
 //            ModelAndView modelAndView = new ModelAndView("error/404");
@@ -112,7 +118,8 @@ public class GlobalAdvice {
 			error.put("error", "UsernameNotFoundException occured");
 			error.put("status", HttpStatus.NOT_FOUND.value());
 			error.put("path", request.getRequestURL());
-			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
+//			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 		} else {
 			// Browser request (Accept: text/html or default)
 //            ModelAndView modelAndView = new ModelAndView("error/404");
