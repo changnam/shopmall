@@ -88,7 +88,7 @@ public class SecurityConfig {
 	@Bean
 	@Order(1)
 	public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
-		http.securityMatcher("/api/**").csrf(csrf -> csrf.disable()).formLogin(formLogin -> formLogin.disable())
+		http.securityMatcher("/api/**").cors(cors -> {}).csrf(csrf -> csrf.disable()).formLogin(formLogin -> formLogin.disable())
 				.sessionManagement(
 						sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
