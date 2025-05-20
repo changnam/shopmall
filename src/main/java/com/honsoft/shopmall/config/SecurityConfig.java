@@ -24,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.HttpMediaTypeException;
 
+import com.honsoft.shopmall.security.CustomAccessDeniedHandler;
 import com.honsoft.shopmall.security.CustomAuthenticationFailureHandler;
 import com.honsoft.shopmall.security.CustomSavedRequestAwareAuthenticationSuccessHandler;
 import com.honsoft.shopmall.security.JwtAuthenticationEntryPoint;
@@ -39,13 +40,15 @@ public class SecurityConfig {
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
 	private final CustomAuthenticationFailureHandler authenticationFailureHandler;
+	private final CustomAccessDeniedHandler accessDeniedHandler;
 	
 	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint
-			,CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler,CustomAuthenticationFailureHandler authenticationFailureHandler) {
+			,CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler,CustomAuthenticationFailureHandler authenticationFailureHandler,CustomAccessDeniedHandler accessDeniedHandler) {
 		this.jwtAuthFilter = jwtAuthFilter;
 		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 		this.authenticationSuccessHandler = authenticationSuccessHandler;
 		this.authenticationFailureHandler = authenticationFailureHandler;
+		this.accessDeniedHandler = accessDeniedHandler;
 	}
 	
 //	@Bean
@@ -91,10 +94,12 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/accounts").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/accounts").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .exceptionHandling(ex -> ex
-                    .authenticationEntryPoint(jwtAuthenticationEntryPoint)  // <--- here
+                    .authenticationEntryPoint(jwtAuthenticationEntryPoint) // handles 401
+                    .accessDeniedHandler(accessDeniedHandler)           // handles 403
                 )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         
