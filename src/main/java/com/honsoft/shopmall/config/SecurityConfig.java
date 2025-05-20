@@ -9,7 +9,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,10 +21,10 @@ import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.HttpMediaTypeException;
 
 import com.honsoft.shopmall.security.CustomAccessDeniedHandler;
 import com.honsoft.shopmall.security.CustomAuthenticationFailureHandler;
+import com.honsoft.shopmall.security.CustomFormLoginAccessDeniedHandler;
 import com.honsoft.shopmall.security.CustomSavedRequestAwareAuthenticationSuccessHandler;
 import com.honsoft.shopmall.security.JwtAuthenticationEntryPoint;
 import com.honsoft.shopmall.security.JwtAuthenticationFilter;
@@ -41,17 +40,20 @@ public class SecurityConfig {
 	private final CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
 	private final CustomAuthenticationFailureHandler authenticationFailureHandler;
 	private final CustomAccessDeniedHandler accessDeniedHandler;
+	private final CustomFormLoginAccessDeniedHandler formLoginAccessDeniedHandler;
 
 	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,
 			JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
 			CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler,
 			CustomAuthenticationFailureHandler authenticationFailureHandler,
-			CustomAccessDeniedHandler accessDeniedHandler) {
+			CustomAccessDeniedHandler accessDeniedHandler,
+			CustomFormLoginAccessDeniedHandler formLoginAccessDeniedHandler) {
 		this.jwtAuthFilter = jwtAuthFilter;
 		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 		this.authenticationSuccessHandler = authenticationSuccessHandler;
 		this.authenticationFailureHandler = authenticationFailureHandler;
 		this.accessDeniedHandler = accessDeniedHandler;
+		this.formLoginAccessDeniedHandler =formLoginAccessDeniedHandler;
 	}
 
 //	@Bean
@@ -115,13 +117,16 @@ public class SecurityConfig {
 
 		http.csrf(csrf -> csrf.disable());
 		http.authorizeHttpRequests(authz -> authz.requestMatchers("/home", "/books", "/members/add", "/login")
-				.permitAll().anyRequest().authenticated()).userDetailsService(userDetailsService)
+				.permitAll()
+				.requestMatchers(HttpMethod.POST, "/accounts").permitAll()
+				.requestMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN").anyRequest().authenticated()).userDetailsService(userDetailsService)
 				.authenticationManager(authenticationManager)
 //            .formLogin(Customizer.withDefaults());
 //            .formLogin(form -> form.loginPage("/login").permitAll());
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.failureHandler(authenticationFailureHandler) // <--- here
 						.successHandler(authenticationSuccessHandler).permitAll())
+				.exceptionHandling(ex -> ex.accessDeniedHandler(formLoginAccessDeniedHandler))
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout"));
 
 		return http.build();
