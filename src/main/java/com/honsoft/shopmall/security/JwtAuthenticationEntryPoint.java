@@ -11,14 +11,15 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-	 private final ObjectMapper objectMapper = new ObjectMapper();
-	 
+	private final ObjectMapper objectMapper = new ObjectMapper();
+
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException {
@@ -34,19 +35,22 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 //			response.getWriter()
 //					.write("{\"error\": \"Unauthorized access\",\"message\": \"Unauthorized access\",\"data\":}");
 //		
-			HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
-	        String message = "Unauthorized access";
+			Throwable cause = authException.getCause();
+			String errorCode = "UNAUTHORIZED";
 
-	        Map<String, Object> body = new HashMap<>();
-	        body.put("message", authException.getLocalizedMessage());
-	        body.put("httpStatus", httpStatus.value()); // or .value()
-	        body.put("error", "Unauthorized access");
-	        body.put("data", null);
+			if (cause instanceof ExpiredJwtException) {
+				errorCode = "TOKEN_EXPIRED";
+			}
 
-	        response.setStatus(httpStatus.value());
-	        response.setContentType("application/json;charset=UTF-8");
-	        response.getWriter().write(objectMapper.writeValueAsString(body));
-	        System.out.println("respond: "+objectMapper.writeValueAsString(body));
+			Map<String, Object> body = new HashMap<>();
+			body.put("message", authException.getMessage());
+			body.put("error", errorCode);
+			body.put("data", null);
+
+			response.setStatus(HttpStatus.UNAUTHORIZED.value());
+			response.setContentType("application/json;charset=UTF-8");
+			response.getWriter().write(objectMapper.writeValueAsString(body));
+			System.out.println("respond: " + objectMapper.writeValueAsString(body));
 		}
 	}
 }

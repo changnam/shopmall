@@ -4,19 +4,21 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.honsoft.shopmall.service.CustomUserDetailsService;
 import com.honsoft.shopmall.service.JwtName;
 import com.honsoft.shopmall.service.JwtService;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -39,27 +41,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 
+		String jwt = jwtService.getJwtFromCookie(request, JwtName.accessToken.name());
 		try {
-			String jwt = jwtService.getJwtFromCookie(request,JwtName.accessToken.name());
-			jwtService.validateToken(jwt);
-			String userEmail = jwtService.extractEmail();
+			if (StringUtils.hasText(jwt)) {
 
-			UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
+				jwtService.validateToken(jwt);
+				String userEmail = jwtService.extractEmail();
 
-			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null,
-					userDetails.getAuthorities());
-			authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+				UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
 
-			SecurityContext context = SecurityContextHolder.createEmptyContext();
-			context.setAuthentication(authToken);
-			SecurityContextHolder.setContext(context);
+				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+						null, userDetails.getAuthorities());
+				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-		} catch (Exception e) {
-			logger.error("Invalid JWT token: {}", e.getMessage());
-//			handleException(response, new Exception("Access token error"));
-//			return;
+				SecurityContext context = SecurityContextHolder.createEmptyContext();
+				context.setAuthentication(authToken);
+				SecurityContextHolder.setContext(context);
+			}
+			filterChain.doFilter(request, response);
+//		} catch (ExpiredJwtException ex) {
+//			// ❗ Set cause for AuthenticationException
+//			throw new ExpiredJwtException("Token expired", ex);
+		} catch (JwtException ex) {
+			logger.error("Invalid JWT token: {}", ex.getMessage());
+			throw new BadCredentialsException("Invalid token", ex);
 		}
-		filterChain.doFilter(request, response);
 	}
 
 	private void handleException(HttpServletResponse response, Exception exception) throws IOException {

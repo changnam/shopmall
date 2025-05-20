@@ -9,9 +9,13 @@ import org.springframework.http.ResponseEntity;
 public class ResponseHandler {
 	public static ResponseEntity<Object> responseBuilder(String message, HttpStatus httpStatus, Object responseObject) {
 
+		
+		int statusCode = ((HttpStatus) httpStatus).value();
+        String statusName = ((HttpStatus) httpStatus).name();
+		
 		Map<String, Object> response = new HashMap<>();
 		response.put("message", message);
-		response.put("httpStatus", httpStatus);
+		
 		if (httpStatus == HttpStatus.OK)
 			response.put("success", "success");
 		else
@@ -19,7 +23,7 @@ public class ResponseHandler {
 
 		response.put("data", responseObject);
 
-		return new ResponseEntity<>(response, httpStatus);
+		return new ResponseEntity<>(response, HttpStatus.valueOf(statusCode));
 	}
 
 }
