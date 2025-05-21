@@ -5,7 +5,7 @@
 <title>Insert title here</title>
 <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
-<body>
+<body th:inline="text">
 	<h1>account list</h1>
 	<div class="container mx-5">
 		<table class="table table-boarded table-striped">
@@ -29,15 +29,15 @@
 					<td><a th:href="@{'/accounts/edit/' + ${account.accountId}}"
 						class="btn btn-sm btn-warning"> Edit </a></td>
 		            <td>
-		                <button  type="button"
-		                         class="btn btn-sm btn-warning edit-btn"
-		                         data-bs-toggle="modal"
-		                         data-bs-target="#editModal"
-		                         data-id         ="[[${account.accountId}]]"
-		                         data-nickname   ="[[${account.nickname}]]"
-		                         data-email      ="[[${account.email}]]">
-		                    Edit
-		                </button>
+		                <button type="button"
+					        class="btn btn-sm btn-warning edit-btn"
+					        data-bs-toggle="modal"
+					        data-bs-target="#editModal"
+					        th:attr="data-id=${account.accountId}, 
+					                 data-nickname=${account.nickname}, 
+					                 data-email=${account.email}">
+					    Edit
+					</button>
 		            </td>
             
 				</tr>
