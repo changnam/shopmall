@@ -5,7 +5,7 @@ import java.util.List;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.data.domain.Page;
 
 import com.honsoft.shopmall.dto.AccountDto;
 import com.honsoft.shopmall.entity.Account;
@@ -19,6 +19,10 @@ public abstract class AccountMapper {
 	
 	public abstract List<AccountDto> toDtoList(List<Account> accounts);
 	public abstract List<Account> toEntityList(List<AccountDto> accountDtos);
+	
+	public Page<AccountDto> toDtoPage(Page<Account> account){
+		return account.map(this::toDto);
+	}
 	
 //	@AfterMapping
 //	public void afterToDto(Account account, @MappingTarget AccountDto accountDto) {

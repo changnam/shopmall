@@ -77,8 +77,9 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Page<AccountDto> getPageAccounts(Pageable pageable) {
-		// TODO Auto-generated method stub
-		return null;
+		Page<Account> accountPage = accountRepository.findAll(pageable);
+		Page<AccountDto> dtoPage = accountMapper.toDtoPage(accountPage);
+		return dtoPage;
 	}
 
 	@Override

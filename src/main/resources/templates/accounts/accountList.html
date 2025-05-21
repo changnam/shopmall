@@ -43,6 +43,30 @@
 				</tr>
 			</tbody>
 		</table>
+		<nav class="centered mt-4">
+		  <ul class="pagination justify-content-center">
+		    <!-- Previous Button -->
+		    <li class="page-item" th:classappend="${page.first} ? ' disabled'">
+		      <a class="page-link" th:href="@{/accounts(page=${page.number - 1}, size=${page.size})}">Previous</a>
+		    </li>
+		
+		    <!-- Page Numbers -->
+		    <li class="page-item"
+		        th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
+		        th:classappend="${i == page.number} ? ' active'">
+		      <a class="page-link"
+		         th:href="@{/accounts(page=${i}, size=${page.size})}"
+		         th:text="${i + 1}">1</a>
+		    </li>
+		
+		    <!-- Next Button -->
+		    <li class="page-item" th:classappend="${page.last} ? ' disabled'">
+		      <a class="page-link" th:href="@{/accounts(page=${page.number + 1}, size=${page.size})}">Next</a>
+		    </li>
+		  </ul>
+		</nav>
+
+
 	</div>
 	
 	<div class="modal fade" id="editModal" tabindex="-1">
