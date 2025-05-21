@@ -18,6 +18,7 @@ import com.honsoft.shopmall.repository.AccountRepository;
 import com.honsoft.shopmall.repository.AccountRoleRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -46,6 +47,7 @@ public class AccountServiceImpl implements AccountService {
 		this.validator = validator;
 	}
 
+	@Transactional
 	@Override
 	public AccountDto createAccount(AccountDto accountDto) {
 		Account account = accountMapper.toEntity(accountDto);
@@ -88,10 +90,11 @@ public class AccountServiceImpl implements AccountService {
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public void deleteAccountById(Long accountId) {
-		// TODO Auto-generated method stub
-
+		Account account = accountRepository.findById(accountId).orElseThrow(()->new EntityNotFoundException(accountId + " not found"));
+		accountRepository.delete(account);
 	}
 
 	@Override

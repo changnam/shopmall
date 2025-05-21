@@ -8,9 +8,12 @@
 <body th:inline="text">
 	<div class="container mx-5">
 	   <th:block th:replace="~{/module/header}"></th:block>
-	   
+	   <div class="d-flex justify-content-between align-items-center my-3">
+		  <h2>Account List</h2>
+		  <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAccountModal">Add Account</button>
+		</div>
+			   
 		<table class="table table-boarded table-striped">
-			<h2>account list</h2>
 			<thead class="table-dark">
 			  <tr>
 			    <!-- Nickname Sorting -->
@@ -39,7 +42,8 @@
 			
 			    <!-- Actions Columns (no sort) -->
 			    <th>Actions</th>
-			    <th>Popup Action</th>
+			    <th>Edit</th>
+			    <th>Delete</th>
 			  </tr>
 			</thead>
 
@@ -63,6 +67,14 @@
 					    Edit
 					</button>
 		            </td>
+  
+  <td>
+  <form th:action="@{'/accounts/delete/' + ${account.accountId}}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure?');">
+    <input type="hidden" name="_method" value="delete"/> <!-- For Spring's HiddenHttpMethodFilter -->
+    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+  </form>
+</td>
+  
             
 				</tr>
 			</tbody>
@@ -153,6 +165,40 @@
 	
 	      <div class="modal-footer">
 	        <button type="submit" class="btn btn-primary">Save</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+	      </div>
+	    </form>
+	  </div>
+	</div>
+	
+		<div class="modal fade" id="addAccountModal" tabindex="-1">
+	  <div class="modal-dialog">
+	    <form class="modal-content" method="post" th:action="@{/accounts/add}">
+	      <div class="modal-header">
+	        <h5 class="modal-title">Add Account</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      </div>
+	
+	      <div class="modal-body">
+	        <div class="mb-3">
+	          <label for="new-nickname" class="form-label" th:text="#{label.name}">Name</label>
+	          <input type="text" class="form-control" name="nickname" id="new-nickname" required>
+	        </div>
+	
+	        <div class="mb-3">
+	          <label for="new-email" class="form-label" th:text="#{label.email}">Email</label>
+	          <input type="email" class="form-control" name="email" id="new-email" required>
+	        </div>
+
+            <div class="mb-3">
+              <label for="new-password" class="form-label" th:text="#{label.password}">Password</label>
+              <input type="password" class="form-control" name="password" id="new-password" required>
+            </div>
+          </div>
+    
+    	
+	      <div class="modal-footer">
+	        <button type="submit" class="btn btn-primary">Add</button>
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 	      </div>
 	    </form>
