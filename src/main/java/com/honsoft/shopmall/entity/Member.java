@@ -39,8 +39,8 @@ public class Member {
 
     private String address;
 
-//    @Enumerated(EnumType.STRING)
-//    private Role role;
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
 
   
     public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder){
@@ -52,7 +52,7 @@ public class Member {
         member.setAddress(memberFormDto.getAddress());
         String password = passwordEncoder.encode(memberFormDto.getPassword());
         member.setPassword(password);
-//        member.setRole(Role.USER);
+        member.setRole(MemberRole.USER);
         return member;
     }
     

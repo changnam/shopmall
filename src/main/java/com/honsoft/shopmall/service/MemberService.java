@@ -53,7 +53,7 @@ public class MemberService implements UserDetailsService {
 
     	 System.out.println("11111111111   "+ id);
     	 Member member = memberRepository.findByMemberId(id);
-    	 System.out.println("22222   "+ member);
+//    	 System.out.println("22222   "+ member);
     	 if(member == null){
     		 throw new UsernameNotFoundException(id);
     	 }
@@ -61,7 +61,7 @@ public class MemberService implements UserDetailsService {
     	 return User.builder()
     			 .username(member.getMemberId())
     			 .password(member.getPassword())
-//    			 .roles(member.getRole().toString())
+    			 .roles(member.getRole().toString())
     			 .build();
      }
 

@@ -1,5 +1,7 @@
 package com.honsoft.shopmall.dto;
 
+import com.honsoft.shopmall.entity.MemberRole;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,4 +24,5 @@ public class MemberDto {
 
 	    private String address;
 
+	    private MemberRole role;
 }
