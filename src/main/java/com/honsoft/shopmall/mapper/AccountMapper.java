@@ -2,15 +2,17 @@ package com.honsoft.shopmall.mapper;
 
 import java.util.List;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import com.honsoft.shopmall.dto.AccountDto;
 import com.honsoft.shopmall.entity.Account;
 
 @Mapper(componentModel = "spring")
 public abstract class AccountMapper {
-	@Mapping(target = "roles", ignore = true)
+//	@Mapping(target = "roles", ignore = true)
 	public abstract AccountDto toDto(Account account);
 	@Mapping(target = "roles", ignore = true)
 	public abstract Account toEntity(AccountDto accountDto);
@@ -18,6 +20,9 @@ public abstract class AccountMapper {
 	public abstract List<AccountDto> toDtoList(List<Account> accounts);
 	public abstract List<Account> toEntityList(List<AccountDto> accountDtos);
 	
-	
+//	@AfterMapping
+//	public void afterToDto(Account account, @MappingTarget AccountDto accountDto) {
+//		
+//	}
 
 }
