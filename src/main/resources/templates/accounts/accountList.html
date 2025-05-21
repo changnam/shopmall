@@ -6,8 +6,9 @@
 <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body th:inline="text">
-	<h1>account list</h1>
 	<div class="container mx-5">
+	   <th:block th:replace="~{/module/header}"></th:block>
+	   
 		<table class="table table-boarded table-striped">
 			<h2>account list</h2>
 			<thead class="table-dark">
@@ -43,61 +44,85 @@
 				</tr>
 			</tbody>
 		</table>
-		<nav class="centered mt-4">
-		  <ul class="pagination justify-content-center">
-		    <!-- Previous Button -->
-		    <li class="page-item" th:classappend="${page.first} ? ' disabled'">
-		      <a class="page-link" th:href="@{/accounts(page=${page.number - 1}, size=${page.size})}">Previous</a>
-		    </li>
-		
-		    <!-- Page Numbers -->
-		    <li class="page-item"
-		        th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
-		        th:classappend="${i == page.number} ? ' active'">
-		      <a class="page-link"
-		         th:href="@{/accounts(page=${i}, size=${page.size})}"
-		         th:text="${i + 1}">1</a>
-		    </li>
-		
-		    <!-- Next Button -->
-		    <li class="page-item" th:classappend="${page.last} ? ' disabled'">
-		      <a class="page-link" th:href="@{/accounts(page=${page.number + 1}, size=${page.size})}">Next</a>
-		    </li>
+<nav class="centered mt-4">
+  <ul class="pagination justify-content-center">
+
+    <!-- First Page -->
+    <li class="page-item" th:classappend="${page.first} ? ' disabled'">
+      <a class="page-link" th:href="@{/accounts(page=0, size=${page.size})}">First</a>
+    </li>
+
+    <!-- Previous Page -->
+    <li class="page-item" th:classappend="${page.first} ? ' disabled'">
+      <a class="page-link" th:href="@{/accounts(page=${page.number - 1}, size=${page.size})}">Previous</a>
+    </li>
+
+    <!-- Page Numbers (centered around current page) -->
+    <li class="page-item"
+        th:each="i : ${#numbers.sequence(
+            T(java.lang.Math).max(0, page.number - 2),
+            T(java.lang.Math).min(page.totalPages - 1, page.number + 2)
+        )}"
+        th:classappend="${i == page.number} ? ' active'">
+      <a class="page-link" th:href="@{/accounts(page=${i}, size=${page.size})}" th:text="${i + 1}">1</a>
+    </li>
+
+    <!-- Next Page -->
+    <li class="page-item" th:classappend="${page.last} ? ' disabled'">
+      <a class="page-link" th:href="@{/accounts(page=${page.number + 1}, size=${page.size})}">Next</a>
+    </li>
+
+    <!-- Last Page -->
+    <li class="page-item" th:classappend="${page.last} ? ' disabled'">
+      <a class="page-link" th:href="@{/accounts(page=${page.totalPages - 1}, size=${page.size})}">Last</a>
+    </li>
+  </ul>
+
+  <!-- Page Info -->
+  <div class="text-center mt-2">
+    Page <span th:text="${page.number + 1}"></span> of <span th:text="${page.totalPages}"></span>,
+    Total Items: <span th:text="${page.totalElements}"></span>
+  </div>
+</nav>
+
+		    
 		  </ul>
+		  
+		  
 		</nav>
 
-
+        <th:block th:replace="~{/module/footer}"></th:block>
 	</div>
 	
 	<div class="modal fade" id="editModal" tabindex="-1">
-  <div class="modal-dialog">
-    <form class="modal-content" method="post">
-      <div class="modal-header">
-        <h5 class="modal-title">Edit Account</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-          <input type="hidden" name="id" id="acc-id">
-
-          <div class="mb-3">
-              <label class="form-label" for="acc-nickname" th:text="#{label.name}">Name</label>
-              <input class="form-control" type="text"  name="nickname" id="acc-nickname">
-          </div>
-
-          <div class="mb-3">
-              <label class="form-label" for="acc-email" th:text="#{label.email}">Email</label>
-              <input class="form-control" type="email" name="email" id="acc-email">
-          </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-      </div>
-    </form>
-  </div>
-</div>
+	  <div class="modal-dialog">
+	    <form class="modal-content" method="post">
+	      <div class="modal-header">
+	        <h5 class="modal-title">Edit Account</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      </div>
+	
+	      <div class="modal-body">
+	          <input type="hidden" name="id" id="acc-id">
+	
+	          <div class="mb-3">
+	              <label class="form-label" for="acc-nickname" th:text="#{label.name}">Name</label>
+	              <input class="form-control" type="text"  name="nickname" id="acc-nickname">
+	          </div>
+	
+	          <div class="mb-3">
+	              <label class="form-label" for="acc-email" th:text="#{label.email}">Email</label>
+	              <input class="form-control" type="email" name="email" id="acc-email">
+	          </div>
+	      </div>
+	
+	      <div class="modal-footer">
+	        <button type="submit" class="btn btn-primary">Save</button>
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+	      </div>
+	    </form>
+	  </div>
+	</div>
 	
 	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 <script>

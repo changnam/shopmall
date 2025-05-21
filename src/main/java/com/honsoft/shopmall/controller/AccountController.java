@@ -41,7 +41,7 @@ public class AccountController {
 	}
 
 	@GetMapping
-	public String getAllAccounts(Model m, @PageableDefault(page = 0, size = 10, sort = "email", direction = Sort.Direction.ASC) Pageable pageable ) {
+	public String getAllAccounts(Model m, @PageableDefault(page = 0, size = 2, sort = "email", direction = Sort.Direction.ASC) Pageable pageable ) {
 //		List<AccountDto> dtoList = accountService.getAllAccounts();
 		Page<AccountDto> dtoPage = accountService.getPageAccounts(pageable);
 		
