@@ -116,7 +116,8 @@ public class SecurityConfig {
 			@Qualifier("memberUserDetailsService") UserDetailsService userDetailsService) throws Exception {
 
 		http.csrf(csrf -> csrf.disable());
-		http.authorizeHttpRequests(authz -> authz.requestMatchers("/home", "/books", "/members/add", "/login")
+//		http.anonymous(anonymous -> anonymous.disable());
+		http.authorizeHttpRequests(authz -> authz.requestMatchers("/home", "/books", "/members/add", "/login","/access-denied")
 				.permitAll()
 				.requestMatchers(HttpMethod.POST, "/accounts").permitAll()
 				.requestMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN").anyRequest().authenticated()).userDetailsService(userDetailsService)
