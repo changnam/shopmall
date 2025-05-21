@@ -8,6 +8,7 @@ import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -97,7 +98,7 @@ public class GlobalAdvice {
 			error.put("message", ex.getLocalizedMessage());
 			error.put("data", null);
 			error.put("path", request.getRequestURL());
-			
+
 			return ResponseHandler.responseBuilder("error occured", HttpStatus.FORBIDDEN, error);
 //			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 		} else {
@@ -112,7 +113,7 @@ public class GlobalAdvice {
 			return modelAndView;
 		}
 	}
-	
+
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public Object handleUsernameNotFoundException(HttpServletRequest request, UsernameNotFoundException ex) {
 		System.out.println("@@@@@@@@@@@@@@@@@@@@@ browser AuthorizationDeniedException:");
@@ -143,7 +144,7 @@ public class GlobalAdvice {
 			return modelAndView;
 		}
 	}
-	
+
 	@ExceptionHandler(Exception.class)
 	public Object handleAllExceptions(HttpServletRequest request, Exception ex) {
 		System.out.println(ex.getMessage());
@@ -173,5 +174,17 @@ public class GlobalAdvice {
 
 			return modelAndView;
 		}
+
 	}
+
+	@ModelAttribute("siteName")
+	public String getSiteName(HttpServletRequest request) {
+		String host = request.getServerName();
+		return switch (host) {
+		case "honsoft.co.kr" -> "Honsoft.co.kr";
+		case "honsoft.com" -> "Honsoft.com";
+		default -> host;
+		};
+	}
+
 }
