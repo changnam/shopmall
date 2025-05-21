@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.honsoft.shopmall.entity.AccountRole;
 
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class AccountDto {
 
 	    private String nickname;
 
+	    @Email
 	    private String email;
 
 	    private String password;

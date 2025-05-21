@@ -17,6 +17,7 @@ import com.honsoft.shopmall.mapper.AccountRoleMapper;
 import com.honsoft.shopmall.repository.AccountRepository;
 import com.honsoft.shopmall.repository.AccountRoleRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -90,6 +91,13 @@ public class AccountServiceImpl implements AccountService {
 	public void deleteAccountById(Long accountId) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public AccountDto getAccountById(Long accountId) {
+		Account existing = accountRepository.findById(accountId).orElseThrow(() -> new EntityNotFoundException(accountId+" not found"));
+		AccountDto dto = accountMapper.toDto(existing);
+		return dto;
 	}
 
 }

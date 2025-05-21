@@ -15,16 +15,18 @@
 					<th th:text="#{label.name}"></th>
 					<th th:text="#{label.email}"></th>
 					<th th:text="#{label.role}"></th>
+					<th>Actions</th>				<!-- New column -->
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="account : ${accounts}">
 					<td th:text="${account.nickname}"></td>
 					<td th:text="${account.email}"></td>
-					<td>
-					   <span th:each="role : ${account.roles}"
+					<td><span th:each="role : ${account.roles}"
 						class="badge bg-primary me-1" th:text="${role.erole}">ROLE</span>
 					</td>
+					<td><a th:href="@{'/accounts/edit/' + ${account.accountId}}"
+						class="btn btn-sm btn-warning"> Edit </a></td>
 				</tr>
 			</tbody>
 		</table>
