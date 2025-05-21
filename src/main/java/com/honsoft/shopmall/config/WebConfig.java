@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import com.honsoft.shopmall.interceptor.MonitoringInterceptor;
+import com.honsoft.shopmall.util.DatabaseMessageSource;
 import com.honsoft.shopmall.util.DelegatingLocaleResolver;
 
 @Configuration
@@ -78,16 +80,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new MonitoringInterceptor());
     }
     
-    @Bean
-    public MessageSource messageSource() {
-    	ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-    	messageSource.setBasename("messages");
-    	messageSource.setDefaultEncoding("UTF-8");
-    	messageSource.setFallbackToSystemLocale(false);
-    	messageSource.setAlwaysUseMessageFormat(false);
-    	return messageSource;
-    }
-    
+
     //반드시 validator 이름으로 등록해야함. 
     @Bean
     public LocalValidatorFactoryBean validator(@Qualifier("messageSource") MessageSource messageSource) {
@@ -129,4 +122,20 @@ public class WebConfig implements WebMvcConfigurer {
         converters.add(responseBodyConverter());
     }
 
+    @Bean
+    @Primary
+    public MessageSource messageSource(DatabaseMessageSource dbMessageSource) {
+        return dbMessageSource;
+    }
+    
+    @Bean
+    public MessageSource fileMessageSource() {
+    	ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    	messageSource.setBasename("messages");
+    	messageSource.setDefaultEncoding("UTF-8");
+    	messageSource.setFallbackToSystemLocale(false);
+    	messageSource.setAlwaysUseMessageFormat(false);
+    	return messageSource;
+    }
+    
 }
