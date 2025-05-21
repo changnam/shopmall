@@ -8,9 +8,9 @@
 <p>account list</p>
 <div th:each="account : ${accounts}">
     <label th:for="name" th:text="#{label.name}">name: </label>
-    <p th:id="name" th:text="${account.nickname}">
+    <span th:id="name" th:text="${account.nickname}"/>
     <label th:for="email" th:text="#{label.email}">email:</label>
-    <p th:id="email" th:text="${account.email}">
+    <span th:id="email" th:text="${account.email}"/>
 </div>
 </body>
 </html>
