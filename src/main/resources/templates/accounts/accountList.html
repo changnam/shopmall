@@ -3,23 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" >
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
-<h1>account list</h1>
-<div th:each="account : ${accounts}" class="container mx-5">
-    <label th:for="name" th:text="#{label.name}">name: </label>
-    <span th:id="name" th:text="${account.nickname}">창남</span>
-    
-    <label th:for="email" th:text="#{label.email}">email:</label>
-    <span th:id="email" th:text="${account.email}">a@a.com</span>
-    
-    <label th:for="role" th:text="#{label.role}">role:</label>
-    <span th:id="role">
-        <span th:each="role : ${account.roles}">
-            <span th:text="${role.erole}">amdin</span>
-        </span>
-    </span>
-</div>
+	<h1>account list</h1>
+	<div class="container mx-5">
+		<table class="table table-boarded table-striped">
+			<h2>account list</h2>
+			<thead class="table-dark">
+				<tr>
+					<th th:text="#{label.name}"></th>
+					<th th:text="#{label.email}"></th>
+					<th th:text="#{label.role}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="account : ${accounts}">
+					<td th:text="${account.nickname}"></td>
+					<td th:text="${account.email}"></td>
+					<td>
+					   <span th:each="role : ${account.roles}"
+						class="badge bg-primary me-1" th:text="${role.erole}">ROLE</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>
