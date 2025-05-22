@@ -1,16 +1,11 @@
 package com.honsoft.shopmall.service;
 
-import java.net.http.HttpHeaders;
-import java.time.Duration;
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
 
@@ -38,9 +33,11 @@ public class JwtService {
 
 	private Claims claims;
 
-	public void generateToken(String email, HttpServletResponse response) {
+	public void generateToken(String email, String userName,List<String> userRoles,HttpServletResponse response) {
 		String jwt = Jwts.builder().subject(email) // username here is indeed the email
-				.issuedAt(new Date(System.currentTimeMillis()))
+//				.claim("id", userId)
+		        .claim("name", userName)
+		        .claim("roles", userRoles).issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + jwtExpiresMinutes * 60 * 1000))
 				.signWith(getSignInKey()).compact();
 
