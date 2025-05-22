@@ -65,7 +65,7 @@ public class BookController {
 	@GetMapping
 	public String requestBookList(Model model) {
 
-		List<Book> list = bookService.getAllBookList();
+		List<BookDto> list = bookService.getAllBooks();
 		model.addAttribute("bookList", list);
 		return "books/bookList";
 	}

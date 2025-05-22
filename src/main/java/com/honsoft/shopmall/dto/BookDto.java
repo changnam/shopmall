@@ -27,5 +27,6 @@ public class BookDto {
 	private String isbn;
 	private MultipartFile bookImage;
     private Long authorId; // nested mapping
+    private String authorName; // nested mapping
     
 }

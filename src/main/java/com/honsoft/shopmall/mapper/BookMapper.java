@@ -43,6 +43,7 @@ public abstract class BookMapper {
 //    }
 	
 	@Mapping(source = "author.authorId", target="authorId")
+	@Mapping(source = "author.name", target="authorName")
 	public abstract BookDto toDto(Book book);
 	
 //	@Mapping(source = "authorId", target="author")
