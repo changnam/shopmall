@@ -28,7 +28,7 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+//@Builder
 @ToString
 public class Author {
 	@Id
@@ -43,8 +43,8 @@ public class Author {
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "author", orphanRemoval = true)
 	@JsonManagedReference
-	@Builder.Default
-	private List<Book> books = new ArrayList<>();
+//	@Builder.Default
+	private List<Book> books ;;
 
 	public void addBook(Book book) {
 		this.books.add(book);

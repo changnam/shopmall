@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,11 +29,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.honsoft.shopmall.dto.AuthorDto;
 import com.honsoft.shopmall.dto.BookDto;
-import com.honsoft.shopmall.dto.BookRequest;
 import com.honsoft.shopmall.entity.Book;
 import com.honsoft.shopmall.exception.BookIdException;
 import com.honsoft.shopmall.exception.CategoryException;
+import com.honsoft.shopmall.service.AuthorService;
 import com.honsoft.shopmall.service.BookService;
 import com.honsoft.shopmall.validator.BookValidator;
 
@@ -56,6 +58,9 @@ public class BookController {
 
 	@Autowired
 	private BookValidator bookValidator; // BookValidator 인스턴스 선언
+	
+	@Autowired
+	private AuthorService authorService;
 
 	@GetMapping
 	public String requestBookList(Model model) {
@@ -111,16 +116,18 @@ public class BookController {
 	@GetMapping("/add")
 	public String requestAddBookForm(Model model) {
 		model.addAttribute("book", new BookDto()); // 유효검사기 추가
+		List<AuthorDto> authors = authorService.getAllAuthors();
+		model.addAttribute("authors",authors);
 		return "books/bookAdd";
 	}
 
 	@PostMapping("/add")
-	public String submitAddNewBook(@Valid @ModelAttribute Book book, BindingResult bindingResult) {
+	public String submitAddNewBook(@Valid @ModelAttribute BookDto bookDto, BindingResult bindingResult) throws BindException {
 
 		if (bindingResult.hasErrors())
 			return "books/bookAdd";
 
-		MultipartFile bookImage = book.getBookImage();
+		MultipartFile bookImage = bookDto.getBookImage();
 
 		String saveName = bookImage.getOriginalFilename();
 		File saveFile = new File(fileDir, saveName);
@@ -132,9 +139,10 @@ public class BookController {
 				throw new RuntimeException("도서 이미지 업로드가 실패하였습니다", e);
 			}
 		}
-		book.setFileName(saveName);
+		bookDto.setFileName(saveName);
 
-		bookService.setNewBook(book);
+//		bookService.setNewBook(bookDto);
+		bookService.createBook(bookDto);
 
 		return "redirect:/books";
 	}

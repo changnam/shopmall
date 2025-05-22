@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthorDto {
@@ -18,6 +18,6 @@ public class AuthorDto {
 	private int age;
 	private String genre;
 
-	@Builder.Default
-	private List<BookDto> books = new ArrayList<>();
+//	@Builder.Default
+	private List<BookDto> books ;;
 }

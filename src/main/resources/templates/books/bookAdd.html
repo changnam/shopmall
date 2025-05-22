@@ -16,7 +16,7 @@
 
 	<div class="p-5 mb-4 bg-body-tertiary rounded-3">
  		<div class="container-fluid py-5">
-			<h1 class="display-5 fw-bold"><span th:text="#{addBook.form.title.label}"/></h1>
+			<h1 class="display-5 fw-bold"><span th:text="#{label.addBook.form.title}"/></h1>
 			<p class="col-md-8 fs-4">BookMarket</p>       
 		</div>
 	</div>	
@@ -32,10 +32,10 @@
 			</div>	  
       	</div>
 		   
-	   <form th:object="${bookRequest}" th:action="@{/books/add}"  method="post" enctype="multipart/form-data">  
-      <legend>[[#{addBook.form.subtitle.label}]]</legend>
+	   <form th:object="${book}" th:action="@{/books/add}"  method="post" enctype="multipart/form-data">  
+      <legend>[[#{label.addBook.form.subtitle}]]</legend>
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label"><span th:text="#{addBook.form.bookId.label}"/></label>
+         <label class="col-sm-2 control-label"><span th:text="#{label.addBook.form.bookId}"/></label>
          <div class="col-sm-3">
             <input  type="text" name="bookId"  class="form-control" th:field="*{bookId}"/> 
          </div>
@@ -44,7 +44,7 @@
          </div>
       </div>
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.name.label}"/></label>
+         <label class="col-sm-2 control-label" ><span th:text="#{label.addBook.form.name}"/></label>
          <div class="col-sm-3">
             <input   type="text" name="name"  class="form-control"  th:field="*{name}"/> 
          </div>
@@ -53,7 +53,7 @@
          </div>
       </div>
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.unitPrice.label}"/></label>
+         <label class="col-sm-2 control-label" ><span th:text="#{label.addBook.form.unitPrice}"/></label>
          <div class="col-sm-3">					     
            <input   type="text" name="unitPrice" class="form-control"  th:field="*{unitPrice}"/>  
          </div>		
@@ -62,16 +62,21 @@
          </div>			
       </div>
    	  <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.author.label}"/></label>
-         <div class="col-sm-3">
-           <input   type="text" name="author" class="form-control" th:field="*{author}"/>  
+         <label class="col-sm-2 control-label" ><span th:text="#{label.addBook.form.author}"/></label>
+         <div class="col-sm-3"> 
+            <select th:field="*{authorId}" class="form-select">
+                <option th:each="author : ${authors}"
+                        th:value="${author.authorId}"
+                        th:text="${author.name}">
+                </option>
+            </select>
          </div>
           <div class="col-sm-6">
-         	<p class="text-danger" th:errors="*{author}"/>
+         	<p class="text-danger" th:errors="*{authorId}"/>
          </div>
       </div>
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.description.label}"/></label>
+         <label class="col-sm-2 control-label" ><span th:text="#{label.addBook.form.description}"/></label>
          <div class="col-sm-5">	
          <textarea  type="text" name="description" cols="50" rows="2" class="form-control" th:field="*{description}"> </textarea>
          </div>		
@@ -80,7 +85,7 @@
          </div>
       </div>
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.publisher.label}"/></label>
+         <label class="col-sm-2 control-label" ><span th:text="#{label.addBook.form.publisher}"/></label>
          <div class="col-sm-3">	
           <input   type="text" name="publisher" class="form-control" th:field="*{publisher}"/> 
          </div>		
@@ -89,7 +94,7 @@
          </div>
       </div>
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.category.label}"/></label>
+         <label class="col-sm-2 control-label" ><span th:text="#{label.addBook.form.category}"/></label>
          <div class="col-sm-3">	 
            <input  type="text" name="category" class="form-control" th:field="*{category}"/> 
          </div>		
@@ -98,7 +103,7 @@
          </div>
       </div>
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.unitsInStock.label}"/> </label>
+         <label class="col-sm-2 control-label" ><span th:text="#{label.addBook.form.unitsInStock}"/> </label>
          <div class="col-sm-3">	
             <input  type="text" name="unitsInStock" class="form-control" th:field="*{unitsInStock}" th:value="0"/> 
          </div>		
@@ -107,7 +112,7 @@
          </div>
       </div>      
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.releaseDate.label}"/></label>
+         <label class="col-sm-2 control-label" ><span th:text="#{label.addBook.form.releaseDate}"/></label>
          <div class="col-sm-3">	
           <input  type="text" name="releaseDate" class="form-control" th:field="*{releaseDate}"/> 
          </div>		
@@ -116,18 +121,18 @@
          </div>
       </div>
       <div class="mb-3 row">
-         <label class="col-sm-2 control-label" ><span th:text="#{addBook.form.productCondition.label}"/></label>
+         <label class="col-sm-2 control-label" ><span th:text="#{label.addBook.form.condition}"/></label>
          <div class="col-sm-3">	
-            <input type="radio" name="productCondition" th:field="*{productCondition}" value="New" /> New 
-            <input type="radio"  name="productCondition" th:field="*{productCondition}" value="Old" /> Old 
-            <input type="radio" name="productCondition" th:field="*{productCondition}" value="E-Book" /> E-Book 
+            <input type="radio" name="condition" th:field="*{condition}" value="New" /> New 
+            <input type="radio"  name="condition" th:field="*{condition}" value="Old" /> Old 
+            <input type="radio" name="condition" th:field="*{condition}" value="E-Book" /> E-Book 
          </div>		
           <div class="col-sm-6">
-         	<p class="text-danger" th:errors="*{productCondition}"/>
+         	<p class="text-danger" th:errors="*{condition}"/>
          </div>
       </div>
       <div class="mb-3 row">
-      	<label class="col-sm-2 control-label"><span th:text="#{addBook.form.bookImage.label}"/></label>
+      	<label class="col-sm-2 control-label"><span th:text="#{label.addBook.form.fileName}"/></label>
       	<div class="col-sm-7">
       		<input type="file" name="bookImage" class="form-control"  th:field="*{bookImage}"/>
       	</div>
@@ -135,27 +140,10 @@
          	<p class="text-danger" th:errors="*{bookImage}"/>
          </div>
       </div>
-      <div class="mb-3 row">
-      	<label class="col-sm-2 control-label"><span th:text="#{addBook.form.weight.label}"/></label>
-      	<div class="col-sm-7">
-      		<input type="text" name="weight" class="form-control"  th:field="*{weight}"/>
-      	</div>
-      	 <div class="col-sm-6">
-         	<p class="text-danger" th:errors="*{weight}"/>
-         </div>
-      </div>
-      <div class="mb-3 row">
-      	<label class="col-sm-2 control-label"><span th:text="#{addBook.form.height.label}"/></label>
-      	<div class="col-sm-7">
-      		<input type="text" name="height" class="form-control"  th:field="*{height}"/>
-      	</div>
-      	 <div class="col-sm-6">
-         	<p class="text-danger" th:errors="*{height}"/>
-         </div>
-      </div>
+  
       <div class="mb-3 row">
          <div class="col-sm-offset-2 col-sm-10" >
-           <input type="submit" class="btn btn-primary" th:value="#{addBook.form.button.label}"/>
+           <input type="submit" class="btn btn-primary" th:value="#{label.addBook.form.button}"/>
          </div>
       </div>  
       </form>

@@ -38,23 +38,35 @@ public class AuthorService {
 		Author jn = authorRepository.findByName("Joana Nimar").orElse(null);
 		int result = 0;
 		if (jn == null)
-			jn = Author.builder().name("Joana Nimar").age(24).genre("History").build();
+			jn = new Author();
+		    jn.setName("Joana Nimar");
+		    jn.setAge(24);
+		    jn.setGenre("History");
 
 		if (!bookRepository.existsByBookId("ISBN1111")) {
-			Book jn01 = Book.builder().isbn("001-JN").title("A History of ancient prague").bookId("ISBN1111")
-					.unitPrice(new BigDecimal(10000)).build();
+			Book jn01 = new Book();
+			jn01.setIsbn("001-JN");
+			jn01.setTitle("A History of ancient prague");
+			jn01.setBookId("ISBN1111");
+			jn01.setUnitPrice(new BigDecimal(10000));
 			jn.addBook(jn01);
 			result++;
 		}
 		if (!bookRepository.existsByBookId("ISBN2222")) {
-			Book jn02 = Book.builder().isbn("002-JN").title("People's History").bookId("ISBN2222")
-					.unitPrice(new BigDecimal(20000)).build();
+			Book jn02 = new Book();
+			jn02.setIsbn("002-JN");
+			jn02.setTitle("People's History");
+			jn02.setBookId("ISBN2222");
+			jn02.setUnitPrice(new BigDecimal(20000));
 			jn.addBook(jn02);
 			result++;
 		}
 		if (!bookRepository.existsByBookId("ISBN3333")) {
-			Book jn03 = Book.builder().isbn("003-JN").title("World's History ").bookId("ISBN3333")
-					.unitPrice(new BigDecimal(30000)).build();
+			Book jn03 = new Book();
+			jn03.setIsbn("003-JN");
+			jn03.setTitle("World's History ");
+			jn03.setBookId("ISBN3333");
+			jn03.setUnitPrice(new BigDecimal(30000));
 			jn.addBook(jn03);
 			result++;
 		}
@@ -68,8 +80,11 @@ public class AuthorService {
 		Author author = authorRepository.findByName("Joana Nimar").orElseThrow();
 
 		if (bookRepository.existsByBookId("ISBN4444")) {
-			Book book = Book.builder().isbn("004-JN").title("History Details").bookId("ISBN4444")
-					.unitPrice(new BigDecimal(10000)).build();
+			Book book = new Book();
+			book.setIsbn("004-JN");
+			book.setTitle("History Details");
+			book.setBookId("ISBN4444");
+			book.setUnitPrice(new BigDecimal(10000));
 
 			throw new AlreadyExistsException(book.getBookId() + " already exists");
 		}
@@ -106,8 +121,11 @@ public class AuthorService {
 		List<Book> books = bookRepository.getBooksByAuthorName(name);
 		int result = 0;
 		if (!bookRepository.existsById("ISBN5555")) {
-			Book book = Book.builder().isbn("005-JN").title("A History facts").bookId("ISBN5555")
-					.unitPrice(new BigDecimal(10000)).build();
+			Book book = new Book();
+			book.setIsbn("005-JN");
+			book.setTitle("A History facts");
+			book.setBookId("ISBN5555");
+			book.setUnitPrice(new BigDecimal(10000));
 			result++;
 			book.setAuthor(books.get(0).getAuthor());
 			books.add(bookRepository.save(book));
