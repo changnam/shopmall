@@ -25,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.honsoft.shopmall.security.CustomAccessDeniedHandler;
 import com.honsoft.shopmall.security.CustomAuthenticationFailureHandler;
 import com.honsoft.shopmall.security.CustomFormLoginAccessDeniedHandler;
+import com.honsoft.shopmall.security.CustomLoginUrlEntryPoint;
 import com.honsoft.shopmall.security.CustomSavedRequestAwareAuthenticationSuccessHandler;
 import com.honsoft.shopmall.security.JwtAuthenticationEntryPoint;
 import com.honsoft.shopmall.security.JwtAuthenticationFilter;
@@ -40,20 +41,23 @@ public class SecurityConfig {
 	private final CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
 	private final CustomAuthenticationFailureHandler authenticationFailureHandler;
 	private final CustomAccessDeniedHandler accessDeniedHandler;
+//	private final CustomLoginUrlEntryPoint customLoginUrlEntryPoint;
 	private final CustomFormLoginAccessDeniedHandler formLoginAccessDeniedHandler;
 
 	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter,
 			JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
 			CustomSavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler,
 			CustomAuthenticationFailureHandler authenticationFailureHandler,
-			CustomAccessDeniedHandler accessDeniedHandler,
+			CustomAccessDeniedHandler accessDeniedHandler, 
+//			CustomLoginUrlEntryPoint customLoginUrlEntryPoint,
 			CustomFormLoginAccessDeniedHandler formLoginAccessDeniedHandler) {
 		this.jwtAuthFilter = jwtAuthFilter;
 		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 		this.authenticationSuccessHandler = authenticationSuccessHandler;
 		this.authenticationFailureHandler = authenticationFailureHandler;
 		this.accessDeniedHandler = accessDeniedHandler;
-		this.formLoginAccessDeniedHandler =formLoginAccessDeniedHandler;
+//		this.customLoginUrlEntryPoint = customLoginUrlEntryPoint;
+		this.formLoginAccessDeniedHandler = formLoginAccessDeniedHandler;
 	}
 
 //	@Bean
@@ -90,7 +94,8 @@ public class SecurityConfig {
 	@Bean
 	@Order(1)
 	public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http) throws Exception {
-		http.securityMatcher("/api/**").cors(cors -> {}).csrf(csrf -> csrf.disable()).formLogin(formLogin -> formLogin.disable())
+		http.securityMatcher("/api/**").cors(cors -> {
+		}).csrf(csrf -> csrf.disable()).formLogin(formLogin -> formLogin.disable())
 				.sessionManagement(
 						sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
@@ -117,17 +122,18 @@ public class SecurityConfig {
 
 		http.csrf(csrf -> csrf.disable());
 //		http.anonymous(anonymous -> anonymous.disable());
-		http.authorizeHttpRequests(authz -> authz.requestMatchers("/home", "/books", "/members/add", "/login","/access-denied")
-				.permitAll()
-				.requestMatchers(HttpMethod.POST, "/accounts").permitAll()
-				.requestMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN").anyRequest().authenticated()).userDetailsService(userDetailsService)
-				.authenticationManager(authenticationManager)
+		http.authorizeHttpRequests(
+				authz -> authz.requestMatchers("/home", "/books", "/members/add", "/login", "/access-denied")
+						.permitAll().requestMatchers(HttpMethod.POST, "/accounts").permitAll()
+						.requestMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN").anyRequest().authenticated())
+				.userDetailsService(userDetailsService).authenticationManager(authenticationManager)
 //            .formLogin(Customizer.withDefaults());
 //            .formLogin(form -> form.loginPage("/login").permitAll());
 				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login")
 						.failureHandler(authenticationFailureHandler) // <--- here
 						.successHandler(authenticationSuccessHandler).permitAll())
-				.exceptionHandling(ex -> ex.accessDeniedHandler(formLoginAccessDeniedHandler))
+				.exceptionHandling(ex -> ex.authenticationEntryPoint(new CustomLoginUrlEntryPoint("/login"))
+						.accessDeniedHandler(formLoginAccessDeniedHandler))
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout"));
 
 		return http.build();
