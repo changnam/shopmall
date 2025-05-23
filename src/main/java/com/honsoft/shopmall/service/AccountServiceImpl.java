@@ -50,6 +50,9 @@ public class AccountServiceImpl implements AccountService {
 	@Transactional
 	@Override
 	public AccountDto createAccount(AccountDto accountDto) {
+		if (accountDto.getAccountId() != null ) {
+			throw new RuntimeException("account 생성시 accountId 는 설정할 수 없습니다.");
+		}
 		Account account = accountMapper.toEntity(accountDto);
 		Set<ConstraintViolation<Account>> violations = validator.validate(account);
 		if (!violations.isEmpty()) {
