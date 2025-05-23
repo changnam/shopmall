@@ -12,10 +12,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
-import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.Validator;
 
 import com.honsoft.shopmall.dto.RoleDto;
 import com.honsoft.shopmall.dto.UserDto;
@@ -33,7 +33,6 @@ import com.honsoft.shopmall.repository.PermissionRepository;
 import com.honsoft.shopmall.repository.PersonRepository;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
-import com.honsoft.shopmall.service.BookService;
 import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
 
 import jakarta.annotation.PostConstruct;
@@ -216,8 +215,13 @@ public class ShopmallApplication implements CommandLineRunner {
 	@PostConstruct
 	public void listBeans() {
 		System.out.println("🔄 Application restarted at " + Instant.now());
-		Map<String, BookService> beans = context.getBeansOfType(BookService.class);
+		System.out.println("============> jakarta validator");
+		Map<String, jakarta.validation.Validator> beans = context.getBeansOfType(jakarta.validation.Validator.class);
 		beans.forEach((name, bean) -> System.out.println(name + " → " + bean.getClass().getSimpleName()));
+		System.out.println("============> spring validator");
+		Map<String, org.springframework.validation.Validator> springBeans = context.getBeansOfType(org.springframework.validation.Validator.class);
+		springBeans.forEach((name, bean) -> System.out.println(name + " → " + bean.getClass().getSimpleName()));
+	
 	}
 
 }
