@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.BookDto;
+import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.AuthorService;
 import com.honsoft.shopmall.service.BookService;
 
 @RestController("restBookController")
-@RequestMapping("/api/books")
+@RequestMapping("/api/v1/books")
 public class BookController {
 	private static final Logger logger = LoggerFactory.getLogger(BookController.class);
 	
@@ -31,8 +32,9 @@ public class BookController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<BookDto>> getAllBooks(){
-		return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.CREATED);
+	public ResponseEntity<Object> getAllBooks(){
+		List<BookDto> list = bookService.getAllBooks();
+		return ResponseHandler.responseBuilder("book data fetch success", HttpStatus.OK, list);
 	}
 	
 	@PostMapping
