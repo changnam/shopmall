@@ -1,7 +1,5 @@
 package com.honsoft.shopmall.controller;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -97,7 +95,7 @@ public class AccountController {
 	}
 
 	@PutMapping("/edit/{id}")
-	public String updateAccount(Model m, HttpServletRequest request,@PathVariable("id") Long accountId, @Validated @RequestBody AccountDto accountDto,
+	public Object updateAccount(Model m, HttpServletRequest request,@PathVariable("id") Long accountId, @Validated @RequestBody AccountDto accountDto,
 			BindingResult bindingResult) {
 		AccountDto updated = accountService.updateAccount(accountId, accountDto);
 
@@ -105,16 +103,16 @@ public class AccountController {
 			return "accounts/accountEdit";
 
 		m.addAttribute("account", updated);
-		return "accounts/accountEdit";
+//		return "accounts/accountEdit";
 //		return "redirect:/accounts";
 		
-//		if (isAjax(request)) {
-//	        return ResponseEntity.ok(updated);
-//	    } else {
-//	        model.addAttribute("account", updated);
-//	        return "accounts/accountEdit";
-//	        // or return "redirect:/accounts" if you want a redirect
-//	    }
+		if (isAjax(request)) {
+	        return ResponseEntity.ok(updated);
+	    } else {
+	        m.addAttribute("account", updated);
+	        return "accounts/accountEdit";
+	        // or return "redirect:/accounts" if you want a redirect
+	    }
 		
 	}
 	

@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const roles = Array.from(document.getElementById('acc-roles').selectedOptions)
                          .map(opt => opt.value);
 
-      fetch(`/api/v1/accounts/edit/${id}`, {
+      fetch(`/api/v1/accounts/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

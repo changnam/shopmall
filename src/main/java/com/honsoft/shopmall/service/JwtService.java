@@ -62,6 +62,18 @@ public class JwtService {
 		refreshTokenCookie.setMaxAge(60 * 60 * 24 * 7); // 7 days
 		response.addCookie(refreshTokenCookie);
 	}
+	
+	public String generateTokenForAjax( String userName,List<String> userRoles) {
+		String jwt = Jwts.builder().subject(userName) // username here is indeed the email
+//				.claim("id", userId)
+		        .claim("name", userName)
+		        .claim("roles", userRoles).issuedAt(new Date(System.currentTimeMillis()))
+				.expiration(new Date(System.currentTimeMillis() + 1440 * 60 * 1000))
+				.signWith(getSignInKey()).compact();
+		
+		return jwt;
+	}
+	
 
 	public String getJwtFromCookie(HttpServletRequest request, String tokenName) {
 		Cookie cookie = WebUtils.getCookie(request, tokenName);

@@ -27,6 +27,7 @@ import com.honsoft.shopmall.security.CustomAuthenticationFailureHandler;
 import com.honsoft.shopmall.security.CustomFormLoginAccessDeniedHandler;
 import com.honsoft.shopmall.security.CustomLoginUrlEntryPoint;
 import com.honsoft.shopmall.security.CustomSavedRequestAwareAuthenticationSuccessHandler;
+import com.honsoft.shopmall.security.FormLogoutSuccessHandler;
 import com.honsoft.shopmall.security.JwtAuthenticationEntryPoint;
 import com.honsoft.shopmall.security.JwtAuthenticationFilter;
 
@@ -117,7 +118,7 @@ public class SecurityConfig {
 	@Bean
 	@Order(2)
 	public SecurityFilterChain formLoginSecurityFilterChain(HttpSecurity http,
-			@Qualifier("formAuthenticationManager") AuthenticationManager authenticationManager,
+			@Qualifier("jwtAuthenticationManager") AuthenticationManager authenticationManager,
 			@Qualifier("memberUserDetailsService") UserDetailsService userDetailsService) throws Exception {
 
 		http.csrf(csrf -> csrf.disable());
@@ -134,9 +135,9 @@ public class SecurityConfig {
 						.successHandler(authenticationSuccessHandler).permitAll())
 				.exceptionHandling(ex -> ex.authenticationEntryPoint(new CustomLoginUrlEntryPoint("/login"))
 						.accessDeniedHandler(formLoginAccessDeniedHandler))
-				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout"));
+				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessHandler(new FormLogoutSuccessHandler()).permitAll());
 
-		return http.build();
+				return http.build();
 	}
 
 	@Bean("jwtAuthenticationManager")

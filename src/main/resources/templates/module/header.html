@@ -18,10 +18,10 @@
 		<a sec:authorize="isAuthenticated()" th:href="@{/cart}" class="nav-link">장바구니 &nbsp;| &nbsp;  </a>
 		<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/orders/list}" class="nav-link">주문목록 &nbsp;| &nbsp;   </a>
         <a th:href="@{/boards/list}" class="nav-link">게시판 &nbsp;| &nbsp; </a>  
- 	    <a sec:authorize="isAnonymous()"  th:href="@{/members/add}" class="nav-link">회원가입 &nbsp;| &nbsp;</a>
+ 	   <!-- <a sec:authorize="isAnonymous()"  th:href="@{/members/add}" class="nav-link">회원가입 &nbsp;| &nbsp;</a> --> 
  	   	<a sec:authorize="isAuthenticated()"  th:href="@{/accounts}" class="nav-link">회원관리 &nbsp;| &nbsp;</a>
  	   	<a sec:authorize="isAnonymous()" th:href="@{/login}" class="nav-link">로그인 &nbsp;| &nbsp;</a> 	   
- 	   	<a sec:authorize="isAuthenticated()" th:href="@{/members/update/{id}(id=${session.userLoginInfo.memberId})}" class="nav-link">회원수정 &nbsp;| &nbsp;</a>
+ 	  <!--	<a sec:authorize="isAuthenticated()" th:href="@{/members/update/{id}(id=${session.userLoginInfo.memberId})}" class="nav-link">회원수정 &nbsp;| &nbsp;</a>  --> 
   	   	<a  sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-link">로그아웃 &nbsp;| &nbsp;	</a>
 		<b sec:authorize="isAuthenticated()"><span sec:authentication='name'></span>님</b>
 	
