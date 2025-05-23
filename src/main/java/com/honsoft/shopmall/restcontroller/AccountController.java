@@ -1,15 +1,16 @@
 package com.honsoft.shopmall.restcontroller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,5 +51,19 @@ public class AccountController {
 
 //		List<AccountDto> dtoList = accountService.getAllAccounts();
 		return ResponseHandler.responseBuilder("accounts selected", HttpStatus.OK, dtoPage);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> deleteAccount(@PathVariable("id") Long accountId){
+		
+		accountService.deleteAccountById(accountId);
+		return ResponseHandler.responseBuilder("delete success", HttpStatus.OK, accountId);
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<Object> updateAccount(@PathVariable("id") Long accountId, @RequestBody AccountDto accountDto){
+		
+		AccountDto updated = accountService.updateAccount(accountId, accountDto);
+		return ResponseHandler.responseBuilder("update success", HttpStatus.OK, updated);
 	}
 }

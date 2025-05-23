@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.honsoft.shopmall.dto.AccountDto;
 import com.honsoft.shopmall.entity.Account;
@@ -18,7 +19,6 @@ import com.honsoft.shopmall.repository.AccountRepository;
 import com.honsoft.shopmall.repository.AccountRoleRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -84,10 +84,24 @@ public class AccountServiceImpl implements AccountService {
 		return dtoPage;
 	}
 
+	@Transactional
 	@Override
 	public AccountDto updateAccount(Long accountId, AccountDto accountDto) {
-		// TODO Auto-generated method stub
-		return null;
+		Account existing = accountRepository.findById(accountId).orElseThrow(() -> new EntityNotFoundException(accountId + " not found"));
+		Account updating = accountMapper.toEntity(accountDto);
+		
+//		existing.setEmail(updating.getEmail());
+		existing.setNickname(updating.getNickname());
+		
+		Set<ConstraintViolation<Account>> violations = validator.validate(existing);
+		if (!violations.isEmpty()) {
+			// Log or handle validation messages
+			throw new ConstraintViolationException(violations);
+		}
+		
+		Account updated = accountRepository.save(existing);
+		AccountDto updatedDto = accountMapper.toDto(updated);
+		return updatedDto;
 	}
 
 	@Transactional
