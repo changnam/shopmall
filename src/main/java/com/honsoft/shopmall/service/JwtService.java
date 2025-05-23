@@ -85,9 +85,11 @@ public class JwtService {
 		return true;
 	}
 
-	public void refreshToken(String email, HttpServletResponse response) {
+	public void refreshToken(String email, String userName,List<String> userRoles, HttpServletResponse response) {
 		String newAccessToken = Jwts.builder().subject(email) // username here is indeed the email
-				.issuedAt(new Date(System.currentTimeMillis()))
+//				.claim("id", userId)
+		        .claim("name", userName)
+		        .claim("roles", userRoles).issuedAt(new Date(System.currentTimeMillis()))
 				.expiration(new Date(System.currentTimeMillis() + jwtExpiresMinutes * 60 * 1000))
 				.signWith(getSignInKey()).compact();
 

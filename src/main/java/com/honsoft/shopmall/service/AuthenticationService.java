@@ -37,14 +37,17 @@ public class AuthenticationService {
 	private final AccountRoleRepository accountRoleRepository;
 	private final UserDetailsService userDetailsService;
 
-	public AuthenticationService(@Qualifier("jwtAuthenticationManager") AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, AccountRepository accountRepository,  JwtService jwtService, AccountRoleRepository accountRoleRepository,@Qualifier("customerUserDetailsService") UserDetailsService userDetailsService) {
-        this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
-        this.accountRepository = accountRepository;
-        this.jwtService = jwtService;
-        this.accountRoleRepository = accountRoleRepository;
-        this.userDetailsService = userDetailsService;
-    }
+	public AuthenticationService(@Qualifier("jwtAuthenticationManager") AuthenticationManager authenticationManager,
+			PasswordEncoder passwordEncoder, AccountRepository accountRepository, JwtService jwtService,
+			AccountRoleRepository accountRoleRepository,
+			@Qualifier("customerUserDetailsService") UserDetailsService userDetailsService) {
+		this.authenticationManager = authenticationManager;
+		this.passwordEncoder = passwordEncoder;
+		this.accountRepository = accountRepository;
+		this.jwtService = jwtService;
+		this.accountRoleRepository = accountRoleRepository;
+		this.userDetailsService = userDetailsService;
+	}
 
 	public String login(LoginRequest loginRequest, HttpServletResponse response) {
 
@@ -53,11 +56,9 @@ public class AuthenticationService {
 		Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
 
 		SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
-		List<String> userRoles = authenticationResponse.getAuthorities()
-			    .stream()
-			    .map(GrantedAuthority::getAuthority)
-			    .collect(Collectors.toList());
-		jwtService.generateToken(loginRequest.getEmail(),authenticationResponse.getName(),userRoles,response);
+		List<String> userRoles = authenticationResponse.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toList());
+		jwtService.generateToken(loginRequest.getEmail(), authenticationResponse.getName(), userRoles, response);
 		UserDetails userDetails = (UserDetails) authenticationResponse.getPrincipal();
 		return userDetails.getUsername();
 	}
@@ -86,7 +87,9 @@ public class AuthenticationService {
 			String email = jwtService.extractEmail();
 			Authentication authentication = authenticateWithRefreshToken(request);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			jwtService.refreshToken(email, response);
+			List<String> userRoles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+					.collect(Collectors.toList());
+			jwtService.refreshToken(email, authentication.getName(), userRoles, response);
 			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		}
 	}
