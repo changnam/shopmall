@@ -1,11 +1,14 @@
 package com.honsoft.shopmall.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -23,6 +27,8 @@ import com.honsoft.shopmall.dto.AccountDto;
 import com.honsoft.shopmall.dto.AccountRoleDto;
 import com.honsoft.shopmall.service.AccountRoleService;
 import com.honsoft.shopmall.service.AccountService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/accounts")
@@ -36,9 +42,18 @@ public class AccountController {
 		this.accountRoleService = accountRoleService;
 	}
 
+	@GetMapping("/add")
+	public String getAddAccountForm(Model m) {
+	    m.addAttribute("account", new AccountDto());
+	    List<AccountRoleDto> accountRoleDtos = accountRoleService.getAllAccountRoles();
+	    m.addAttribute("allRoles",accountRoleDtos);
+	    return "accounts/accountAdd";
+	}
+	
 	@PostMapping("/add")
 	public String addAccount(@ModelAttribute AccountDto dto) {
 	    AccountDto added = accountService.createAccount(dto); // implement in service
+	    
 	    return "redirect:/accounts";
 	}
 
@@ -61,11 +76,14 @@ public class AccountController {
 		// List<AccountDto> dtoList = accountService.getAllAccounts();
 		Page<AccountDto> dtoPage = accountService.getPageAccounts(pageable);
 
+		List<AccountRoleDto> allRoles = accountRoleService.getAllAccountRoles();
+		
 		m.addAttribute("accounts", dtoPage.getContent());
 		m.addAttribute("page", dtoPage);
 		m.addAttribute("sort", sort); // keep track of sorting in template
 		m.addAttribute("sortField", sortField);
 		m.addAttribute("sortDir", sortDir);
+		m.addAttribute("allRoles", allRoles);
 		return "accounts/accountList";
 	}
 
@@ -79,7 +97,7 @@ public class AccountController {
 	}
 
 	@PutMapping("/edit/{id}")
-	public String updateAccount(Model m, @PathVariable("id") Long accountId, @Validated AccountDto accountDto,
+	public String updateAccount(Model m, HttpServletRequest request,@PathVariable("id") Long accountId, @Validated @RequestBody AccountDto accountDto,
 			BindingResult bindingResult) {
 		AccountDto updated = accountService.updateAccount(accountId, accountDto);
 
@@ -89,6 +107,19 @@ public class AccountController {
 		m.addAttribute("account", updated);
 		return "accounts/accountEdit";
 //		return "redirect:/accounts";
+		
+//		if (isAjax(request)) {
+//	        return ResponseEntity.ok(updated);
+//	    } else {
+//	        model.addAttribute("account", updated);
+//	        return "accounts/accountEdit";
+//	        // or return "redirect:/accounts" if you want a redirect
+//	    }
+		
 	}
-
+	
+	private boolean isAjax(HttpServletRequest request) {
+	    return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+	}
+	
 }

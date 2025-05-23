@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Account</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Add Account</h2>
+
+    <form th:action="@{'/accounts/add'}" th:object="${account}" method="post">
+        <div class="mb-3">
+            <label for="nickname" class="form-label" th:text="#{label.name}">Name</label>
+            <input type="text" th:field="*{nickname}" class="form-control" name="nickname">
+            <div class="text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label" th:text="#{label.email}">Email</label>
+            <input type="email" th:field="*{email}" class="form-control" name="email">
+            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label" th:text="#{label.password}">Password</label>
+            <input type="password" th:field="*{password}" class="form-control" name="password">
+            <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+        </div>
+
+       <div class="mb-3">
+            <label for="age" class="form-label" th:text="#{label.age}">Age</label>
+            <input type="text" th:field="*{age}" class="form-control" name="age">
+            <div class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
+        </div>
+        
+        <div class="mb-3">
+            <label for="koreanAge" class="form-label" th:text="#{label.koreanAge}">KoreanAge</label>
+            <input type="text" th:field="*{koreanAge}" class="form-control" name="koreanAge">
+            <div class="text-danger" th:if="${#fields.hasErrors('koreanAge')}" th:errors="*{koreanAge}"></div>
+        </div>
+        
+        <!-- Example for selecting role(s) -->
+        <div class="mb-3">
+            <label class="form-label" th:text="#{label.role}">Roles</label>
+            <select multiple th:field="*{roles}" class="form-select">
+                <option th:each="role : ${allRoles}"
+                        th:value="${role.erole}"
+                        th:text="${role.erole}"
+                        th:selected="${account?.roles?.contains(role)}">
+                </option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add</button>
+        <a th:href="@{/accounts}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

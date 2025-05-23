@@ -1,9 +1,6 @@
 package com.honsoft.shopmall.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.honsoft.shopmall.entity.AccountRole;
+import java.util.List;
 
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -23,7 +20,11 @@ public class AccountDto {
 	    private String email;
 
 	    private String password;
+	    
+	    private int age;
+	    
+	    private Integer koreanAge;
 
-	    private Set<AccountRole> roles = new HashSet<>(); 
+	    private List<String> roles ; 
 
 }

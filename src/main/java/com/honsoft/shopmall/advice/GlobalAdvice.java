@@ -3,17 +3,21 @@ package com.honsoft.shopmall.advice;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.honsoft.shopmall.response.ResponseHandler;
+import com.honsoft.shopmall.util.EmptyStringToNullEditor;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -186,5 +190,11 @@ public class GlobalAdvice {
 		default -> host;
 		};
 	}
+	
+	 @InitBinder
+	    public void initBinder(WebDataBinder binder) {
+		 
+	        binder.registerCustomEditor(String.class, new EmptyStringToNullEditor());
+	    }
 
 }

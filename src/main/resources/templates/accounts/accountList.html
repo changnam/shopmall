@@ -52,20 +52,23 @@
 					<td th:text="${account.nickname}"></td>
 					<td th:text="${account.email}"></td>
 					<td><span th:each="role : ${account.roles}"
-						class="badge bg-primary me-1" th:text="${role.erole}">ROLE</span>
+						class="badge bg-primary me-1" th:text="${role}">ROLE</span>
 					</td>
 					<td><a th:href="@{'/accounts/edit/' + ${account.accountId}}"
 						class="btn btn-sm btn-warning"> Edit </a></td>
 		            <td>
-		                <button type="button"
-					        class="btn btn-sm btn-warning edit-btn"
+		            
+					<button type="button"
+					        class="btn btn-sm btn-primary edit-btn"
 					        data-bs-toggle="modal"
 					        data-bs-target="#editModal"
-					        th:attr="data-id=${account.accountId}, 
-					                 data-nickname=${account.nickname}, 
-					                 data-email=${account.email}">
-					    Edit
+					        th:attr="data-id=${account.accountId},
+					        data-nickname=${account.nickname},
+					        data-email=${account.email},
+					        data-roles=${#strings.listJoin(account.roles, ',')}">
+					  Edit
 					</button>
+					
 		            </td>
   
   <td>
@@ -141,35 +144,46 @@
         <th:block th:replace="~{/module/footer}"></th:block>
 	</div>
 	
-	<div class="modal fade" id="editModal" tabindex="-1">
-	  <div class="modal-dialog">
-	    <form class="modal-content" method="post">
-	      <div class="modal-header">
-	        <h5 class="modal-title">Edit Account</h5>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-	      </div>
-	
-	      <div class="modal-body">
-	          <input type="hidden" name="id" id="acc-id">
-	
-	          <div class="mb-3">
-	              <label class="form-label" for="acc-nickname" th:text="#{label.name}">Name</label>
-	              <input class="form-control" type="text"  name="nickname" id="acc-nickname">
-	          </div>
-	
-	          <div class="mb-3">
-	              <label class="form-label" for="acc-email" th:text="#{label.email}">Email</label>
-	              <input class="form-control" type="email" name="email" id="acc-email">
-	          </div>
-	      </div>
-	
-	      <div class="modal-footer">
-	        <button type="submit" class="btn btn-primary">Save</button>
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-	      </div>
-	    </form>
-	  </div>
-	</div>
+		<div class="modal fade" id="editModal" tabindex="-1">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Edit Account</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+		      </div>
+		
+		      <div class="modal-body">
+		        <input type="hidden" id="acc-id">
+		
+		        <div class="mb-3">
+		          <label class="form-label" for="acc-nickname">Name</label>
+		          <input class="form-control" type="text" id="acc-nickname">
+		        </div>
+		
+		        <div class="mb-3">
+		          <label class="form-label" for="acc-email">Email</label>
+		          <input class="form-control" type="email" id="acc-email">
+		        </div>
+		
+		        <div class="mb-3">
+		          <label class="form-label">Roles</label>
+		          <select multiple class="form-select" id="acc-roles">
+		            <option th:each="role : ${allRoles}"
+		                    th:value="${role.erole}"
+		                    th:text="${role.erole}">
+		            </option>
+		          </select>
+		        </div>
+		      </div>
+		
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary" id="save-account-btn">Save</button>
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
 	
 		<div class="modal fade" id="addAccountModal" tabindex="-1">
 	  <div class="modal-dialog">
@@ -207,29 +221,62 @@
 	
 	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 <script>
-  const editModal  = document.getElementById('editModal');
-  const idInput    = document.getElementById('acc-id');
-  const nickInput  = document.getElementById('acc-nickname');
-  const emailInput = document.getElementById('acc-email');
-  const form       = editModal.querySelector('form');
+document.addEventListener('DOMContentLoaded', () => {
+  // Bind edit button events
+  document.querySelectorAll('.edit-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const id = button.getAttribute('data-id');
+      const nickname = button.getAttribute('data-nickname');
+      const email = button.getAttribute('data-email');
+      const roles = button.getAttribute('data-roles').split(',');
 
-  // Fired every time a .edit‑btn opens the modal
-  editModal.addEventListener('show.bs.modal', event => {
-      const btn = event.relatedTarget;        // button that triggered the modal
+      document.getElementById('acc-id').value = id;
+      document.getElementById('acc-nickname').value = nickname;
+      document.getElementById('acc-email').value = email;
 
-      // Pull values out of data-* attributes
-      const id       = btn.getAttribute('data-id');
-      const nickname = btn.getAttribute('data-nickname');
-      const email    = btn.getAttribute('data-email');
-
-      // Pre‑fill the form fields
-      idInput.value       = id;
-      nickInput.value     = nickname;
-      emailInput.value    = email;
-
-      // Point the form at /accounts/edit/{id}
-      form.action = `/accounts/edit/${id}`;
+      const select = document.getElementById('acc-roles');
+      Array.from(select.options).forEach(opt => {
+        opt.selected = roles.includes(opt.value);
+      });
+    });
   });
+
+  // Save edited account
+  const saveBtn = document.getElementById('save-account-btn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      const id = document.getElementById('acc-id').value;
+      const nickname = document.getElementById('acc-nickname').value;
+      const email = document.getElementById('acc-email').value;
+      const roles = Array.from(document.getElementById('acc-roles').selectedOptions)
+                         .map(opt => opt.value);
+
+      fetch(`/api/v1/accounts/edit/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            accountId: id,
+            nickname: nickname,
+            email: email,
+            roles: roles
+          })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to update account');
+        return response.json();
+      })
+      .then(data => {
+        location.reload();
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Failed to update account');
+      });
+    });
+  }
+});
 </script>
 
 	

@@ -53,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
 		if (accountDto.getAccountId() != null ) {
 			throw new RuntimeException("account 생성시 accountId 는 설정할 수 없습니다.");
 		}
-		Account account = accountMapper.toEntity(accountDto);
+		Account account = accountMapper.toEntity(accountDto,accountRoleRepository);
 		Set<ConstraintViolation<Account>> violations = validator.validate(account);
 		if (!violations.isEmpty()) {
 			// Log or handle validation messages
@@ -91,10 +91,12 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public AccountDto updateAccount(Long accountId, AccountDto accountDto) {
 		Account existing = accountRepository.findById(accountId).orElseThrow(() -> new EntityNotFoundException(accountId + " not found"));
-		Account updating = accountMapper.toEntity(accountDto);
+//		Account updating = accountMapper.toEntity(accountDto,accountRoleRepository);
 		
 //		existing.setEmail(updating.getEmail());
-		existing.setNickname(updating.getNickname());
+//		existing.setNickname(updating.getNickname());
+		// Use MapStruct with roleRepo as context
+        accountMapper.updateAccountFromDto(accountDto, existing, accountRoleRepository);
 		
 		Set<ConstraintViolation<Account>> violations = validator.validate(existing);
 		if (!violations.isEmpty()) {
