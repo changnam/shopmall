@@ -1,5 +1,6 @@
 package com.honsoft.shopmall.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -34,6 +35,9 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	@OrderBy("assignedAt DESC") // or "role.roleId ASC", depending on your entity fields
-    private Set<UserRole> userRoles;
+    private Set<UserRole> userRoles = new HashSet<>();
 
+	public void addRole(Role role) {
+		this.userRoles.add(new UserRole(this,role));
+	}
 }
