@@ -190,7 +190,8 @@ public class ShopmallApplication implements CommandLineRunner {
 		if (admin == null) {
 			UserDto adminDto = new UserDto();
 			adminDto.setUserId("admin");
-			adminDto.setPassword(passwordEncoder.encode("pass"));
+			adminDto.setEmail("admin@honsoft.com");
+			adminDto.setPassword(passwordEncoder.encode("password"));
 			adminDto.setRoleIds(new HashSet<>(List.of("admin")));
 			admin = userMapper.toEntity(adminDto);
 			

@@ -40,7 +40,7 @@ public class AuthenticationService {
 	public AuthenticationService(@Qualifier("jwtAuthenticationManager") AuthenticationManager authenticationManager,
 			PasswordEncoder passwordEncoder, AccountRepository accountRepository, JwtService jwtService,
 			AccountRoleRepository accountRoleRepository,
-			@Qualifier("customerUserDetailsService") UserDetailsService userDetailsService) {
+			@Qualifier("finalUserDetailsService") UserDetailsService userDetailsService) {
 		this.authenticationManager = authenticationManager;
 		this.passwordEncoder = passwordEncoder;
 		this.accountRepository = accountRepository;
