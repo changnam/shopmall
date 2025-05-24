@@ -74,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
 
 		existingRole.getRolePermissions().clear(); // permission 클리어 여부를 판단할것 . 기존 permission 을 삭제할것인지
 
-		existingRole.setName(roleDto.getName());
+		existingRole.setRoleName(roleDto.getRoleName());
 		existingRole.setRolePermissions(forUpdateRole.getRolePermissions()); // 새로운 permissions 셋팅
 
 		Role updatedRole = roleRepository.save(existingRole);

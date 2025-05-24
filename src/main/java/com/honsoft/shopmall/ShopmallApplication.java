@@ -1,7 +1,6 @@
 package com.honsoft.shopmall;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.Validator;
 
 import com.honsoft.shopmall.dto.RoleDto;
 import com.honsoft.shopmall.dto.UserDto;
@@ -176,7 +174,7 @@ public class ShopmallApplication implements CommandLineRunner {
 		if (role == null) {
 			RoleDto roleDto = new RoleDto();
 			roleDto.setRoleId("admin");
-			roleDto.setName("어드민롤");
+			roleDto.setRoleName("ROLE_ADMIN");
 			role = roleMapper.toEntity(roleDto);
 			roleRepository.save(role);
 		}

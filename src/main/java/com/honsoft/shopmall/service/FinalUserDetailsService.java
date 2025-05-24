@@ -29,7 +29,7 @@ public class FinalUserDetailsService implements UserDetailsService {
         Set<GrantedAuthority> authorities = user
                 .getUserRoles()
                 .stream()
-                .map((role) -> new SimpleGrantedAuthority(role.getRole().getName()))
+                .map((role) -> new SimpleGrantedAuthority(role.getRole().getRoleName()))
                 .collect(Collectors.toSet());
 
         return new org.springframework.security.core.userdetails.User(

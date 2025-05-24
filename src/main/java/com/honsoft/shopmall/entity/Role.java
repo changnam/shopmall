@@ -22,7 +22,7 @@ public class Role {
 	@Id
 	private String roleId;
 	
-	private String name;
+	private String roleName;
 	
 //	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 //	@JoinTable(name="role_permissions",joinColumns = @JoinColumn(name="role_id"),inverseJoinColumns = @JoinColumn(name = "permission_id"))
