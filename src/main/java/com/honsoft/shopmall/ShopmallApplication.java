@@ -2,6 +2,7 @@ package com.honsoft.shopmall;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -192,7 +193,7 @@ public class ShopmallApplication implements CommandLineRunner {
 			UserDto adminDto = new UserDto();
 			adminDto.setUserId("admin");
 			adminDto.setPassword(passwordEncoder.encode("pass"));
-			adminDto.setRoleIds(new ArrayList<>(List.of("admin")));
+			adminDto.setRoleIds(new HashSet<>(List.of("admin")));
 			admin = userMapper.toEntity(adminDto);
 			
 			// Optionally add this user to each role.users set if bidirectional
