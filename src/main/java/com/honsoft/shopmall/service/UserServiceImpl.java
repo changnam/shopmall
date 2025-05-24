@@ -2,6 +2,7 @@ package com.honsoft.shopmall.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -123,6 +124,11 @@ public class UserServiceImpl implements UserService {
 		Page<User> users = userRepository.findAll(pageable);
 		Page<UserDto> dtos = userMapper.toPage(users);
 		return dtos;
+	}
+
+	@Override
+	public Optional<UserDto> findById(String id) {
+		 return userRepository.findById(id).map(userMapper::toDto);
 	}
 
 
