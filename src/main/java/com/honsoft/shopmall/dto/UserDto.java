@@ -1,13 +1,8 @@
 package com.honsoft.shopmall.dto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 @Data
@@ -23,5 +18,5 @@ public class UserDto {
 	private Boolean enabled;
 
 //    @Builder.Default
-    private List<String> roleIds = new ArrayList<>(); // avoid exposing full Role entity
+    private Set<String> roleIds; // avoid exposing full Role entity
 }
