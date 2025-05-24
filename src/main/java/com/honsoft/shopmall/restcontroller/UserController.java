@@ -24,7 +24,7 @@ import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.UserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
@@ -46,26 +46,26 @@ public class UserController {
 	}
 	
 	@GetMapping("/id/{id}")
-	public ResponseEntity<UserDto> getUserById(@PathVariable("id") String UserId){
+	public ResponseEntity<Object> getUserById(@PathVariable("id") String UserId){
 		UserDto UserDto = userService.getUserById(UserId);
-		return ResponseEntity.ok(UserDto);
+		return ResponseHandler.responseBuilder("get success", HttpStatus.OK, UserDto);
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserDto> createUser(@RequestBody UserDto UserDto){
+	public ResponseEntity<Object> createUser(@RequestBody UserDto UserDto){
 		UserDto createdUserDto = userService.createUser(UserDto);
-		return ResponseEntity.ok(createdUserDto);
+		return ResponseHandler.responseBuilder("create success", HttpStatus.OK, createdUserDto);
 	}
 	
 	@PutMapping
-	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto UserDto){
+	public ResponseEntity<Object> updateUser(@RequestBody UserDto UserDto){
 		UserDto updatedUserDto = userService.updateUser(UserDto.getUserId(),UserDto);
-		return ResponseEntity.ok(updatedUserDto);
+		return ResponseHandler.responseBuilder("update success", HttpStatus.OK, updatedUserDto);
 	}
 	
 	@DeleteMapping
-	public ResponseEntity<String> deleteUser(@RequestBody UserDto UserDto){
+	public ResponseEntity<Object> deleteUser(@RequestBody UserDto UserDto){
 		userService.deleteUserById(UserDto.getUserId());
-		return ResponseEntity.ok(UserDto.getUserId()+"  deleted");
+		return ResponseHandler.responseBuilder("delete success", HttpStatus.OK, "delete success");
 	}
 }
