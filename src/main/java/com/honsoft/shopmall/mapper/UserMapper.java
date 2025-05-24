@@ -19,55 +19,21 @@ import com.honsoft.shopmall.entity.UserRole;
 import com.honsoft.shopmall.entity.UserRoleId;
 import com.honsoft.shopmall.repository.RoleRepository;
 
-@Mapper(componentModel = "spring")
-public abstract class UserMapper {
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
+public interface UserMapper {
 
-    @Autowired
-    protected RoleRepository roleRepository;
-
-    @Mapping(target = "roleIds", ignore = true) // Manually set later
-    public abstract UserDto toDto(User user);
+	@Mapping(target = "roleIds", ignore = true) // Manually set later
+    UserDto toDto(User user);
 
     @Mapping(target = "userRoles", ignore = true)
-    public abstract User toEntity(UserDto userDto);
+    User toEntity(UserDto userDto);
     
-    public abstract List<UserDto> toDtoList(List<User> users);
+    List<UserDto> toDtoList(List<User> users);
     
-//    public abstract List<User> toEntityList(List<UserDto> userDtos);
+    List<User> toEntityList(List<UserDto> userDtos);
     
-    public Page<UserDto> toPage(Page<User> users) {
+    default Page<UserDto> toPage(Page<User> users) {
         return users.map(this::toDto);
     }
 	
-    @AfterMapping
-    protected void mapRoles(UserDto dto, @MappingTarget User user) {
-        if (dto.getRoleIds() == null) return;
-
-        List<UserRole> userRoles = new ArrayList<>();
-        for (String roleId : dto.getRoleIds()) {
-            Role role = roleRepository.findById(roleId)
-                    .orElseThrow(() -> new RuntimeException("Role not found: " + roleId));
-
-            UserRole userRole = new UserRole();
-            userRole.setRole(role);
-            userRole.setUser(user);
-            userRole.setId(new UserRoleId(role.getRoleId(), user.getUserId()));
-            userRole.setAssignedAt(LocalDateTime.now());
-
-            userRoles.add(userRole);
-        }
-        user.setUserRoles(userRoles);
-    }
-    
-    @AfterMapping
-    protected void mapRoleIds( User user,@MappingTarget UserDto dto) {        
-        if (user.getUserRoles() == null) return;
-
-        List<String> roleIds = user.getUserRoles().stream()
-            .map(rp -> rp.getRole().getRoleId())
-            .collect(Collectors.toList());
-
-        dto.setRoleIds(roleIds);
-    }
-
 }
