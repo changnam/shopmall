@@ -1,6 +1,6 @@
 package com.honsoft.shopmall.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class User {
 	@Id
 //	@GeneratedValue(strategy =GenerationType.IDENTITY)
@@ -32,6 +31,6 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	@OrderBy("assignedAt DESC") // or "role.roleId ASC", depending on your entity fields
-    private List<UserRole> userRoles;
+    private Set<UserRole> userRoles;
 
 }

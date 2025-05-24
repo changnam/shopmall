@@ -1,6 +1,6 @@
 package com.honsoft.shopmall.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -31,5 +31,5 @@ public class Permission {
 
 	@OneToMany(mappedBy = "permission", cascade = CascadeType.ALL)
 	@JsonManagedReference
-    private List<RolePermission> rolePermissions;
+    private Set<RolePermission> rolePermissions;
 }

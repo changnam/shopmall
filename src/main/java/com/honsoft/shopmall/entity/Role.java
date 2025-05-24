@@ -1,6 +1,7 @@
 package com.honsoft.shopmall.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -9,7 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Table(name = "roles")
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Role {
 	@Id
 	private String roleId;
@@ -34,5 +34,5 @@ public class Role {
     
 	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
 	@JsonManagedReference
-    private List<UserRole> userRoles;
+    private Set<UserRole> userRoles;
 }
