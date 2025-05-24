@@ -119,7 +119,7 @@ public class SecurityConfig {
 	@Order(2)
 	public SecurityFilterChain formLoginSecurityFilterChain(HttpSecurity http,
 			@Qualifier("jwtAuthenticationManager") AuthenticationManager authenticationManager,
-			@Qualifier("memberUserDetailsService") UserDetailsService userDetailsService) throws Exception {
+			@Qualifier("finalUserDetailsService") UserDetailsService userDetailsService) throws Exception {
 
 		http.csrf(csrf -> csrf.disable());
 //		http.anonymous(anonymous -> anonymous.disable());
@@ -143,7 +143,7 @@ public class SecurityConfig {
 	@Bean("jwtAuthenticationManager")
 	@Primary
 	public AuthenticationManager jwtAuthenticationManager(
-			@Qualifier("customerUserDetailsService") UserDetailsService userDetailsService,
+			@Qualifier("finalUserDetailsService") UserDetailsService userDetailsService,
 			PasswordEncoder passwordEncoder) {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 		authenticationProvider.setUserDetailsService(userDetailsService);
@@ -154,7 +154,7 @@ public class SecurityConfig {
 
 	@Bean("formAuthenticationManager")
 	public AuthenticationManager formAuthenticationManager(
-			@Qualifier("memberUserDetailsService") UserDetailsService userDetailsService,
+			@Qualifier("finalUserDetailsService") UserDetailsService userDetailsService,
 			PasswordEncoder passwordEncoder) {
 		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
 		authenticationProvider.setUserDetailsService(userDetailsService);

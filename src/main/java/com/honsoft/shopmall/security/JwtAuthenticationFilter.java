@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.honsoft.shopmall.exception.TokenExpiredException;
-import com.honsoft.shopmall.service.CustomUserDetailsService;
+import com.honsoft.shopmall.service.FinalUserDetailsService;
 import com.honsoft.shopmall.service.JwtName;
 import com.honsoft.shopmall.service.JwtService;
 
@@ -30,13 +30,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
 	private final JwtService jwtService;
-	private final CustomUserDetailsService customUserDetailsService;
+//	private final CustomUserDetailsService customUserDetailsService;
+	private final FinalUserDetailsService finalUserDetailsService;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-	public JwtAuthenticationFilter(JwtService jwtService, CustomUserDetailsService customUserDetailsService,
+	public JwtAuthenticationFilter(JwtService jwtService, FinalUserDetailsService finalUserDetailsService,
 			JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
 		this.jwtService = jwtService;
-		this.customUserDetailsService = customUserDetailsService;
+		this.finalUserDetailsService = finalUserDetailsService;
 		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 	}
 
@@ -60,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				jwtService.validateToken(jwt);
 				String userEmail = jwtService.extractEmail();
 
-				UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
+				UserDetails userDetails = finalUserDetailsService.loadUserByUsername(userEmail);
 
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
 						null, userDetails.getAuthorities());

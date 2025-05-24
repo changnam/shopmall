@@ -5,6 +5,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -25,6 +26,8 @@ public class User {
 
 	private String password;
 	private String name;
+	
+	@Column(unique = true)
 	private String email;
 	private Boolean enabled;
 	

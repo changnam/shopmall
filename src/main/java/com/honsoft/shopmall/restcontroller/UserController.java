@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.UserDto;
+import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.UserService;
 
 @RestController
@@ -32,9 +34,9 @@ public class UserController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<UserDto>> getAllUsers(){
+	public ResponseEntity<Object> getAllUsers(){
 		List<UserDto> list = userService.getAllUsers();
-		return ResponseEntity.ok(list);
+		return ResponseHandler.responseBuilder("get success", HttpStatus.OK, list);
 	}
 	
 	@GetMapping("/page")
