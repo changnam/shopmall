@@ -10,6 +10,6 @@ import com.honsoft.shopmall.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String>{
-	@EntityGraph(attributePaths = "userRoles")
+	@EntityGraph(attributePaths = {"userRoles","userRoles.role"})
 	Optional<User> findByEmail(String email);
 }

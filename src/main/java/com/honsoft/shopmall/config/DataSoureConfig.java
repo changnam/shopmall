@@ -73,7 +73,7 @@ public class DataSoureConfig {
         
      // Set additional JPA properties, Hibernate 관련 속성 설정 
         Properties jpaProperties = new Properties();
-        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "update"); //테이블 구조 DDL 필요시 create-only 로 할것
+        jpaProperties.setProperty("hibernate.hbm2ddl.auto", "create-only"); //테이블 구조 DDL 필요시 create-only 로 할것
         jpaProperties.setProperty("hibernate.format_sql", "true");
         jpaProperties.setProperty("hibernate.show_sql", "false"); // Optional: to log SQL to console
         factory.setJpaProperties(jpaProperties);
