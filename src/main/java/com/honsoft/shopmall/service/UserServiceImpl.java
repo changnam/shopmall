@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import com.honsoft.shopmall.dto.UserDto;
 import com.honsoft.shopmall.entity.Role;
@@ -31,13 +33,16 @@ public class UserServiceImpl implements UserService {
 	private final RoleRepository roleRepository;
 	private final UserMapper userMapper;
 	private final RoleMapper roleMapper;
-
-	public UserServiceImpl(BizExceptionMessageService bizExceptionMessageService,UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, RoleMapper roleMapper) {
+	private final Validator validator;
+	
+	public UserServiceImpl(BizExceptionMessageService bizExceptionMessageService,UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, RoleMapper roleMapper,
+			@Qualifier("bookValidator") Validator validator) {
 		this.bizExceptionMessageService = bizExceptionMessageService;
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
 		this.roleRepository = roleRepository;
 		this.roleMapper = roleMapper;
+		this.validator = validator;
 	}
 
 	@Transactional

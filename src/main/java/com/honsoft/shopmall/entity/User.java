@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,6 +26,7 @@ public class User {
 //      @GeneratedValue(strategy =GenerationType.IDENTITY)
         private String userId;
 
+        @Size(min = 8,max = 16)
         private String password;
         private String name;
 
