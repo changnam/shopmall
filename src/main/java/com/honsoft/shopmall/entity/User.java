@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
 public class User {
         @Id
 //      @GeneratedValue(strategy =GenerationType.IDENTITY)
+        @Size(min = 3)
         private String userId;
 
         @Size(min = 8,max = 16)

@@ -2,11 +2,12 @@ package com.honsoft.shopmall.advice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,7 @@ import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.util.EmptyStringToNullEditor;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class GlobalAdvice {
@@ -181,6 +183,48 @@ public class GlobalAdvice {
 
 	}
 
+	@ExceptionHandler(TransactionSystemException.class)
+	public Object handleConstraintViolationException(HttpServletRequest request, TransactionSystemException ex) {
+		String accept = request.getHeader("Accept");
+		String contentType = request.getHeader("Content-Type");
+		String path = request.getServletPath();
+
+		if (path.startsWith("/api/v")) {
+			Map<String, Object> error = new HashMap<>();
+			Throwable cause = ex.getRootCause();
+			if (cause instanceof ConstraintViolationException) {
+				ConstraintViolationException validationEx = (ConstraintViolationException) cause;
+
+				// Collect field errors into a map
+				Map<String, Object> violations = validationEx.getConstraintViolations().stream()
+						.collect(Collectors.toMap(v -> v.getPropertyPath().toString(), v -> v.getMessage(),
+								(existing, replacement) -> existing // In case of duplicate keys
+						));
+
+				error.put("violations", violations);
+			}
+			error.put("error", "UsernameNotFoundException error");
+			error.put("status", HttpStatus.NOT_FOUND.value());
+			error.put("httpStatus", HttpStatus.NOT_FOUND.name());
+			error.put("message", ex.getLocalizedMessage());
+			error.put("data", null);
+			error.put("path", request.getRequestURL());
+			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
+//			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+		} else {
+			// Browser request (Accept: text/html or default)
+//            ModelAndView modelAndView = new ModelAndView("error/404");
+//            modelAndView.setStatus(HttpStatus.NOT_FOUND);
+//            modelAndView.addObject("url", ex.getRequestURL());
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("exception", ex);
+			modelAndView.setViewName("errorCommon");
+
+			return modelAndView;
+		}
+
+	}
+
 	@ModelAttribute("siteName")
 	public String getSiteName(HttpServletRequest request) {
 		String host = request.getServerName();
@@ -190,11 +234,11 @@ public class GlobalAdvice {
 		default -> host;
 		};
 	}
-	
-	 @InitBinder
-	    public void initBinder(WebDataBinder binder) {
-		 
-	        binder.registerCustomEditor(String.class, new EmptyStringToNullEditor());
-	    }
+
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+
+		binder.registerCustomEditor(String.class, new EmptyStringToNullEditor());
+	}
 
 }
