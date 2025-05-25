@@ -1,7 +1,7 @@
 package com.honsoft.shopmall.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -35,7 +35,7 @@ public class User {
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
         @JsonManagedReference("user-userRoles")
         @OrderBy("assignedAt DESC") // or "role.roleId ASC", depending on your entity fields
-    private Set<UserRole> userRoles = new HashSet<>(); //초기화 되어 있어야 add, clear 등 가능함
+    private List<UserRole> userRoles = new ArrayList(); //초기화 되어 있어야 add, clear 등 가능함
 
         public void addRole(Role role) {
             boolean exists = this.userRoles.stream()

@@ -1,5 +1,6 @@
 package com.honsoft.shopmall.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,11 +30,11 @@ public class Role {
 //
         @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
 //      @JsonManagedReference("role-rolePermissions")
-        private Set<RolePermission> rolePermissions = new HashSet();
+        private List<RolePermission> rolePermissions = new ArrayList<>();
 
         @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
 //      @JsonManagedReference("role-userRoles")
-        private Set<UserRole> userRoles = new HashSet<>();
+        private List<UserRole> userRoles = new ArrayList<>();
 
         public void addUserRole(UserRole userRole) {
             this.userRoles.add(userRole);
