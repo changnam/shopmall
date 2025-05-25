@@ -16,8 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.honsoft.shopmall.dto.RoleDto;
-import com.honsoft.shopmall.dto.UserDto;
 import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
 import com.honsoft.shopmall.mapper.CustomerMapper;
@@ -32,12 +30,14 @@ import com.honsoft.shopmall.repository.PermissionRepository;
 import com.honsoft.shopmall.repository.PersonRepository;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
+import com.honsoft.shopmall.request.RoleCreateDto;
+import com.honsoft.shopmall.request.UserCreateDto;
 import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
 
 import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication(exclude = { SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class,
-		UserDetailsServiceAutoConfiguration.class} )
+		UserDetailsServiceAutoConfiguration.class })
 @ComponentScan(nameGenerator = FullyQualifiedBeanNameGenerator.class)
 public class ShopmallApplication implements CommandLineRunner {
 
@@ -58,7 +58,8 @@ public class ShopmallApplication implements CommandLineRunner {
 	public ShopmallApplication(BookRepositoryManual bookRepository, PersonRepository personRepository,
 			MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomerRepository customerRepository,
 			AddressRepository addressRepository, CustomerMapper customerMapper, UserRepository userRepository,
-			UserMapper userMapper, RoleRepository roleRepositoy, RoleMapper roleMapper,PermissionRepository permissionRepository,PermissionMapper permissionMapper) {
+			UserMapper userMapper, RoleRepository roleRepositoy, RoleMapper roleMapper,
+			PermissionRepository permissionRepository, PermissionMapper permissionMapper) {
 		this.bookRepository = bookRepository;
 		this.personRepository = personRepository;
 		this.memberRepository = memberRepository;
@@ -172,40 +173,37 @@ public class ShopmallApplication implements CommandLineRunner {
 //		
 		Role role = roleRepository.findById("admin").orElse(null);
 		if (role == null) {
-			RoleDto roleDto = new RoleDto();
-			roleDto.setRoleId("admin");
-			roleDto.setRoleName("ROLE_ADMIN");
-			role = roleMapper.toEntity(roleDto);
+			RoleCreateDto roleCreateDto = new RoleCreateDto();
+			roleCreateDto.setRoleId("admin");
+			roleCreateDto.setRoleName("ROLE_ADMIN");
+			role = roleMapper.toEntity(roleCreateDto);
 			roleRepository.save(role);
 		}
-		
+
 //		User user = userRepository.findById("cngoh").orElse(null);
 //		if (user == null) {
 //			UserDto userDto = UserDto.builder().userId("cngoh").password(passwordEncoder.encode("pass")).build();
 //			user = userMapper.toEntity(userDto);
 //			userRepository.save(user);
 //		}
-		
+
 		User admin = userRepository.findById("admin").orElse(null);
 		if (admin == null) {
-			UserDto adminDto = new UserDto();
-			adminDto.setUserId("admin");
-			adminDto.setEmail("admin@honsoft.com");
-			adminDto.setPassword(passwordEncoder.encode("password"));
-			adminDto.setRoleIds(new HashSet<>(List.of("admin")));
-			admin = userMapper.toEntity(adminDto);
-			
+			UserCreateDto adminCreateDto = new UserCreateDto();
+			adminCreateDto.setUserId("admin");
+			adminCreateDto.setEmail("admin@honsoft.com");
+			adminCreateDto.setPassword(passwordEncoder.encode("password"));
+			adminCreateDto.setRoleIds(new HashSet<>(List.of("admin")));
+			admin = userMapper.toEntity(adminCreateDto);
+
 			// Optionally add this user to each role.users set if bidirectional
 //			List<Role> adminRoles = admin.getRoles();
 //			for (Role adminRole : adminRoles) {
 //				adminRole.getUsers().add(admin); // Needed for bidirectional sync
 //			}
-			
+
 			userRepository.save(admin);
 		}
-
-		
-		
 
 	}
 
@@ -219,9 +217,10 @@ public class ShopmallApplication implements CommandLineRunner {
 		Map<String, jakarta.validation.Validator> beans = context.getBeansOfType(jakarta.validation.Validator.class);
 		beans.forEach((name, bean) -> System.out.println(name + " → " + bean.getClass().getSimpleName()));
 		System.out.println("============> spring validator");
-		Map<String, org.springframework.validation.Validator> springBeans = context.getBeansOfType(org.springframework.validation.Validator.class);
+		Map<String, org.springframework.validation.Validator> springBeans = context
+				.getBeansOfType(org.springframework.validation.Validator.class);
 		springBeans.forEach((name, bean) -> System.out.println(name + " → " + bean.getClass().getSimpleName()));
-	
+
 	}
 
 }

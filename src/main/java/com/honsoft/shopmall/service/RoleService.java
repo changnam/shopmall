@@ -1,15 +1,16 @@
 package com.honsoft.shopmall.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.honsoft.shopmall.dto.RoleDto;
+import com.honsoft.shopmall.request.RoleCreateDto;
+import com.honsoft.shopmall.request.RoleUpdateDto;
 
 public interface RoleService {
-	RoleDto createRole(RoleDto roleDto);
+	RoleDto createRole(RoleCreateDto roleCreateDto);
 	List<RoleDto> getAllRoles() ;
 	RoleDto getRoleById(String id);
-	RoleDto updateRole(String id, RoleDto roleDto);
+	RoleDto updateRole(String id, RoleUpdateDto roleUpdateDto);
 	void deleteRoleById(String id);
 	void assignUserToRole(String roleId, String userId);
 	void removeUserFromRole(String roleId, String userId);

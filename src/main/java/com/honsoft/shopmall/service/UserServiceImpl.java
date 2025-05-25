@@ -19,6 +19,8 @@ import com.honsoft.shopmall.mapper.RoleMapper;
 import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
+import com.honsoft.shopmall.request.UserCreateDto;
+import com.honsoft.shopmall.request.UserUpdateDto;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -45,8 +47,8 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto createUser(UserDto userDto) {
-		User user = userMapper.toEntity(userDto);
+	public UserDto createUser(UserCreateDto userCreateDto) {
+		User user = userMapper.toEntity(userCreateDto);
 		User savedUser = userRepository.save(user);
 		UserDto savedUserDto = userMapper.toDto(savedUser);
 		return savedUserDto;
@@ -70,15 +72,10 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto updateUser(String userId, UserDto userDto) {
+	public UserDto updateUser(String userId, UserUpdateDto userUpdateDto) {
 		User existingUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId));
-		User updatingUser = userMapper.toEntity(userDto);
-		existingUser.getUserRoles().clear();
-		existingUser.setEmail(updatingUser.getEmail());
-		existingUser.setEnabled(updatingUser.getEnabled());
-		existingUser.setName(updatingUser.getName());
-		//existingUser.setPassword(updatingUser.getPassword());
-		existingUser.setUserRoles(updatingUser.getUserRoles());
+		userMapper.updateEntity(userUpdateDto, existingUser);
+		
 		User updatedUser = userRepository.save(existingUser);
 		return userMapper.toDto(updatedUser);
 	}

@@ -33,11 +33,22 @@ public class User {
 	private Boolean enabled;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	@JsonManagedReference
+	@JsonManagedReference("user-userRoles")
 	@OrderBy("assignedAt DESC") // or "role.roleId ASC", depending on your entity fields
-    private Set<UserRole> userRoles = new HashSet<>();
+    private Set<UserRole> userRoles = new HashSet<>(); //초기화 되어 있어야 add, clear 등 가능함
 
 	public void addRole(Role role) {
-		this.userRoles.add(new UserRole(this,role));
+	    boolean exists = this.userRoles.stream()
+	        .anyMatch(ur -> ur.getRole().equals(role));
+
+	    if (!exists) {
+	        UserRole userRole = new UserRole(this, role);
+	        this.userRoles.add(userRole);
+	        role.addUserRole(userRole);
+	    }
+	}
+
+	public void clearRoles() {
+		this.userRoles.clear();
 	}
 }

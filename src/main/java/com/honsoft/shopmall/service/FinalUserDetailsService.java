@@ -10,32 +10,33 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.honsoft.shopmall.dto.UserAuthDto;
 import com.honsoft.shopmall.entity.User;
+import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.UserRepository;
 
 @Service("finalUserDetailsService")
 public class FinalUserDetailsService implements UserDetailsService {
 
-    private  UserRepository userRepository;
-    public FinalUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	private final UserRepository userRepository;
+	private final UserMapper userMapper;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    	User user = userRepository.findByEmail(email)
-    	        .orElseThrow(() -> new UsernameNotFoundException(email + " not found."));
+	public FinalUserDetailsService(UserRepository userRepository, UserMapper userMapper) {
+		this.userRepository = userRepository;
+		this.userMapper = userMapper;
+	}
 
-        Set<GrantedAuthority> authorities = user
-                .getUserRoles()
-                .stream()
-                .map((role) -> new SimpleGrantedAuthority(role.getRole().getRoleName()))
-                .collect(Collectors.toSet());
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		User user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException(email + " not found."));
 
-        return new org.springframework.security.core.userdetails.User(
-        		user.getEmail(),
-        		user.getPassword(),
-                authorities
-        );
-    }
+		UserAuthDto userAuthDto = userMapper.toAuthDto(user);
+
+		Set<GrantedAuthority> authorities = userAuthDto.getRoles().stream()
+				.map((role) -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
+
+		return new org.springframework.security.core.userdetails.User(userAuthDto.getEmail(), userAuthDto.getPassword(),
+				authorities);
+	}
 }

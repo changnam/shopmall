@@ -1,16 +1,17 @@
-package com.honsoft.shopmall.dto;
+package com.honsoft.shopmall.request;
+
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleDto {
+public class RoleCreateDto {
 	private String roleId;
 	private String roleName;
 	
+	private Set<String> permissionIds;
 }

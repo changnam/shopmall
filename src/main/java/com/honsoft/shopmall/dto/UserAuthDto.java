@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 //@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserAuthDto {
 	private String userId;
-
+	private String password;
 	private String name;
 	private String email;
 	private Boolean enabled;

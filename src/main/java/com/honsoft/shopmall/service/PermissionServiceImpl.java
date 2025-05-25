@@ -124,10 +124,10 @@ public class PermissionServiceImpl implements PermissionService {
 	public Integer deleteAllPermissionsByRoleId(String roleId) {
 		Role role = roleRepository.findById(roleId).orElseThrow(() -> new EntityNotFoundException(roleId));
 		
-		List<RolePermission> rolePermissions = role.getRolePermissions();
-		rolePermissions.stream().forEach((rolePermission) -> {
+//		List<RolePermission> rolePermissions = role.getRolePermissions();
+//		rolePermissions.stream().forEach((rolePermission) -> {
 			//다른 role 에서 참조하고 있을수 있으므로 roleid 기준으로 permission 을 삭제할 수는 없다.
-		});
+//		});
 		Integer result = permissionRepository.deleteAllPermissionsByRoleId(roleId);
 		return result;
 	}

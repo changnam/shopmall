@@ -39,5 +39,10 @@ public class UserRole {
     private Role role;
 
     private LocalDateTime assignedAt;
+    
+    public UserRole (User user, Role role) {
+    	this.user = user;
+    	this.role = role;
+    }
 }
 

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.UserDto;
+import com.honsoft.shopmall.request.UserCreateDto;
+import com.honsoft.shopmall.request.UserUpdateDto;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.UserService;
 
@@ -52,14 +54,14 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> createUser(@RequestBody UserDto UserDto){
-		UserDto createdUserDto = userService.createUser(UserDto);
+	public ResponseEntity<Object> createUser(@RequestBody UserCreateDto userCreateDto){
+		UserDto createdUserDto = userService.createUser(userCreateDto);
 		return ResponseHandler.responseBuilder("create success", HttpStatus.OK, createdUserDto);
 	}
 	
 	@PutMapping
-	public ResponseEntity<Object> updateUser(@RequestBody UserDto UserDto){
-		UserDto updatedUserDto = userService.updateUser(UserDto.getUserId(),UserDto);
+	public ResponseEntity<Object> updateUser(@RequestBody UserUpdateDto userUpdateDto){
+		UserDto updatedUserDto = userService.updateUser(userUpdateDto.getUserId(),userUpdateDto);
 		return ResponseHandler.responseBuilder("update success", HttpStatus.OK, updatedUserDto);
 	}
 	

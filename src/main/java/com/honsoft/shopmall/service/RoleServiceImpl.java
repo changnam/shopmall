@@ -21,6 +21,8 @@ import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.PermissionRepository;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
+import com.honsoft.shopmall.request.RoleCreateDto;
+import com.honsoft.shopmall.request.RoleUpdateDto;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -46,8 +48,8 @@ public class RoleServiceImpl implements RoleService {
 
 	@Transactional
 	@Override
-	public RoleDto createRole(RoleDto roleDto) {
-		Role role = roleMapper.toEntity(roleDto);
+	public RoleDto createRole(RoleCreateDto roleCreateDto) {
+		Role role = roleMapper.toEntity(roleCreateDto);
 		Role savedRole = roleRepository.save(role);
 		return roleMapper.toDto(savedRole);
 	}
@@ -65,17 +67,11 @@ public class RoleServiceImpl implements RoleService {
 
 	@Transactional
 	@Override
-	public RoleDto updateRole(String id, RoleDto roleDto) {
+	public RoleDto updateRole(String id, RoleUpdateDto roleUpdateDto) {
 		Role existingRole = roleRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Role not found: " + id));
 
-		// MapStruct @AfterMapping will handle permissionIds
-		Role forUpdateRole = roleMapper.toEntity(roleDto); // update 할 role 에 permissions 정보가 모드 로드되어 있다.
-
-		existingRole.getRolePermissions().clear(); // permission 클리어 여부를 판단할것 . 기존 permission 을 삭제할것인지
-
-		existingRole.setRoleName(roleDto.getRoleName());
-		existingRole.setRolePermissions(forUpdateRole.getRolePermissions()); // 새로운 permissions 셋팅
+		roleMapper.udpateEntity(roleUpdateDto, existingRole);
 
 		Role updatedRole = roleRepository.save(existingRole);
 		return roleMapper.toDto(updatedRole);

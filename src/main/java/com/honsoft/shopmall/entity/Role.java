@@ -1,9 +1,8 @@
 package com.honsoft.shopmall.entity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -21,18 +20,23 @@ import lombok.NoArgsConstructor;
 public class Role {
 	@Id
 	private String roleId;
-	
+
 	private String roleName;
-	
+
 //	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 //	@JoinTable(name="role_permissions",joinColumns = @JoinColumn(name="role_id"),inverseJoinColumns = @JoinColumn(name = "permission_id"))
 //	private List<Permission> permissions;
 //	
 	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-	@JsonManagedReference
-    private List<RolePermission> rolePermissions;
-    
+//	@JsonManagedReference("role-rolePermissions")
+	private Set<RolePermission> rolePermissions = new HashSet();
+
 	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
-	@JsonManagedReference
-    private Set<UserRole> userRoles;
+//	@JsonManagedReference("role-userRoles")
+	private Set<UserRole> userRoles = new HashSet<>();
+	
+	public void addUserRole(UserRole userRole) {
+	    this.userRoles.add(userRole);
+	}
+
 }
