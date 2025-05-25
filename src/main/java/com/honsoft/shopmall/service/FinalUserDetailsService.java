@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.honsoft.shopmall.dto.UserAuthDto;
 import com.honsoft.shopmall.entity.User;
 import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.UserRepository;
@@ -19,11 +18,9 @@ import com.honsoft.shopmall.repository.UserRepository;
 public class FinalUserDetailsService implements UserDetailsService {
 
 	private final UserRepository userRepository;
-	private final UserMapper userMapper;
 
-	public FinalUserDetailsService(UserRepository userRepository, UserMapper userMapper) {
+	public FinalUserDetailsService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-		this.userMapper = userMapper;
 	}
 
 	@Override
@@ -31,12 +28,12 @@ public class FinalUserDetailsService implements UserDetailsService {
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException(email + " not found."));
 
-		UserAuthDto userAuthDto = userMapper.toAuthDto(user);
+//		UserAuthDto userAuthDto = userMapper.toAuthDto(user);
 
-		Set<GrantedAuthority> authorities = userAuthDto.getRoles().stream()
-				.map((role) -> new SimpleGrantedAuthority(role.getRoleName())).collect(Collectors.toSet());
+		Set<GrantedAuthority> authorities = user.getUserRoles().stream()
+				.map((ur) -> new SimpleGrantedAuthority(ur.getRole().getRoleName())).collect(Collectors.toSet());
 
-		return new org.springframework.security.core.userdetails.User(userAuthDto.getEmail(), userAuthDto.getPassword(),
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
 				authorities);
 	}
 }

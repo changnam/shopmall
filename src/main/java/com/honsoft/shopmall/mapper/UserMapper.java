@@ -2,9 +2,7 @@ package com.honsoft.shopmall.mapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.mapstruct.AfterMapping;
@@ -15,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 import com.honsoft.shopmall.dto.RoleDto;
-import com.honsoft.shopmall.dto.UserAuthDto;
 import com.honsoft.shopmall.dto.UserDto;
 import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
@@ -62,10 +59,6 @@ public abstract class UserMapper {
 		}
 	}
 
-	@Mapping(target = "roles", ignore = true) // Manually set later
-	public abstract UserAuthDto toAuthDto(User user);
-
-
 	@Mapping(target = "userRoles", ignore = true)
 	public abstract void updateEntity(UserUpdateDto userUpdateDto, @MappingTarget User user);
 
@@ -84,7 +77,7 @@ public abstract class UserMapper {
 
 	 // AfterMapping hook to populate the list of roles from userRoles
     @AfterMapping
-    protected void mapRoles(User user, @MappingTarget UserAuthDto dto) {
+    protected void mapRoles(User user, @MappingTarget UserDto dto) {
         if (user.getUserRoles() != null) {
             List<RoleDto> roles = user.getUserRoles().stream()
                 .map(UserRole::getRole)
