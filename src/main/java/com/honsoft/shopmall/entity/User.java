@@ -21,34 +21,34 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //@AllArgsConstructor
 public class User {
-	@Id
-//	@GeneratedValue(strategy =GenerationType.IDENTITY)
-	private String userId;
+        @Id
+//      @GeneratedValue(strategy =GenerationType.IDENTITY)
+        private String userId;
 
-	private String password;
-	private String name;
-	
-	@Column(unique = true)
-	private String email;
-	private Boolean enabled;
-	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	@JsonManagedReference("user-userRoles")
-	@OrderBy("assignedAt DESC") // or "role.roleId ASC", depending on your entity fields
+        private String password;
+        private String name;
+
+        @Column(unique = true)
+        private String email;
+        private Boolean enabled;
+
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+        @JsonManagedReference("user-userRoles")
+        @OrderBy("assignedAt DESC") // or "role.roleId ASC", depending on your entity fields
     private Set<UserRole> userRoles = new HashSet<>(); //초기화 되어 있어야 add, clear 등 가능함
 
-	public void addRole(Role role) {
-	    boolean exists = this.userRoles.stream()
-	        .anyMatch(ur -> ur.getRole().equals(role));
+        public void addRole(Role role) {
+            boolean exists = this.userRoles.stream()
+                .anyMatch(ur -> ur.getRole().equals(role));
 
-	    if (!exists) {
-	        UserRole userRole = new UserRole(this, role);
-	        this.userRoles.add(userRole);
-	        role.addUserRole(userRole);
-	    }
-	}
+            if (!exists) {
+                UserRole userRole = new UserRole(this, role);
+                this.userRoles.add(userRole);
+                role.addUserRole(userRole);
+            }
+        }
 
-	public void clearRoles() {
-		this.userRoles.clear();
-	}
+        public void clearRoles() {
+                this.userRoles.clear();
+        }
 }

@@ -1,10 +1,10 @@
 package com.honsoft.shopmall;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.honsoft.shopmall.dto.RoleDto;
 import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
 import com.honsoft.shopmall.mapper.CustomerMapper;
@@ -31,7 +32,8 @@ import com.honsoft.shopmall.repository.PersonRepository;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
 import com.honsoft.shopmall.request.RoleCreateDto;
-import com.honsoft.shopmall.request.UserCreateDto;
+import com.honsoft.shopmall.service.RoleService;
+import com.honsoft.shopmall.service.UserService;
 import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
 
 import jakarta.annotation.PostConstruct;
@@ -41,6 +43,8 @@ import jakarta.annotation.PostConstruct;
 @ComponentScan(nameGenerator = FullyQualifiedBeanNameGenerator.class)
 public class ShopmallApplication implements CommandLineRunner {
 
+	private static final Logger logger = LoggerFactory.getLogger(ShopmallApplication.class);
+
 	private final BookRepositoryManual bookRepository;
 	private final PersonRepository personRepository;
 	private final MemberRepository memberRepository;
@@ -48,8 +52,10 @@ public class ShopmallApplication implements CommandLineRunner {
 	private final CustomerRepository customerRepository;
 	private final AddressRepository addressRepository;
 	private final CustomerMapper customerMapper;
+	private final UserService userService;
 	private final UserRepository userRepository;
 	private final UserMapper userMapper;
+	private final RoleService roleService;
 	private final RoleRepository roleRepository;
 	private final RoleMapper roleMapper;
 	private final PermissionRepository permissionRepository;
@@ -57,9 +63,9 @@ public class ShopmallApplication implements CommandLineRunner {
 
 	public ShopmallApplication(BookRepositoryManual bookRepository, PersonRepository personRepository,
 			MemberRepository memberRepository, PasswordEncoder passwordEncoder, CustomerRepository customerRepository,
-			AddressRepository addressRepository, CustomerMapper customerMapper, UserRepository userRepository,
-			UserMapper userMapper, RoleRepository roleRepositoy, RoleMapper roleMapper,
-			PermissionRepository permissionRepository, PermissionMapper permissionMapper) {
+			AddressRepository addressRepository, CustomerMapper customerMapper, UserService userService,
+			UserRepository userRepository, UserMapper userMapper, RoleService roleService, RoleRepository roleRepositoy,
+			RoleMapper roleMapper, PermissionRepository permissionRepository, PermissionMapper permissionMapper) {
 		this.bookRepository = bookRepository;
 		this.personRepository = personRepository;
 		this.memberRepository = memberRepository;
@@ -67,8 +73,10 @@ public class ShopmallApplication implements CommandLineRunner {
 		this.customerRepository = customerRepository;
 		this.addressRepository = addressRepository;
 		this.customerMapper = customerMapper;
+		this.userService = userService;
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
+		this.roleService = roleService;
 		this.roleRepository = roleRepositoy;
 		this.roleMapper = roleMapper;
 		this.permissionRepository = permissionRepository;
@@ -171,40 +179,39 @@ public class ShopmallApplication implements CommandLineRunner {
 //			permissionRepository.save(permission);
 //		}
 //		
-		Role role = roleRepository.findById("admin").orElse(null);
-		if (role == null) {
-			RoleCreateDto roleCreateDto = new RoleCreateDto();
-			roleCreateDto.setRoleId("admin");
-			roleCreateDto.setRoleName("ROLE_ADMIN");
-			role = roleMapper.toEntity(roleCreateDto);
-			roleRepository.save(role);
-		}
-
-//		User user = userRepository.findById("cngoh").orElse(null);
-//		if (user == null) {
-//			UserDto userDto = UserDto.builder().userId("cngoh").password(passwordEncoder.encode("pass")).build();
-//			user = userMapper.toEntity(userDto);
-//			userRepository.save(user);
+//		Role role = roleRepository.findById("admin").orElse(null);
+//		if (role == null) {
+//			RoleCreateDto roleCreateDto = new RoleCreateDto();
+//			roleCreateDto.setRoleId("admin");
+//			roleCreateDto.setRoleName("ROLE_ADMIN");
+//			RoleDto adminRole = roleService.createRole(roleCreateDto);
+//			logger.info("admin role created");
 //		}
-
-		User admin = userRepository.findById("admin").orElse(null);
-		if (admin == null) {
-			UserCreateDto adminCreateDto = new UserCreateDto();
-			adminCreateDto.setUserId("admin");
-			adminCreateDto.setEmail("admin@honsoft.com");
-			adminCreateDto.setPassword(passwordEncoder.encode("password"));
-			adminCreateDto.setRoleIds(new HashSet<>(List.of("admin")));
-			admin = userMapper.toEntity(adminCreateDto);
-
-			// Optionally add this user to each role.users set if bidirectional
-//			List<Role> adminRoles = admin.getRoles();
-//			for (Role adminRole : adminRoles) {
-//				adminRole.getUsers().add(admin); // Needed for bidirectional sync
-//			}
-
-			userRepository.save(admin);
-		}
-
+//
+////		User user = userRepository.findById("cngoh").orElse(null);
+////		if (user == null) {
+////			UserDto userDto = UserDto.builder().userId("cngoh").password(passwordEncoder.encode("pass")).build();
+////			user = userMapper.toEntity(userDto);
+////			userRepository.save(user);
+////		}
+//
+//		User admin = userRepository.findById("admin").orElse(null);
+//		if (admin == null) {
+////			UserCreateDto adminCreateDto = new UserCreateDto();
+////			adminCreateDto.setUserId("admin");
+////			adminCreateDto.setEmail("admin@honsoft.com");
+////			adminCreateDto.setPassword(passwordEncoder.encode("password"));
+////			adminCreateDto.setRoleIds(new HashSet<>(List.of("admin")));
+////			UserDto adminDto = userService.createUser(adminCreateDto);
+//			
+//			User adminUser = new User();
+//			adminUser.setUserId("admin");
+//			adminUser.setEmail("admin@honsoft.com");
+//			adminUser.setPassword(passwordEncoder.encode("password"));
+////			admin.setUserRoles(new HashSet<>(List.of("")));
+//			userRepository.save(adminUser);
+//		}
+//		logger.info("admin user created");
 	}
 
 	@Autowired

@@ -23,58 +23,22 @@ import jakarta.persistence.EntityNotFoundException;
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
 
-	@Autowired
-	protected RoleRepository roleRepository;
+        @Autowired
+        protected RoleRepository roleRepository;
 
-	@Mapping(target = "roles", expression = "java(toRoleDtoList(user))") // Manually set later
-	public abstract UserDto toDto(User user);
+        @Mapping(target = "roles", expression = "java(toRoleDtoList(user))") // Manually set later
+        public abstract UserDto toDto(User user);
 
-	protected List<RoleDto> toRoleDtoList(User user) {
-		return user.getUserRoles().stream().map(ur -> {
-			Role role = ur.getRole();
-			RoleDto dto = new RoleDto();
-			dto.setRoleId(role.getRoleId());
-			dto.setRoleName(role.getRoleName());
-			return dto;
-		}).toList();
-	}
-	
-	@Mapping(target = "roles", expression = "java(toRoleDtoList(user))") // Manually set later
-	public abstract UserAuthDto toAuthDto(User user);
+        protected List<RoleDto> toRoleDtoList(User user) {
+                return user.getUserRoles().stream().map(ur -> {
+                        Role role = ur.getRole();
+                        RoleDto dto = new RoleDto();
+                        dto.setRoleId(role.getRoleId());
+                        dto.setRoleName(role.getRoleName());
+                        return dto;
+                }).toList();
+        }
 
-	@Mapping(target = "userRoles", ignore = true)
-	public abstract User toEntity(UserCreateDto userCreateDto);
-
-	@AfterMapping
-	public void afterCreateMapping(UserCreateDto dto, @MappingTarget User user) {
-		if (dto.getRoleIds() != null) {
-			for (String roleId : dto.getRoleIds()) {
-				Role role = roleRepository.findById(roleId)
-						.orElseThrow(() -> new EntityNotFoundException(roleId + " not found"));
-				user.addRole(role);
-			}
-		}
-	}
-
-	@Mapping(target = "userRoles", ignore = true)
-	public abstract void updateEntity(UserUpdateDto userUpdateDto, @MappingTarget User user);
-
-	@AfterMapping
-	public void afterUpdateMapping(UserUpdateDto dto, @MappingTarget User user) {
-		user.clearRoles();
-		
-		if (dto.getRoleIds() != null) {
-			for (String roleId : dto.getRoleIds()) {
-				Role role = roleRepository.findById(roleId)
-						.orElseThrow(() -> new EntityNotFoundException(roleId + " not found"));
-				user.addRole(role);
-			}
-		}
-	}
-
-	public abstract List<UserDto> toDtoList(List<User> users);
-
-	public Page<UserDto> toPage(Page<User> users) {
-		return users.map(this::toDto);
-	}
+        @Mapping(target = "roles", expression = "java(toRoleDtoList(user))") // Manually set later
+        public abstract UserAuthDto toAuthDto(User user);
 }
