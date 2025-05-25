@@ -26,12 +26,14 @@ import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {
+	private final BizExceptionMessageService bizExceptionMessageService;
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
 	private final UserMapper userMapper;
 	private final RoleMapper roleMapper;
 
-	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, RoleMapper roleMapper) {
+	public UserServiceImpl(BizExceptionMessageService bizExceptionMessageService,UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, RoleMapper roleMapper) {
+		this.bizExceptionMessageService = bizExceptionMessageService;
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
 		this.roleRepository = roleRepository;
@@ -49,6 +51,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto createUser(UserCreateDto userCreateDto) {
 		User user = userMapper.toEntity(userCreateDto);
+		//check email already exists
+		userRepository.findByEmail(user.getEmail()).ifPresent(a -> {throw bizExceptionMessageService.createLocalizedException("EMAIL_ALREADY_EXIST");});
+
+				
 		User savedUser = userRepository.save(user);
 		UserDto savedUserDto = userMapper.toDto(savedUser);
 		return savedUserDto;
