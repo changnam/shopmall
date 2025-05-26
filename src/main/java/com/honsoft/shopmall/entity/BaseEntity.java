@@ -14,21 +14,20 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import lombok.Data;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-@Data
-public abstract class BaseEntity {
+public abstract class BaseEntity<U> {
     @CreatedBy
-    protected String createdBy;
+    @Column(updatable = false)
+    protected U createdBy;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
     protected LocalDateTime createdDate;
 
     @LastModifiedBy
-    protected String lastModifiedBy;
+    protected U lastModifiedBy;
 
     @LastModifiedDate
     protected LocalDateTime lastModifiedDate;
@@ -39,6 +38,54 @@ public abstract class BaseEntity {
 
     @UpdateTimestamp  //hibernate 기능
     private Instant updatedAt;
+
+	public U getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(U createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public LocalDateTime getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDateTime createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public U getLastModifiedBy() {
+		return lastModifiedBy;
+	}
+
+	public void setLastModifiedBy(U lastModifiedBy) {
+		this.lastModifiedBy = lastModifiedBy;
+	}
+
+	public LocalDateTime getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Instant updatedAt) {
+		this.updatedAt = updatedAt;
+	}
     
     
 }

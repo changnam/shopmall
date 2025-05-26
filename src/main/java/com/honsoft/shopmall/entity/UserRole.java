@@ -11,18 +11,21 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Setter
+@Getter
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user_roles")
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 @ToString(exclude = {"user","role"})
-public class UserRole {
+public class UserRole extends BaseEntity<String>{
     @EmbeddedId
     @AttributeOverrides({
         @AttributeOverride(name = "userId", column = @Column(name = "user_id")),

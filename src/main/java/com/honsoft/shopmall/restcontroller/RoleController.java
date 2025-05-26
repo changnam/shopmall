@@ -20,7 +20,7 @@ import com.honsoft.shopmall.request.RoleUpdateDto;
 import com.honsoft.shopmall.service.RoleService;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("/api/v1/roles")
 public class RoleController {
 	private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
 

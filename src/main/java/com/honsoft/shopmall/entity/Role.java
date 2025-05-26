@@ -1,26 +1,28 @@
 package com.honsoft.shopmall.entity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Data
+@Setter
+@Getter
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "roles")
 @NoArgsConstructor
 //@AllArgsConstructor
 @ToString(exclude = {"userRoles","rolePermissions"})
-public class Role {
+public class Role extends BaseEntity<String>{
         @Id
         private String roleId;
 

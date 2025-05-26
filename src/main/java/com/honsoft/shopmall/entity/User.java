@@ -13,23 +13,27 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Setter
+@Getter
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
 //@AllArgsConstructor
 @ToString(exclude = {"userRoles"})
-public class User {
+public class User extends BaseEntity<String>{
         @Id
 //      @GeneratedValue(strategy =GenerationType.IDENTITY)
         @Size(min = 3)
         private String userId;
 
-        @Size(min = 8,max = 16)
+//        @Size(min = 8,max = 16)
         private String password;
         private String name;
 
@@ -40,7 +44,7 @@ public class User {
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
         @JsonManagedReference("user-userRoles")
         @OrderBy("assignedAt DESC") // or "role.roleId ASC", depending on your entity fields
-    private List<UserRole> userRoles = new ArrayList(); //초기화 되어 있어야 add, clear 등 가능함
+    private List<UserRole> userRoles = new ArrayList<UserRole>(); //초기화 되어 있어야 add, clear 등 가능함
 
         public void addRole(Role role) {
             boolean exists = this.userRoles.stream()
