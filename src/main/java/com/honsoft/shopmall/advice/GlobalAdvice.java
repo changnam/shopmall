@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,13 +21,13 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.honsoft.shopmall.response.ResponseHandler;
-import com.honsoft.shopmall.util.EmptyStringToNullEditor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class GlobalAdvice {
+	private static final Logger logger = LoggerFactory.getLogger(GlobalAdvice.class);
 
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public Object handleNotFound(HttpServletRequest request, NoHandlerFoundException ex) {
@@ -237,8 +240,9 @@ public class GlobalAdvice {
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-
-		binder.registerCustomEditor(String.class, new EmptyStringToNullEditor());
+		logger.info("global binder started.");
+//		binder.registerCustomEditor(String.class, new EmptyStringToNullEditor());
+		binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 	}
 
 }
