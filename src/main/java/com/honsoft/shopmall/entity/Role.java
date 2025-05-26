@@ -12,12 +12,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @Table(name = "roles")
 @NoArgsConstructor
 //@AllArgsConstructor
+@ToString(exclude = {"userRoles","rolePermissions"})
 public class Role {
         @Id
         private String roleId;

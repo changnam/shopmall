@@ -14,12 +14,14 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "user_roles")
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"user","role"})
 public class UserRole {
     @EmbeddedId
     @AttributeOverrides({

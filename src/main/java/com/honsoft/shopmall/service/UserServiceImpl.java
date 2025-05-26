@@ -1,10 +1,17 @@
 package com.honsoft.shopmall.service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hibernate.engine.spi.EntityEntry;
+import org.hibernate.engine.spi.EntityKey;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,10 +31,17 @@ import com.honsoft.shopmall.repository.UserRepository;
 import com.honsoft.shopmall.request.UserCreateDto;
 import com.honsoft.shopmall.request.UserUpdateDto;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserServiceImpl implements UserService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+	
+//	@PersistenceContext
+	private final EntityManager entityManger;
+	
 	private final BizExceptionMessageService bizExceptionMessageService;
 	private final UserRepository userRepository;
 	private final RoleRepository roleRepository;
@@ -35,8 +49,9 @@ public class UserServiceImpl implements UserService {
 	private final RoleMapper roleMapper;
 	private final Validator validator;
 	
-	public UserServiceImpl(BizExceptionMessageService bizExceptionMessageService,UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, RoleMapper roleMapper,
+	public UserServiceImpl(EntityManager entityManager,BizExceptionMessageService bizExceptionMessageService,UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, RoleMapper roleMapper,
 			@Qualifier("bookValidator") Validator validator) {
+		this.entityManger = entityManager;
 		this.bizExceptionMessageService = bizExceptionMessageService;
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
@@ -55,6 +70,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public UserDto createUser(UserCreateDto userCreateDto) {
+		briefOverviewOfPersistentContextContext();
 		User user = userMapper.toEntity(userCreateDto);
 		//check email already exists
 		userRepository.findByEmail(user.getEmail()).ifPresent(a -> {throw bizExceptionMessageService.createLocalizedException("EMAIL_ALREADY_EXIST");});
@@ -62,6 +78,7 @@ public class UserServiceImpl implements UserService {
 				
 		User savedUser = userRepository.save(user);
 		UserDto savedUserDto = userMapper.toDto(savedUser);
+		briefOverviewOfPersistentContextContext();
 		return savedUserDto;
 	}
 
@@ -139,5 +156,41 @@ public class UserServiceImpl implements UserService {
 		 return userRepository.findById(id).map(userMapper::toDto);
 	}
 
+	private org.hibernate.engine.spi.PersistenceContext getPersistenceContext(){
+		SharedSessionContractImplementor sharedSession = entityManger.unwrap(SharedSessionContractImplementor.class);
+		return sharedSession.getPersistenceContext();
+	}
 
+	private void briefOverviewOfPersistentContextContext() {
+		org.hibernate.engine.spi.PersistenceContext persistenceContext = getPersistenceContext();
+		int managedEntities = persistenceContext.getNumberOfManagedEntities();
+		int collectionEntriesSize = persistenceContext.getCollectionEntriesSize();
+		logger.info("Total numbe of managed entities: {}",managedEntities);
+		logger.info("Total numbe of collection entries  {}",collectionEntriesSize);
+		
+		Map<EntityKey, Object> entitiesByKey = persistenceContext.getEntitiesByKey();
+		if(!entitiesByKey.isEmpty()) {
+			logger.info("\nEntities by key: ");
+			entitiesByKey.forEach((key, value) -> logger.info("{} : {}",key,value ));
+			
+			logger.info("\nStatus and hydrated state: ");
+			for (Map.Entry<EntityKey, Object> entry : entitiesByKey.entrySet()) {
+			    Object entity = entry.getValue(); // The actual entity object
+			    EntityEntry ee = persistenceContext.getEntry(entity); // ✅ Correct method
+			    logger.info("Entity name: {} | Status: {} | State: {}",
+			        ee.getEntityName(), ee.getStatus(), Arrays.toString(ee.getLoadedState()));
+			}
+//			
+////			for (Object entry : entitiesByKey.values()) {
+////				EntityEntry ee = persistenceContext.getEntity(entry.getKey());
+////				logger.info("Entity name: {} | Status: {} | State: {}",ee.getEntityName(),ee.getStatus(),Arrays.toString(ee.getLoadedState()));			
+////			}
+		}
+		
+		if (collectionEntriesSize > 0) {
+			logger.info("\nCollection entries:");
+			persistenceContext.forEachCollectionEntry((k, v)->logger.info("Key: {}, Value: {}",k,v.getRole() == null ? "" : v),false);
+		}
+		
+	}
 }

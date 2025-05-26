@@ -15,12 +15,14 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
 //@AllArgsConstructor
+@ToString(exclude = {"userRoles"})
 public class User {
         @Id
 //      @GeneratedValue(strategy =GenerationType.IDENTITY)
