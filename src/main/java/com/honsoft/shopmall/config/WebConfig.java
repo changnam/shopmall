@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import com.honsoft.shopmall.interceptor.MonitoringInterceptor;
 import com.honsoft.shopmall.util.DatabaseMessageSource;
 import com.honsoft.shopmall.util.DelegatingLocaleResolver;
+import com.honsoft.shopmall.util.TrimmedStringDeserializer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -136,6 +138,11 @@ public class WebConfig implements WebMvcConfigurer {
     	messageSource.setFallbackToSystemLocale(false);
     	messageSource.setAlwaysUseMessageFormat(false);
     	return messageSource;
+    }
+    
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer customizer() {
+        return builder -> builder.deserializerByType(String.class, new TrimmedStringDeserializer());
     }
     
 }
