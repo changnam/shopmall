@@ -65,9 +65,9 @@ public class UserController {
 		return ResponseHandler.responseBuilder("update success", HttpStatus.OK, updatedUserDto);
 	}
 	
-	@DeleteMapping
-	public ResponseEntity<Object> deleteUser(@RequestBody UserDto UserDto){
-		userService.deleteUserById(UserDto.getUserId());
-		return ResponseHandler.responseBuilder("delete success", HttpStatus.OK, "delete success");
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> deleteUser(@PathVariable("id") String userId){
+		userService.deleteUserById(userId);
+		return ResponseHandler.responseBuilder("delete success", HttpStatus.OK, userId +" delete success");
 	}
 }
