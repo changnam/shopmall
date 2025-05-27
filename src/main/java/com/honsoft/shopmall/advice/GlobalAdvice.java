@@ -215,12 +215,27 @@ public class GlobalAdvice {
 			return ResponseHandler.responseBuilder("error occured", HttpStatus.NOT_FOUND, error);
 //			return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
 		} else {
+			Map<String, Object> error = new HashMap<>();
+			Throwable cause = ex.getRootCause();
+			if (cause instanceof ConstraintViolationException) {
+				ConstraintViolationException validationEx = (ConstraintViolationException) cause;
+
+				// Collect field errors into a map
+				Map<String, Object> violations = validationEx.getConstraintViolations().stream()
+						.collect(Collectors.toMap(v -> v.getPropertyPath().toString(), v -> v.getMessage(),
+								(existing, replacement) -> existing // In case of duplicate keys
+						));
+
+				error.put("violations", violations);
+			}
+			
 			// Browser request (Accept: text/html or default)
 //            ModelAndView modelAndView = new ModelAndView("error/404");
 //            modelAndView.setStatus(HttpStatus.NOT_FOUND);
 //            modelAndView.addObject("url", ex.getRequestURL());
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("exception", ex);
+			modelAndView.addObject("error",error);
 			modelAndView.setViewName("errorCommon");
 
 			return modelAndView;
