@@ -8,9 +8,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.mapstruct.AfterMapping;
+import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
@@ -39,6 +41,12 @@ public abstract class UserMapper {
 	public abstract UserDto toDto(User user);
 
 	@Mapping(target = "userRoles", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "createdBy", ignore = true)
+	@Mapping(target = "createdDate", ignore = true)
+	@Mapping(target = "lastModifiedBy", ignore = true)
+	@Mapping(target = "lastModifiedDate", ignore = true)
+	@Mapping(target = "updatedAt", ignore = true)
 	public abstract User toEntity(UserCreateDto userCreateDto);
 
 	@AfterMapping
@@ -61,9 +69,19 @@ public abstract class UserMapper {
 		}
 	}
 
+	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "userRoles", ignore = true)
+	@Mapping(target = "createdAt", ignore = true)
+	@Mapping(target = "createdBy", ignore = true)
+	@Mapping(target = "createdDate", ignore = true)
+	@Mapping(target = "lastModifiedBy", ignore = true)
+	@Mapping(target = "lastModifiedDate", ignore = true)
+	@Mapping(target = "updatedAt", ignore = true)
+	@Mapping(target = "password", ignore = true)
+	@Mapping(target = "userId", ignore = true)
 	public abstract void updateEntity(UserUpdateDto userUpdateDto, @MappingTarget User user);
 
+	
 	@AfterMapping
 	public void afterUpdateMapping(UserUpdateDto dto, @MappingTarget User user) {
 	    // 1. Build new UserRoleId list from dto.roleIds
