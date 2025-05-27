@@ -2,13 +2,19 @@ package com.honsoft.shopmall.controller;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.honsoft.shopmall.dto.UserDto;
@@ -31,51 +37,70 @@ public class UserController {
 	@GetMapping
 	public String listUsers(Model model) {
 		model.addAttribute("users", userService.getAllUsers());
-		return "user/list";
+		return "users/userList";
 	}
+	
+	@GetMapping("/page")
+	public String pageUsers(Model model,@PageableDefault(page = 0, size = 5, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+		Page<UserDto> pageUser = userService.getPageUsers(pageable);
+		model.addAttribute("users", pageUser.getContent());
+		return "users/userList";
+	}
+	
 
 	@GetMapping("/add")
 	public String showAddForm(Model model) {
-		model.addAttribute("userDto", new UserDto());
+		model.addAttribute("userCreateDto", new UserCreateDto());
 		model.addAttribute("roles", roleService.getAllRoles());
-		return "user/form";
+		return "users/userAddForm";
 	}
 
 	@PostMapping("/add")
-	public String addUser(@Valid @ModelAttribute("userDto") UserCreateDto userCreateDto, BindingResult result,
+	public String addUser(@Valid @ModelAttribute("userCreateDto") UserCreateDto userCreateDto, BindingResult result,
 			Model model) {
 		if (result.hasErrors()) {
 			model.addAttribute("roles", roleService.getAllRoles());
-			return "user/form";
+			return "users/userAddForm";
 		}
 		userService.createUser(userCreateDto);
 		return "redirect:/users";
 	}
 
-	@GetMapping("/edit/{id}")
-	public String showEditForm(@PathVariable String id, Model model) {
+	@GetMapping("/{id}")
+	public String getUserById(@PathVariable("id") String id, Model model) {
 		Optional<UserDto> userOpt = userService.findById(id);
 		if (userOpt.isEmpty()) {
 			return "redirect:/users";
 		}
 		model.addAttribute("userDto", userOpt.get());
 		model.addAttribute("roles", roleService.getAllRoles());
-		return "user/form";
+		return "users/userDetail";
+	}
+	
+	@GetMapping("/edit/{id}")
+	public String showEditForm(@PathVariable("id") String id, Model model) {
+		Optional<UserDto> userOpt = userService.findById(id);
+		if (userOpt.isEmpty()) {
+			return "redirect:/users";
+		}
+		model.addAttribute("userUpdateDto", userOpt.get());
+		model.addAttribute("roles", roleService.getAllRoles());
+		return "users/userEditForm";
 	}
 
-	@PostMapping("/edit/{id}")
-	public String updateUser(@PathVariable String id, @Valid @ModelAttribute("userDto") UserUpdateDto userUpdateDto,
+	@PutMapping("/edit/{id}")
+	public String updateUser(@PathVariable("id") String id, @Valid @ModelAttribute("userUpdateDto") UserUpdateDto userUpdateDto,
 			BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			model.addAttribute("roles", roleService.getAllRoles());
-			return "user/form";
+			return "users/userEditForm";
 		}
 		userService.updateUser(id, userUpdateDto);
 		return "redirect:/users";
 	}
 
-	@GetMapping("/delete/{id}")
-	public String deleteUser(@PathVariable String id) {
+	@DeleteMapping("/delete/{id}")
+	public String deleteUser(@PathVariable("id") String id) {
 		userService.deleteUserById(id);
 		return "redirect:/users";
 	}

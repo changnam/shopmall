@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -91,11 +92,6 @@ public class WebConfig implements WebMvcConfigurer {
         return bean;
     }
     
-    @Bean
-    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
-        return new HiddenHttpMethodFilter();
-    }
-
 //    @Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
 //    	CorsConfiguration config = new CorsConfiguration();

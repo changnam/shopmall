@@ -12,9 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 //@Builder
 public class UserUpdateDto {
-	private String userId;
 
-	private String password;
 	private String name;
 	private String email;
 	private Boolean enabled;

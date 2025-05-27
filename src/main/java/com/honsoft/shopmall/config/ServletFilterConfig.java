@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 import com.honsoft.shopmall.security.JwtAuthenticationFilter;
 import com.honsoft.shopmall.service.CustomUserDetailsService;
@@ -15,7 +16,7 @@ import com.honsoft.shopmall.util.StaticResourceFilter;
 
 @Configuration
 public class ServletFilterConfig {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ServletFilterConfig.class);
 //	
 //	private final JwtService jwtService;
@@ -26,7 +27,7 @@ public class ServletFilterConfig {
 //        this.customUserDetailsService = customUserDetailsService;
 //    }
 //    
-    
+
 	@Bean
 	public FilterRegistrationBean<SessionLoggerFilter> loggingFilter() {
 		FilterRegistrationBean<SessionLoggerFilter> registrationBean = new FilterRegistrationBean<>();
@@ -40,16 +41,24 @@ public class ServletFilterConfig {
 
 	@Bean
 	public FilterRegistrationBean<StaticResourceFilter> loggingStaticFilter() {
-		
+
 		FilterRegistrationBean<StaticResourceFilter> registrationBean = new FilterRegistrationBean<>();
 
 		registrationBean.setFilter(new StaticResourceFilter());
 		registrationBean.addUrlPatterns("/*");
-		registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE -1);
+		registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE - 1);
 
 		return registrationBean;
 	}
-	
+
+	@Bean
+	public FilterRegistrationBean<HiddenHttpMethodFilter> hiddenHttpMethodFilter() {
+		FilterRegistrationBean<HiddenHttpMethodFilter> filter = new FilterRegistrationBean<>(
+				new HiddenHttpMethodFilter());
+		filter.addUrlPatterns("/*");
+		return filter;
+	}
+
 //	
 //	@Bean
 //	public FilterRegistrationBean<JwtAuthenticationFilter> jwtAuthFilter() {

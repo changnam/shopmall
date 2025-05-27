@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+			<div class="container-fluid py-5">
+				<h1 class="display-5 fw-bold">
+					<span th:text="#{label.editUser.form.title}" />
+				</h1>
+				<p class="col-md-8 fs-4">Honsoft</p>
+			</div>
+		</div>
+
+		<div class="row">
+			<form  th:object="${userDto}">
+				<div class="mb-3 row">
+					<label for="id" class="col-sm-2">id</label> <input type="text"
+						name="userId" th:field="*{userId}" class="col-sm-3 " disabled />
+					<div class="col-sm-6">
+						<p class="text-danger" th:errors="*{userId}" />
+					</div>
+				</div>
+
+				<div class="mb-3 row">
+					<label for="name" class="col-sm-2">name</label> <input type="text"
+						name="name" th:field="*{name}" class="col-sm-3" />
+						<div class="col-sm-6">
+                        <p class="text-danger" th:errors="*{name}" />
+                    </div>
+				</div>
+				<div class="mb-3 row">
+					<label for="email" class="col-sm-2">email</label> <input
+						type="text" name="email" th:field="*{email}" class="col-sm-3" />
+						<div class="col-sm-6">
+                        <p class="text-danger" th:errors="*{email}" />
+                    </div>
+				</div>
+				
+				<div class="mb-3 row">
+					<div class="col-sm-10">
+						<a th:href="@{'/users/edit/'+${userDto.userId}}" class="btn btn-secondary">update</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

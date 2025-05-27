@@ -3,6 +3,7 @@ package com.honsoft.shopmall.request;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,8 @@ public class UserCreateDto {
 
 	private String password;
 	private String name;
+	
+	@Email
 	private String email;
 	private Boolean enabled;
 
