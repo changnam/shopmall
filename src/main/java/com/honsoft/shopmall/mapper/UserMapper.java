@@ -2,7 +2,9 @@ package com.honsoft.shopmall.mapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.mapstruct.AfterMapping;
@@ -64,17 +66,50 @@ public abstract class UserMapper {
 
 	@AfterMapping
 	public void afterUpdateMapping(UserUpdateDto dto, @MappingTarget User user) {
-		user.clearRoles();
-		
-		if (dto.getRoleIds() != null) {
-			for (String roleId : dto.getRoleIds()) {
-				Role role = roleRepository.findById(roleId)
-						.orElseThrow(() -> new EntityNotFoundException(roleId + " not found"));
-				user.addRole(role);
-			}
-		}
-	}
+	    // 1. Build new UserRoleId list from dto.roleIds
+	    List<UserRoleId> newRoleIds = new ArrayList<>();
+	    Map<String, Role> roleMap = new HashMap<>();
 
+	    if (dto.getRoleIds() != null) {
+	        for (String roleId : dto.getRoleIds()) {
+	            Role role = roleRepository.findById(roleId)
+	                .orElseThrow(() -> new EntityNotFoundException(roleId + " not found"));
+	            newRoleIds.add(new UserRoleId(user.getUserId(), role.getRoleId()));
+	            roleMap.put(role.getRoleId(), role);
+	        }
+	    }
+
+	    // 2. Remove roles that are no longer in newRoleIds
+	    List<UserRole> rolesToRemove = new ArrayList<>();
+	    for (UserRole userRole : user.getUserRoles()) {
+	        if (!newRoleIds.contains(userRole.getId())) {
+	            rolesToRemove.add(userRole);
+	        }
+	    }
+	    for (UserRole userRole : rolesToRemove) {
+	        userRole.getRole().getUserRoles().remove(userRole);
+	        userRole.setUser(null);
+	        userRole.setRole(null);
+	        user.removeUserRole(userRole);
+	    }
+
+	    // 3. Add new roles that do not exist yet
+	    for (UserRoleId userRoleId : newRoleIds) {
+	        boolean exists = user.getUserRoles().stream()
+	            .anyMatch(ur -> ur.getId().equals(userRoleId));
+
+	        if (!exists) {
+	            Role role = roleMap.get(userRoleId.getRoleId()); // Already loaded above
+	            UserRole newUserRole = new UserRole();
+	            newUserRole.setId(userRoleId);
+	            newUserRole.setUser(user);
+	            newUserRole.setRole(role);
+	            user.addUserRole(newUserRole);
+	            role.getUserRoles().add(newUserRole); // maintain bidirectional link
+	        }
+	    }
+	}
+	
 	 // AfterMapping hook to populate the list of roles from userRoles
     @AfterMapping
     protected void mapRoles(User user, @MappingTarget UserDto dto) {

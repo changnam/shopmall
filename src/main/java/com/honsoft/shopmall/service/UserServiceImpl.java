@@ -33,13 +33,14 @@ import com.honsoft.shopmall.request.UserUpdateDto;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 public class UserServiceImpl implements UserService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	
-//	@PersistenceContext
+	@PersistenceContext
 	private final EntityManager entityManger;
 	
 	private final BizExceptionMessageService bizExceptionMessageService;
@@ -101,11 +102,38 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public UserDto updateUser(String userId, UserUpdateDto userUpdateDto) {
+		logger.info("@@@@@@@@@@@@@@@@@@@ 1");
+		briefOverviewOfPersistentContextContext();
 		User existingUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId));
-		userMapper.updateEntity(userUpdateDto, existingUser);
 		
-		User updatedUser = userRepository.save(existingUser);
-		return userMapper.toDto(updatedUser);
+		logger.info("@@@@@@@@@@@@@@@@@@@ 2");
+		briefOverviewOfPersistentContextContext();
+		userMapper.updateEntity(userUpdateDto, existingUser);
+//		
+//		logger.info("@@@@@@@@@@@@@@@@@@@ 3");
+//		briefOverviewOfPersistentContextContext();
+//		existingUser.clearRoles();
+//		logger.info("@@@@@@@@@@@@@@@@@@@ 4");
+//		briefOverviewOfPersistentContextContext();
+//		
+//		if (userUpdateDto.getRoleIds() != null) {
+//			for (String roleId : userUpdateDto.getRoleIds()) {
+//				Role role = roleRepository.findById(roleId)
+//						.orElseThrow(() -> new EntityNotFoundException(roleId + " not found"));
+//				existingUser.addRole(role);
+//			}
+//		}
+//		
+//		logger.info("@@@@@@@@@@@@@@@@@@@ 5");
+//		briefOverviewOfPersistentContextContext();
+//		entityManger.flush();
+//		logger.info("@@@@@@@@@@@@@@@@@@@ 6");
+//		briefOverviewOfPersistentContextContext();
+//		User updatedUser = userRepository.save(existingUser);
+//		logger.info("@@@@@@@@@@@@@@@@@@@ 6-1");
+//		briefOverviewOfPersistentContextContext();
+		return userMapper.toDto(existingUser);
+//		return null;
 	}
 
 	@Transactional

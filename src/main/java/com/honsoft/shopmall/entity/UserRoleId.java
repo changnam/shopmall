@@ -14,7 +14,12 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class UserRoleId implements Serializable {
 
-    private String userId;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String userId;
 	
     private String roleId;
 

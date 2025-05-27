@@ -18,18 +18,22 @@ import lombok.Data;
 public class Permission {
 
 	@Id
-	private String  permissionId;
-	
+	private String permissionId;
+
 	private String name;
 	private String path;
-	
+
 	@Pattern(regexp = "GET|POST|DELETE|PUT")
 	private String httpMethod;
-	
+
 //	@ManyToMany(mappedBy = "permissions")
 //	private Set<Role> roles;
 
 	@OneToMany(mappedBy = "permission", cascade = CascadeType.ALL)
 	@JsonManagedReference
-    private Set<RolePermission> rolePermissions;
+	private Set<RolePermission> rolePermissions;
+
+	public void addRolePermission(RolePermission rolePermission) {
+		this.rolePermissions.add(rolePermission);
+	}
 }
