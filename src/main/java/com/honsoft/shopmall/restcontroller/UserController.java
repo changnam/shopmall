@@ -47,7 +47,7 @@ public class UserController {
 		return ResponseEntity.ok(list);
 	}
 	
-	@GetMapping("/id/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<Object> getUserById(@PathVariable("id") String UserId){
 		UserDto UserDto = userService.getUserById(UserId);
 		return ResponseHandler.responseBuilder("get success", HttpStatus.OK, UserDto);
@@ -59,9 +59,9 @@ public class UserController {
 		return ResponseHandler.responseBuilder("create success", HttpStatus.OK, createdUserDto);
 	}
 	
-	@PutMapping
-	public ResponseEntity<Object> updateUser(@RequestBody UserUpdateDto userUpdateDto){
-		UserDto updatedUserDto = userService.updateUser(userUpdateDto.getUserId(),userUpdateDto);
+	@PutMapping("/{id}")
+	public ResponseEntity<Object> updateUser(@PathVariable("id") String userId,@RequestBody UserUpdateDto userUpdateDto){
+		UserDto updatedUserDto = userService.updateUser(userId,userUpdateDto);
 		return ResponseHandler.responseBuilder("update success", HttpStatus.OK, updatedUserDto);
 	}
 	
