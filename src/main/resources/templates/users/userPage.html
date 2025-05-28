@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Users List</title>
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<div class="d-flex justify-content-between align-items-center my-3">
+			<h2>Users list</h2>
+			<a th:href="@{/users/add}" class="btn btn-primary">Add user</a>
+		</div>
+
+		<table class="table table-bordered table-striped">
+			<thead class="table-dark">
+				<tr>
+					<th>id</th>
+					<th>name</th>
+					<th>email</th>
+					<th>detail</th>
+					<th>edit</th>
+					<th>delete</th>
+					<th>edit modal</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="user : ${users}">
+					<td th:text="${user.userId}">id</td>
+					<td th:text="${user.name}">name</td>
+					<td th:text="${user.email}">email</td>
+					<td><a th:href="@{'/users/' + ${user.userId}}"
+						class="btn btn-secondary">detail</a></td>
+					<td><a th:href="@{'/users/edit/' + ${user.userId}}"
+						class="btn btn-secondary">edit</a></td>
+					<td>
+						<form th:action="@{/users/delete/{id}(id=${user.userId})}"
+							method="post">
+							<input type="hidden" name="_method" value="delete" />
+							<button type="submit" class="btn btn-danger">Delete</button>
+						</form>
+					</td>
+					<td>
+						<button type="button" class="btn btn-secondary edit-btn"
+							data-bs-toggle="modal" data-bs-target="#editModal"
+							th:attr="data-id=${user.userId},data-email=${user.email},data-name=${user.name}">edit</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<nav class="centered mt-4">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" th:classappend="${page.first} ? ' disabled'">
+					<a
+					th:href="@{/users/page(page=0, size=${page.size}, sort=${sort})}"
+					class="page-link">First</a>
+				</li>
+
+				<li class="page-item" th:classappend="${page.first} ? ' disabled'">
+					<a
+					th:href="@{/users/page(page=${page.number - 1}, size=${page.size}, sort=${sort})}"
+					class="page-link">Prev</a>
+				</li>
+
+				<li class="page-item"
+					th:each="i : ${#numbers.sequence(page.number > 2 ? page.number - 2 : 0, page.number + 2 < page.totalPages ? page.number + 2 : page.totalPages - 1)}"
+					th:classappend="${i == page.number} ? ' active'"><a
+					class="page-link"
+					th:href="@{/users/page(page=${i}, size=${page.size}, sort=${sort})}"
+					th:text="${i + 1}"></a></li>
+
+				<li class="page-item" th:classappend="${page.last} ? ' disabled'">
+					<a
+					th:href="@{/users/page(page=${page.number + 1}, size=${page.size}, sort=${sort})}"
+					class="page-link">Next</a>
+				</li>
+
+				<li class="page-item" th:classappend="${page.last} ? ' disabled'">
+					<a
+					th:href="@{/users/page(page=${page.totalPages - 1}, size=${page.size}, sort=${sort})}"
+					class="page-link">Last</a>
+				</li>
+			</ul>
+
+
+			<!-- Page Info -->
+			<div class="text-center mt-2">
+				Page <span th:text="${page.number + 1}"></span> of <span
+					th:text="${page.totalPages}"></span> | Total Items: <span
+					th:text="${page.totalElements}"></span>
+			</div>
+
+		</nav>
+	</div>
+	<div id="editModal" class="modal fade" tabIndex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit User</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+				<div class="modal-body">
+					<input id="user-id" type="hidden" />
+					<div class="mb-3">
+						<label class="form-label" for="user-name">Name</label> <input
+							class="form-control" type="text" id="user-name">
+					</div>
+					<div class="mb-3">
+						<label class="form-label" for="user-email">Email</label> <input
+							class="form-control" type="text" id="user-email">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="save-user-btn">Save</button>
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+	<script>
+	   document.addEventListener('DOMContentLoaded',() => {
+		   document.querySelectorAll('.edit-btn').forEach(button => {
+			   button.addEventListener('click',() => {
+				   const id = button.getAttribute('data-id');
+				   const name = button.getAttribute('data-name');
+				   const email = button.getAttribute('data-email');
+				   
+				   document.getElementById('user-id').value = id;
+				   document.getElementById('user-name').value = name;
+				   document.getElementById('user-email').value = email;
+			   })
+		   });
+	   
+	   const saveBtn = document.getElementById('save-user-btn');
+	   if(saveBtn){
+		   saveBtn.addEventListener('click', () => {
+			   const id = document.getElementById('user-id').value;
+			   const name = document.getElementById('user-name').value;
+			   const email = document.getElementById('user-email').value;
+			   
+			   fetch(`/api/v1/users/${id}`,{
+				   method: 'PUT',
+				   headers: {
+					   'Content-Type': 'application/json'
+				   },
+				   body: JSON.stringify({
+					   userId: id,
+					   name: name,
+					   email: email
+				   })
+			   }).then(response => {
+				   if(!response.ok) throw new Error("fetch error");
+				   return response.json();
+			   }).then(data => {
+				   location.reload();
+			   }).catch(error => {
+				   console.error(error);
+				   alert("update error");
+			   });
+			   
+		   })
+	   }
+	   });
+	</script>
+</body>
+</html>

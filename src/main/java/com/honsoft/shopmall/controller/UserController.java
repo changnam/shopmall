@@ -1,6 +1,7 @@
 package com.honsoft.shopmall.controller;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,10 +42,17 @@ public class UserController {
 	}
 	
 	@GetMapping("/page")
-	public String pageUsers(Model model,@PageableDefault(page = 0, size = 5, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+	public String pageUsers(Model model,@PageableDefault(page = 0, size = 2, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+		
+		String sort = pageable.getSort().stream()
+			    .map(order -> order.getProperty() + "," + order.getDirection().name().toLowerCase())
+			    .collect(Collectors.joining("&sort=")); // Note: '&sort=' for multiple sort criteria
+		
 		Page<UserDto> pageUser = userService.getPageUsers(pageable);
 		model.addAttribute("users", pageUser.getContent());
-		return "users/userList";
+		model.addAttribute("page", pageUser);
+		model.addAttribute("sort", sort);
+		return "users/userPage";
 	}
 	
 

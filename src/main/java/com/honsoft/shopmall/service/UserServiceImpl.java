@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
@@ -49,9 +50,10 @@ public class UserServiceImpl implements UserService {
 	private final UserMapper userMapper;
 	private final RoleMapper roleMapper;
 	private final Validator validator;
+	private final PasswordEncoder passwordEncoder;
 	
 	public UserServiceImpl(EntityManager entityManager,BizExceptionMessageService bizExceptionMessageService,UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, RoleMapper roleMapper,
-			@Qualifier("bookValidator") Validator validator) {
+			@Qualifier("bookValidator") Validator validator,PasswordEncoder passwordEncoder) {
 		this.entityManger = entityManager;
 		this.bizExceptionMessageService = bizExceptionMessageService;
 		this.userRepository = userRepository;
@@ -59,6 +61,7 @@ public class UserServiceImpl implements UserService {
 		this.roleRepository = roleRepository;
 		this.roleMapper = roleMapper;
 		this.validator = validator;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Transactional
@@ -76,7 +79,7 @@ public class UserServiceImpl implements UserService {
 		//check email already exists
 		userRepository.findByEmail(user.getEmail()).ifPresent(a -> {throw bizExceptionMessageService.createLocalizedException("EMAIL_ALREADY_EXIST");});
 
-				
+		user.setPassword(passwordEncoder.encode(user.getPassword()));		
 		User savedUser = userRepository.save(user);
 		UserDto savedUserDto = userMapper.toDto(savedUser);
 		briefOverviewOfPersistentContextContext();

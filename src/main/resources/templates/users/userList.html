@@ -13,11 +13,14 @@
     </div>
 	<table class="table table-bordered table-striped">
 		<thead class="table-dark">
+		<tr>
 			<td>id</td>
 			<td>name</td>
 			<td>email</td>
+			<td>detail</td>
 			<td>edit</td>
 			<td>delete</td>
+			</tr>
 		</thead>
 		<tbody>
 			<tr th:each="user : ${users}">
