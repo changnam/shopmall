@@ -2,11 +2,13 @@ package com.honsoft.shopmall.service;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hibernate.engine.spi.CollectionEntry;
 import org.hibernate.engine.spi.EntityEntry;
 import org.hibernate.engine.spi.EntityKey;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
@@ -82,7 +84,7 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));		
 		User savedUser = userRepository.save(user);
 		UserDto savedUserDto = userMapper.toDto(savedUser);
-//		briefOverviewOfPersistentContextContext();
+		briefOverviewOfPersistentContextContext();
 		return savedUserDto;
 	}
 
@@ -218,10 +220,24 @@ public class UserServiceImpl implements UserService {
 ////			}
 		}
 		
+//		if (collectionEntriesSize > 0) {
+//			logger.info("\nCollection entries:");
+//			persistenceContext.forEachCollectionEntry((k, v)->logger.info("Key: {}, Value: {}",k,v.getRole() == null ? "" : v),false);
+//		}
+		
 		if (collectionEntriesSize > 0) {
-			logger.info("\nCollection entries:");
-			persistenceContext.forEachCollectionEntry((k, v)->logger.info("Key: {}, Value: {}",k,v.getRole() == null ? "" : v),false);
+		    logger.info("\nCollection entries:");
+
+		    Map<Object, CollectionEntry> copy = new HashMap<>();
+		    persistenceContext.forEachCollectionEntry(copy::put, false);
+
+		    for (Map.Entry<Object, CollectionEntry> entry : copy.entrySet()) {
+		        Object key = entry.getKey();
+		        CollectionEntry value = entry.getValue();
+		        logger.info("Key: {}, Value: {}", key, value.getRole() == null ? "" : value);
+		    }
 		}
+
 		
 	}
 
