@@ -124,7 +124,7 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.disable());
 //		http.anonymous(anonymous -> anonymous.disable());
 		http.authorizeHttpRequests(
-				authz -> authz.requestMatchers("/home", "/books", "/members/add", "/login", "/access-denied")
+				authz -> authz.requestMatchers("/home", "/books", "/members/add", "/login", "/access-denied","/users/**")
 						.permitAll().requestMatchers(HttpMethod.POST, "/accounts").permitAll()
 						.requestMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN").anyRequest().authenticated())
 				.userDetailsService(userDetailsService).authenticationManager(authenticationManager)
