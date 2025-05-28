@@ -4,6 +4,11 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.honsoft.shopmall.dto.RoleDto;
 import com.honsoft.shopmall.request.RoleCreateDto;
 import com.honsoft.shopmall.request.RoleUpdateDto;
+import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.RoleService;
 
 @RestController
@@ -31,32 +37,39 @@ public class RoleController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<RoleDto>> getAllroles() {
+	public ResponseEntity<Object> getAllroles(
+			@PageableDefault(page = 0, size = 5, sort = "roleName", direction = Sort.Direction.ASC) Pageable pageable) {
+		Page<RoleDto> list = roleService.getAllRoles(pageable);
+		return ResponseHandler.responseBuilder("role pages success", HttpStatus.OK, list);
+	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<Object> getAllrolesReal() {
 		List<RoleDto> list = roleService.getAllRoles();
-		return ResponseEntity.ok(list);
+		return ResponseHandler.responseBuilder("role pages success", HttpStatus.OK, list);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<RoleDto> getroleById(@PathVariable("id") String roleId) {
+	public ResponseEntity<Object> getroleById(@PathVariable("id") String roleId) {
 		RoleDto roleDto = roleService.getRoleById(roleId);
-		return ResponseEntity.ok(roleDto);
+		return ResponseHandler.responseBuilder("role get success", HttpStatus.OK, roleDto);
 	}
 
 	@PostMapping
-	public ResponseEntity<RoleDto> createrole(@RequestBody RoleCreateDto roleCreateDto) {
+	public ResponseEntity<Object> createrole(@RequestBody RoleCreateDto roleCreateDto) {
 		RoleDto createdroleDto = roleService.createRole(roleCreateDto);
-		return ResponseEntity.ok(createdroleDto);
+		return ResponseHandler.responseBuilder("role create success", HttpStatus.OK, createdroleDto);
 	}
 
-	@PutMapping
-	public ResponseEntity<RoleDto> updaterole(@RequestBody RoleUpdateDto roleUpdateDto) {
-		RoleDto updatedroleDto = roleService.updateRole(roleUpdateDto.getRoleId(), roleUpdateDto);
-		return ResponseEntity.ok(updatedroleDto);
+	@PutMapping("/{id}")
+	public ResponseEntity<Object> updaterole(@PathVariable("id") String roleId,@RequestBody RoleUpdateDto roleUpdateDto) {
+		RoleDto updatedroleDto = roleService.updateRole(roleId, roleUpdateDto);
+		return ResponseHandler.responseBuilder("role update success", HttpStatus.OK, updatedroleDto);
 	}
 
-	@DeleteMapping
-	public ResponseEntity<String> deleterole(@RequestBody RoleDto roleDto) {
-		roleService.deleteRoleById(roleDto.getRoleId());
-		return ResponseEntity.ok(roleDto.getRoleId() + "  deleted");
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> deleterole(@PathVariable("id") String roleId) {
+		roleService.deleteRoleById(roleId);
+		return ResponseHandler.responseBuilder("role delete success", HttpStatus.OK, roleId + "  deleted");
 	}
 }

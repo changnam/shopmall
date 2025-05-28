@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,7 @@ import jakarta.persistence.EntityNotFoundException;
 @Service
 public class RoleServiceImpl implements RoleService {
 
+	private final BizExceptionMessageService bizExceptionMessageService;
 	private final RoleRepository roleRepository;
 	private final RoleMapper roleMapper;
 	private final UserRepository userRepository;
@@ -37,26 +40,30 @@ public class RoleServiceImpl implements RoleService {
 	private final PermissionMapper permissionMapper;
 
 	public RoleServiceImpl(RoleRepository roleRepository, RoleMapper roleMapper, UserRepository userRepository,
-			UserMapper userMapper, PermissionRepository permissionRepository, PermissionMapper permissionMapper) {
+			UserMapper userMapper, PermissionRepository permissionRepository, PermissionMapper permissionMapper, BizExceptionMessageService bizExceptionMessageService) {
 		this.roleRepository = roleRepository;
 		this.roleMapper = roleMapper;
 		this.userRepository = userRepository;
 		this.userMapper = userMapper;
 		this.permissionRepository = permissionRepository;
 		this.permissionMapper = permissionMapper;
+		this.bizExceptionMessageService = bizExceptionMessageService;
 	}
 
 	@Transactional
 	@Override
 	public RoleDto createRole(RoleCreateDto roleCreateDto) {
+		roleRepository.findById(roleCreateDto.getRoleId()).ifPresent(r -> {throw bizExceptionMessageService.createLocalizedException("ROLE_ALREADY_EXIST");});
 		Role role = roleMapper.toEntity(roleCreateDto);
 		Role savedRole = roleRepository.save(role);
 		return roleMapper.toDto(savedRole);
 	}
 
 	@Override
-	public List<RoleDto> getAllRoles() {
-		return roleRepository.findAll().stream().map(roleMapper::toDto).collect(Collectors.toList());
+	public Page<RoleDto> getAllRoles(Pageable pageable) {
+		Page<Role> roles = roleRepository.findAll(pageable);
+		Page<RoleDto> dtos = roleMapper.toPage(roles);
+		return dtos;
 	}
 
 	@Override
@@ -73,8 +80,8 @@ public class RoleServiceImpl implements RoleService {
 
 		roleMapper.udpateEntity(roleUpdateDto, existingRole);
 
-		Role updatedRole = roleRepository.save(existingRole);
-		return roleMapper.toDto(updatedRole);
+//		Role updatedRole = roleRepository.save(existingRole);
+		return roleMapper.toDto(existingRole);
 	}
 
 	@Transactional
@@ -139,5 +146,12 @@ public class RoleServiceImpl implements RoleService {
 				.removeIf(rolePermission -> rolePermission.getPermission().getPermissionId().equals(permissionId));
 		roleRepository.save(role);
 
+	}
+
+	@Override
+	public List<RoleDto> getAllRoles() {
+		List<Role> roles = roleRepository.findAll();
+		List<RoleDto> dtos = roleMapper.toDtoList(roles);
+		return dtos;
 	}
 }

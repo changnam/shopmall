@@ -1,15 +1,15 @@
 package com.honsoft.shopmall.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 //@Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +22,6 @@ public class PermissionDto {
 	@Pattern(regexp = "GET|POST|DELETE|PUT")
 	private String httpMethod;
 	
-	private List<String> roleIds = new ArrayList<>();
+	private List<String> roleIds ;
 
 }

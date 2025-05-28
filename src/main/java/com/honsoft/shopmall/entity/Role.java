@@ -90,4 +90,11 @@ public class Role extends BaseEntity<String> {
 		}
 	}
 
+	public void removeRolePermission(RolePermission rolePermission) {
+		this.rolePermissions.remove(rolePermission);
+	}
+
+	public void addRolePermission(RolePermission rolePermission) {
+		this.rolePermissions.add(rolePermission);
+	}
 }
