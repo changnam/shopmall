@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public UserDto createUser(UserCreateDto userCreateDto) {
-		briefOverviewOfPersistentContextContext();
+//		briefOverviewOfPersistentContextContext();
 		User user = userMapper.toEntity(userCreateDto);
 		//check email already exists
 		userRepository.findByEmail(user.getEmail()).ifPresent(a -> {throw bizExceptionMessageService.createLocalizedException("EMAIL_ALREADY_EXIST");});
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));		
 		User savedUser = userRepository.save(user);
 		UserDto savedUserDto = userMapper.toDto(savedUser);
-		briefOverviewOfPersistentContextContext();
+//		briefOverviewOfPersistentContextContext();
 		return savedUserDto;
 	}
 
