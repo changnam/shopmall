@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<div class="d-flex justify-content-between align-items-center">
+			<h2>roles</h2>
+			<a th:href="@{/roles/add}" class="btn btn-primary">Add role</a>
+		</div>
+		<table class="table table-bordered table-striped">
+			<thead class="table-dark">
+				<tr>
+					<td>id</td>
+					<td>name</td>
+					<td>permissions</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="role : ${roles}">
+					<td th:text="${role.roleId}"></td>
+					<td th:text="${role.roleName}"></td>
+					<td><span th:each="permission : ${role.permissions}"
+						th:text="${permission.name}" class="badge bg-primary me-1"></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<nav class="centered">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" th:classappend="${page.first} ? ' disabled'">
+					<a class="page-link"
+					th:href="@{/roles(page=0,size=${page.size},sort=${sort})}">First</a>
+				</li>
+				<li class="page-item"><a class="page-link"
+					th:href="@{/roles(page=${page.number -1},size=${page.size},sort=${sort})}">Prev</a>
+				</li>
+
+				<li class="page-item"
+					th:each="i : ${#numbers.sequence(
+				page.number > 2 ? page.number - 2 : 0, page.number + 2 < page.totalPages ? page.number + 2 : page.totalPages -1)}"
+					th:classapend="${i == page.number} ? ' active'"><a
+					class="page-link"
+					th:href="@{/roles(page=${i},size=${page.size},sort=${sort})}"
+					th:text="${i+ 1}"></a></li>
+
+				<li class="page-item"><a class="page-link"
+					th:href="@{/roles(page=${page.number +1},size=${page.size},sort=${sort})}">Next</a>
+				</li>
+				<li class="page-item" th:classappend="${page.last} ? ' disabled'">
+					<a class="page-link"
+					th:href="@{/roles(page=${page.totalPages-1},size=${page.size},sort=${sort})}">Last</a>
+				</li>
+			</ul>
+		</nav>
+		<div class="text-center mt-2">
+		  Page <span th:text="${page.number + 1}"></span> of <span th:text="${page.totalPages}"></span> | Total items: <span th:text="${page.totalElements}"></span>
+		</div>
+	</div>
+</body>
+</html>

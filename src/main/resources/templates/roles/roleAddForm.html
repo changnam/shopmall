@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<div></div>
+		<form th:action="@{/roles/add}" th:object="${roleCreateDto}"
+			method="post">
+			<div class="mb-3 row">
+				<label for="roleId" class="col-sm-2">roleId</label> <input
+					type="text" th:field="*{roleId}" class="col-sm-5" />
+			</div>
+			<div class="mb-3 row">
+				<label for="roleName" class="col-sm-2">roleName</label> <input
+					type="text" th:field="*{roleName}" class="col-sm-5" />
+			</div>
+			
+			<div class="mb-3 row">
+			 <label for="permissions" class="col-sm-2">permissions</label>
+			 <div class="col-sm-5" id="permissions">
+			     <select multiple th:field="*{permissionIds}" >
+			         <option th:each="permission : ${permissions}" th:value="${permission.permissionId}" th:text="${permission.name}" />
+			     </select>
+			 </div>
+			</div>
+			<div>
+
+				<button type="submit" class="btn btn-secondary">Submit</button>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
