@@ -7,5 +7,15 @@ custom validator 를 구현하면 (@ValidEmail) , Hibernate validator 를 확장
 spring validator api 는 별도의 빈으로 등록할수 있다. 구동방법은 org.springframework.validation.Validator 타입의 빈을 수동으로 주입받아 사용,또는 InitBinder 사용   
 spring validator 는 다른 spring validator 를 주입받아 하나의 global validator 로 사용가능하며, hibernate validator 도 주입받아 사용가능 (ex, BookValidator)    
   
-initBinder 는 @ModelAttribue 객체에만 적용됨. @RequestBody 에 적용하려면 jackson deserializer 를 사용해야한다.
+initBinder 는 @ModelAttribue 객체에만 적용됨. @RequestBody 에 적용하려면 jackson deserializer 를 사용해야한다. trim을 위해 각각 GlobalAdvice 의 @InitBinder 와 custom deserializer 빈을 등록
+  
+spring security filter 를 통과해서 (anonymous 포함) controller method 로 들어가면 이후 exception 처리는 try-catch 에서 처리하거나 controllerAdvice 에서 처리하거나 spring default exception handler 에게 위임한다.  
+  
+controller method 로 넘어가기 전에 발생하는 에러는 AuthenticationEntryPoint 또는 AccessDeniedHandler 에서 처리됨  
+  
+ControllerAdvice 가 여러 개이면 가장 specific 한 exception handler 를 찾는다. 따라서 Exception.class 에 대해서 GlobalAdvice 와 GlobalControllerAdvice 에 설정되어 있다면 Ambiguous @ExceptionHandler method error 발생하므로 @Order(1) 과 @Order(2) 로 구분해 놓을것 , NoHandlerFoundException 과 NoResourceFoundException 은 controller 에서 내는 exception 이 아니므로 GlobalAdvice 에서 처리해야 한다.
+
+
+
+
 
