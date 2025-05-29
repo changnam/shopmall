@@ -2,10 +2,12 @@ package com.honsoft.shopmall.advice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,12 +18,14 @@ import org.thymeleaf.exceptions.TemplateInputException;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 
 import com.honsoft.shopmall.dto.BookRequest;
+import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.validator.BookRequestValidator;
 
-import jakarta.validation.ConstraintViolation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice(basePackages = "com.honsoft.shopmall.controller")
+@Order(2)
 public class GlobalControllerAdvice {
 
 	private final BookRequestValidator bookRequestValidator;
@@ -65,8 +69,37 @@ public class GlobalControllerAdvice {
 		return "error/thymeleaf-error";
 	}
 
+	@ExceptionHandler(TransactionSystemException.class)
+	public ModelAndView handleTransactionSystemException(HttpServletRequest request, TransactionSystemException ex) {
+
+		Map<String, Object> error = new HashMap<>();
+		Throwable cause = ex.getRootCause();
+		if (cause instanceof ConstraintViolationException) {
+			ConstraintViolationException validationEx = (ConstraintViolationException) cause;
+
+			// Collect field errors into a map
+			Map<String, Object> violations = validationEx.getConstraintViolations().stream().collect(Collectors
+					.toMap(v -> v.getPropertyPath().toString(), v -> v.getMessage(), (existing, replacement) -> existing // In
+																															// case
+																															// of
+																															// duplicate
+																															// keys
+					));
+
+			error.put("violations", violations);
+		}
+
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("exception", ex);
+		modelAndView.addObject("error", error);
+		modelAndView.setViewName("errorCommon");
+
+		return modelAndView;
+
+	}
+
 	@ExceptionHandler(Exception.class)
-	public ModelAndView handleGenericException(Exception ex, Model model) {
+	public ModelAndView handleException(Exception ex, Model model) {
 //        model.addAttribute("errorMessage", "Unexpected Error: " + ex.getMessage());
 //        return "error/generic-error"; // Optional generic fallback
 		ModelAndView modelAndView = new ModelAndView();
