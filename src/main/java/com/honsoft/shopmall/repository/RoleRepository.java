@@ -10,6 +10,6 @@ import com.honsoft.shopmall.entity.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, String>{
-	@EntityGraph(attributePaths = {"userRoles"})
+	@EntityGraph(attributePaths = {"roleAssignments"})
 	Optional<Role> findById(String roleId);
 }

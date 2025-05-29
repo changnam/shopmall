@@ -102,10 +102,10 @@ public class RoleServiceImpl implements RoleService {
 		UserRole userRole = new UserRole();
 		userRole.setRole(role);
 		userRole.setUser(user);
-		userRole.setId(new UserRoleId(role.getRoleId(), user.getUserId()));
+//		userRole.setId(new UserRoleId(role.getRoleId(), user.getUserId()));
 		userRole.setAssignedAt(LocalDateTime.now());
 
-		role.getUserRoles().add(userRole);
+		role.getRoleAssignments().add(null);
 		roleRepository.save(role); // Handles join table automatically
 	}
 
@@ -114,7 +114,7 @@ public class RoleServiceImpl implements RoleService {
 	public void removeUserFromRole(String roleId, String userId) {
 		Role role = roleRepository.findById(roleId).orElseThrow(() -> new RuntimeException("Role not found"));
 
-		role.getUserRoles().removeIf(userRole -> userRole.getUser().getUserId().equals(userId));
+		role.getRoleAssignments().removeIf(userRole -> userRole.getUser().getUserId().equals(userId));
 		roleRepository.save(role);
 	}
 

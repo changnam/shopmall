@@ -30,7 +30,7 @@ public class FinalUserDetailsService implements UserDetailsService {
 
 //		UserAuthDto userAuthDto = userMapper.toAuthDto(user);
 
-		Set<GrantedAuthority> authorities = user.getUserRoles().stream()
+		Set<GrantedAuthority> authorities = user.getRoleAssignments().stream()
 				.map((ur) -> new SimpleGrantedAuthority(ur.getRole().getRoleName())).collect(Collectors.toSet());
 
 		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),

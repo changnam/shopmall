@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -78,6 +79,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			// Delegate to the AuthenticationEntryPoint manually
 			SecurityContextHolder.clearContext();
 			jwtAuthenticationEntryPoint.commence(request, response, new TokenExpiredException(jwtName));
+		} catch (UsernameNotFoundException ex) {
+			// Delegate to the AuthenticationEntryPoint manually
+			SecurityContextHolder.clearContext();
+			jwtAuthenticationEntryPoint.commence(request, response,ex);
+		} catch (Exception ex) {
+			SecurityContextHolder.clearContext();
+			jwtAuthenticationEntryPoint.commence(request, response, new UsernameNotFoundException("findbyemail 에러"));
 		}
 	}
 

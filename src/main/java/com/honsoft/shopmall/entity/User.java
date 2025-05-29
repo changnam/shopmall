@@ -25,7 +25,7 @@ import lombok.ToString;
 @Table(name = "users")
 @NoArgsConstructor
 //@AllArgsConstructor
-@ToString(exclude = { "userRoles" })
+@ToString(exclude = { "roleAssignments" })
 public class User extends BaseEntity<String> {
 	@Id
 //      @GeneratedValue(strategy =GenerationType.IDENTITY)
@@ -43,57 +43,6 @@ public class User extends BaseEntity<String> {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 //        @JsonManagedReference("user-userRoles")
 	@OrderBy("assignedAt DESC") // or "role.roleId ASC", depending on your entity fields
-	private List<UserRole> userRoles = new ArrayList<UserRole>(); // 초기화 되어 있어야 add, clear 등 가능함
+	private List<UserRoleAssignment> roleAssignments ; // 초기화 되어 있어야 add, clear 등 가능함
 
-	public void clearRoles() {
-		Iterator<UserRole> iterator = this.userRoles.iterator();
-		while (iterator.hasNext()) {
-			UserRole userRole = iterator.next();
-			Role role = userRole.getRole();
-
-			// Remove from Role's userRoles list
-			if (role != null) {
-				role.getUserRoles().remove(userRole);
-			}
-
-			// Break both sides of the bidirectional relationship
-			userRole.setUser(null);
-			userRole.setRole(null);
-
-			iterator.remove(); // Remove from this user's userRoles
-		}
-	}
-
-	public void addRole(Role role) {
-		boolean exists = this.userRoles.stream().anyMatch(ur -> ur.getRole().equals(role));
-		if (!exists) {
-			UserRole userRole = new UserRole(this, role);
-			this.userRoles.add(userRole);
-			role.addUserRole(userRole);
-		}
-	}
-
-	public void removeRole(Role role) {
-		Iterator<UserRole> iterator = this.userRoles.iterator();
-		while (iterator.hasNext()) {
-			UserRole userRole = iterator.next();
-			if (userRole.getRole().equals(role)) {
-				// Break bidirectional relationship
-				userRole.setUser(null);
-				userRole.setRole(null);
-
-				iterator.remove(); // Remove from user's userRoles list
-				role.getUserRoles().remove(userRole); // Remove from role's userRoles list (if maintained)
-				break; // Assuming only one matching UserRole should exist
-			}
-		}
-	}
-	
-	public void removeUserRole(UserRole userRole) {
-		this.userRoles.remove(userRole);
-	}
-
-	public void addUserRole(UserRole userRole) {
-		this.userRoles.add(userRole);
-	}
 }

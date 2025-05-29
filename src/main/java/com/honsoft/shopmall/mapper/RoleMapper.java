@@ -66,7 +66,7 @@ public abstract class RoleMapper {
     }
     
 	@Mapping(target = "rolePermissions", ignore = true)
-	@Mapping(target = "userRoles", ignore = true)
+	@Mapping(target = "roleAssignments", ignore = true)
 	public abstract Role toEntity(RoleCreateDto roleCreateDto);
 	
 	@AfterMapping
@@ -91,7 +91,7 @@ public abstract class RoleMapper {
 
 	@BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "rolePermissions", ignore = true)
-	@Mapping(target = "userRoles", ignore = true)
+	@Mapping(target = "roleAssignments", ignore = true)
 	public abstract void udpateEntity(RoleUpdateDto roleUpdateDto, @MappingTarget Role role);
 	
 	@AfterMapping
@@ -121,7 +121,7 @@ public abstract class RoleMapper {
 	    	rolePermission.getPermission().getRolePermissions().remove(rolePermission);
 	    	rolePermission.setRole(null);
 	    	rolePermission.setPermission(null);
-	        role.removeRolePermission(rolePermission);
+//	        role.removeRolePermission(rolePermission);
 	    }
 
 	    // 3. Add new roles that do not exist yet
@@ -135,7 +135,7 @@ public abstract class RoleMapper {
 	            newRolePermission.setId(rolePermissionId);
 	            newRolePermission.setRole(role);
 	            newRolePermission.setPermission(permission);
-	            role.addRolePermission(newRolePermission);
+//	            role.addRolePermission(newRolePermission);
 	            permission.getRolePermissions().add(newRolePermission); // maintain bidirectional link
 	        }
 	    }

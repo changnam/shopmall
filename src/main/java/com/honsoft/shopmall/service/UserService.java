@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.honsoft.shopmall.dto.UserDto;
+import com.honsoft.shopmall.request.RoleAssignmentRequestDto;
 import com.honsoft.shopmall.request.UserCreateDto;
 import com.honsoft.shopmall.request.UserUpdateDto;
 
@@ -20,4 +21,7 @@ public interface UserService {
 	void removeRoleFromUser(String userId, String roleId);
 	Page<UserDto> getPageUsers(Pageable pageable);
 	Optional<UserDto> findById(String id);
+	void assignRoleToUser(String roleId, String userId, String assignedBy);
+	void assignRoles(RoleAssignmentRequestDto roleAssignmentRequestDto);
+	
 }

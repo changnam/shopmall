@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 				} else {
 					errorCode = "REFRESH_TOKEN_EXPIRED";
 				}
+			} else if (authException instanceof UsernameNotFoundException) {
+				errorCode = "USERNAME_NOT_FOUND";
+			} else {
+				errorCode = authException.getMessage();
 			}
 
 			Map<String, Object> body = new HashMap<>();

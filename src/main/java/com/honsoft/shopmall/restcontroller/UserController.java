@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.UserDto;
+import com.honsoft.shopmall.request.RoleAssignmentRequestDto;
 import com.honsoft.shopmall.request.UserCreateDto;
 import com.honsoft.shopmall.request.UserUpdateDto;
 import com.honsoft.shopmall.response.ResponseHandler;
@@ -70,4 +71,11 @@ public class UserController {
 		userService.deleteUserById(userId);
 		return ResponseHandler.responseBuilder("delete success", HttpStatus.OK, userId +" delete success");
 	}
+	
+	@PostMapping("/assign-roles")
+	public ResponseEntity<?> assignRoles(@RequestBody RoleAssignmentRequestDto dto) {
+	    userService.assignRoles(dto);
+	    return ResponseHandler.responseBuilder("role assignment success", HttpStatus.OK, dto.getRoleIds());
+	}
+
 }

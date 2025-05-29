@@ -22,7 +22,7 @@ import lombok.ToString;
 @Table(name = "roles")
 @NoArgsConstructor
 //@AllArgsConstructor
-@ToString(exclude = { "userRoles", "rolePermissions" })
+@ToString(exclude = { "roleAssignments", "rolePermissions" })
 public class Role extends BaseEntity<String> {
 	@Id
 	private String roleId;
@@ -39,62 +39,7 @@ public class Role extends BaseEntity<String> {
 
 	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
 //      @JsonManagedReference("role-userRoles")
-	private List<UserRole> userRoles = new ArrayList<>();
+	private List<UserRoleAssignment> roleAssignments ;
 
-	public void addUserRole(UserRole userRole) {
-		this.userRoles.add(userRole);
-	}
 
-	public void clearPermissions() {
-		Iterator<RolePermission> iterator = this.rolePermissions.iterator();
-		while (iterator.hasNext()) {
-			RolePermission rolePermission = iterator.next();
-			Permission permission = rolePermission.getPermission();
-
-			// Remove from Role's userRoles list
-			if (permission != null) {
-				permission.getRolePermissions().remove(rolePermission);
-			}
-
-			// Break both sides of the bidirectional relationship
-			rolePermission.setRole(null);
-			rolePermission.setPermission(null);
-
-			iterator.remove(); // Remove from this user's userRoles
-		}
-	}
-
-	public void addPermission(Permission permission) {
-		boolean exists = this.rolePermissions.stream().anyMatch(rp -> rp.getPermission().equals(permission));
-		if (!exists) {
-			RolePermission rolePermission = new RolePermission(this, permission);
-			this.rolePermissions.add(rolePermission);
-			permission.addRolePermission(rolePermission);
-		}
-	}
-
-	public void removePermission(Permission permission) {
-		Iterator<RolePermission> iterator = this.rolePermissions.iterator();
-		while (iterator.hasNext()) {
-			RolePermission rolePermission = iterator.next();
-			if (rolePermission.getPermission().equals(permission)) {
-				// Break bidirectional relationship
-				rolePermission.setRole(null);
-				rolePermission.setPermission(null);
-
-				iterator.remove(); // Remove from user's userRoles list
-				permission.getRolePermissions().remove(rolePermission); // Remove from role's userRoles list (if
-																		// maintained)
-				break; // Assuming only one matching UserRole should exist
-			}
-		}
-	}
-
-	public void removeRolePermission(RolePermission rolePermission) {
-		this.rolePermissions.remove(rolePermission);
-	}
-
-	public void addRolePermission(RolePermission rolePermission) {
-		this.rolePermissions.add(rolePermission);
-	}
 }

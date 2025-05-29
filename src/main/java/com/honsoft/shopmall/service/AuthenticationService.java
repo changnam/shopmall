@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,16 +52,21 @@ public class AuthenticationService {
 
 	public String login(LoginRequest loginRequest, HttpServletResponse response) {
 
-		Authentication authenticationRequest = UsernamePasswordAuthenticationToken
-				.unauthenticated(loginRequest.getEmail(), loginRequest.getPassword());
-		Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
+//		try {
+			Authentication authenticationRequest = UsernamePasswordAuthenticationToken
+					.unauthenticated(loginRequest.getEmail(), loginRequest.getPassword());
+			Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
 
-		SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
-		List<String> userRoles = authenticationResponse.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
-		jwtService.generateToken(loginRequest.getEmail(), authenticationResponse.getName(), userRoles, response);
-		UserDetails userDetails = (UserDetails) authenticationResponse.getPrincipal();
-		return userDetails.getUsername();
+			SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
+			List<String> userRoles = authenticationResponse.getAuthorities().stream()
+					.map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+			jwtService.generateToken(loginRequest.getEmail(), authenticationResponse.getName(), userRoles, response);
+			UserDetails userDetails = (UserDetails) authenticationResponse.getPrincipal();
+			return userDetails.getUsername();
+//		} catch (AuthenticationException ex) {
+			// Catch bad credentials or user not found
+//			throw new RuntimeException("아이디 또는 비밀번호가 올바르지 않습니다.");
+//		}
 	}
 
 	public void registerAccount(SignupRequest signupRequest) {
