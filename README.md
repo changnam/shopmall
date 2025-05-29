@@ -14,7 +14,8 @@ spring security filter 를 통과해서 (anonymous 포함) controller method 로
 controller method 로 넘어가기 전에 발생하는 에러는 AuthenticationEntryPoint 또는 AccessDeniedHandler 에서 처리됨  
   
 ControllerAdvice 가 여러 개이면 가장 specific 한 exception handler 를 찾는다. 따라서 Exception.class 에 대해서 GlobalAdvice 와 GlobalControllerAdvice 에 설정되어 있다면 Ambiguous @ExceptionHandler method error 발생하므로 @Order(1) 과 @Order(2) 로 구분해 놓을것 , NoHandlerFoundException 과 NoResourceFoundException 은 controller 에서 내는 exception 이 아니므로 GlobalAdvice 에서 처리해야 한다.
-
+  
+@EnableConfigurationPorperties 는 @ConfigurationProperties 어노테이션이 된 클래스를 빈으로 등록하고자 할때 사용, 단, 해당 클래스에 @Component 가 되어 있거나 @Bean 으로 등록되었다면 불필요함. @Value 대신 사용해야 하는 이유는 1. 값이 여기 저기 분산 가능성 2.No validation 3. Lack of immutability 4. Manual defaulting (기본값 설정이 가능하여 예측불확실)   
 
 
 
