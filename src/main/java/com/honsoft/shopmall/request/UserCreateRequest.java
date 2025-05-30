@@ -1,20 +1,20 @@
 package com.honsoft.shopmall.request;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 //@Builder
-public class UserCreateDto {
+public class UserCreateRequest {
 	@Size(min = 3)
 	private String userId;
 

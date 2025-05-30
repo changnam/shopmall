@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.honsoft.shopmall.dto.UserDto;
-import com.honsoft.shopmall.request.UserCreateDto;
-import com.honsoft.shopmall.request.UserUpdateDto;
+import com.honsoft.shopmall.request.UserCreateRequest;
+import com.honsoft.shopmall.request.UserUpdateRequest;
 import com.honsoft.shopmall.service.RoleService;
 import com.honsoft.shopmall.service.UserService;
 
@@ -58,19 +58,19 @@ public class UserController {
 
 	@GetMapping("/add")
 	public String showAddForm(Model model) {
-		model.addAttribute("userCreateDto", new UserCreateDto());
+		model.addAttribute("userCreateRequest", new UserCreateRequest());
 		model.addAttribute("roles", roleService.getAllRoles());
 		return "users/userAddForm";
 	}
 
 	@PostMapping("/add")
-	public String addUser(@Valid @ModelAttribute("userCreateDto") UserCreateDto userCreateDto, BindingResult result,
+	public String addUser(@Valid @ModelAttribute("userCreateRequest") UserCreateRequest userCreateRequest, BindingResult result,
 			Model model) {
 		if (result.hasErrors()) {
 			model.addAttribute("roles", roleService.getAllRoles());
 			return "users/userAddForm";
 		}
-		userService.createUser(userCreateDto);
+		userService.createUser(userCreateRequest);
 		return "redirect:/users";
 	}
 
@@ -91,19 +91,19 @@ public class UserController {
 		if (userOpt.isEmpty()) {
 			return "redirect:/users";
 		}
-		model.addAttribute("userUpdateDto", userOpt.get());
+		model.addAttribute("userUpdateRequest", userOpt.get());
 		model.addAttribute("roles", roleService.getAllRoles());
 		return "users/userEditForm";
 	}
 
 	@PutMapping("/edit/{id}")
-	public String updateUser(@PathVariable("id") String id, @Valid @ModelAttribute("userUpdateDto") UserUpdateDto userUpdateDto,
+	public String updateUser(@PathVariable("id") String id, @Valid @ModelAttribute("userUpdateRequest") UserUpdateRequest userUpdateRequest,
 			BindingResult result, Model model) {
 		if (result.hasErrors()) {
 			model.addAttribute("roles", roleService.getAllRoles());
 			return "users/userEditForm";
 		}
-		userService.updateUser(id, userUpdateDto);
+		userService.updateUser(id, userUpdateRequest);
 		return "redirect:/users";
 	}
 

@@ -35,7 +35,7 @@ import com.honsoft.shopmall.repository.PersonRepository;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
 import com.honsoft.shopmall.request.RoleCreateDto;
-import com.honsoft.shopmall.request.UserCreateDto;
+import com.honsoft.shopmall.request.UserCreateRequest;
 import com.honsoft.shopmall.service.RoleService;
 import com.honsoft.shopmall.service.UserService;
 import com.honsoft.shopmall.util.FullyQualifiedBeanNameGenerator;
@@ -206,12 +206,12 @@ public class ShopmallApplication implements CommandLineRunner {
 
 		User admin = userRepository.findById("admin").orElse(null);
 		if (admin == null) {
-//			UserCreateDto adminCreateDto = new UserCreateDto();
-//			adminCreateDto.setUserId("admin");
-//			adminCreateDto.setEmail("admin@honsoft.com");
-//			adminCreateDto.setPassword(passwordEncoder.encode("password"));
-//			adminCreateDto.setRoleIds(new HashSet<>(List.of("admin")));
-//			UserDto adminDto = userService.createUser(adminCreateDto);
+//			userCreateRequest adminCreateRequest = new UserCreateRequest();
+//			adminCreateRequest.setUserId("admin");
+//			adminCreateRequest.setEmail("admin@honsoft.com");
+//			adminCreateRequest.setPassword(passwordEncoder.encode("password"));
+//			adminCreateRequest.setRoleIds(new HashSet<>(List.of("admin")));
+//			UserDto adminDto = userService.createUser(adminCreateRequest);
 			admin = new User();
 			admin.setUserId("admin");
 			admin.setEmail("admin@honsoft.com");

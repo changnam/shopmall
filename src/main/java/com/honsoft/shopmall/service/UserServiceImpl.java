@@ -1,9 +1,11 @@
 package com.honsoft.shopmall.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,13 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
 import com.honsoft.shopmall.dto.UserDto;
-import com.honsoft.shopmall.entity.ChangeType;
 import com.honsoft.shopmall.entity.Role;
 import com.honsoft.shopmall.entity.User;
 import com.honsoft.shopmall.entity.UserRole;
 import com.honsoft.shopmall.entity.UserRoleAssignment;
 import com.honsoft.shopmall.entity.UserRoleAssignmentHistory;
-import com.honsoft.shopmall.entity.UserRoleHistory;
 import com.honsoft.shopmall.mapper.RoleMapper;
 import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.RoleRepository;
@@ -39,9 +39,9 @@ import com.honsoft.shopmall.repository.UserRepository;
 import com.honsoft.shopmall.repository.UserRoleAssignmentHistoryRepository;
 import com.honsoft.shopmall.repository.UserRoleAssignmentRepository;
 import com.honsoft.shopmall.repository.UserRoleHistoryRepository;
-import com.honsoft.shopmall.request.RoleAssignmentRequestDto;
-import com.honsoft.shopmall.request.UserCreateDto;
-import com.honsoft.shopmall.request.UserUpdateDto;
+import com.honsoft.shopmall.request.UserCreateRequest;
+import com.honsoft.shopmall.request.UserRoleAssignmentRequest;
+import com.honsoft.shopmall.request.UserUpdateRequest;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
@@ -71,8 +71,8 @@ public class UserServiceImpl implements UserService {
 			UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, RoleMapper roleMapper,
 			@Qualifier("bookValidator") Validator validator, PasswordEncoder passwordEncoder,
 //			UserRoleRepository userRoleRepository,
-			UserRoleHistoryRepository historyRepository,
-			UserRoleAssignmentRepository userRoleAssignmentRepository,UserRoleAssignmentHistoryRepository userRoleAssignmentHistoryRepository) {
+			UserRoleHistoryRepository historyRepository, UserRoleAssignmentRepository userRoleAssignmentRepository,
+			UserRoleAssignmentHistoryRepository userRoleAssignmentHistoryRepository) {
 		this.entityManger = entityManager;
 		this.bizExceptionMessageService = bizExceptionMessageService;
 		this.userRepository = userRepository;
@@ -96,19 +96,51 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto createUser(UserCreateDto userCreateDto) {
-//		briefOverviewOfPersistentContextContext();
-		User user = userMapper.toEntity(userCreateDto);
-		// check email already exists
-		userRepository.findByEmail(user.getEmail()).ifPresent(a -> {
-			throw bizExceptionMessageService.createLocalizedException("EMAIL_ALREADY_EXIST");
-		});
+	public UserDto createUser(UserCreateRequest request) {
+		// Check if user already exists
+		if (userRepository.existsById(request.getUserId())) {
+			throw new IllegalArgumentException("User with ID already exists.");
+		}
 
+//		User user = new User();
+//		user.setUserId(request.getUserId());
+//		user.setPassword(request.getPassword()); // You may encode password
+//		user.setName(request.getName());
+//		user.setEmail(request.getEmail());
+//		user.setEnabled(request.getEnabled());
+
+		User user = userMapper.toEntity(request);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		User savedUser = userRepository.save(user);
-		UserDto savedUserDto = userMapper.toDto(savedUser);
-		briefOverviewOfPersistentContextContext();
-		return savedUserDto;
+
+		List<UserRoleAssignment> assignments = new ArrayList<>();
+		List<UserRoleAssignmentHistory> assignmentsHistory = new ArrayList<>();
+
+		for (String roleId : request.getRoleIds()) {
+			Role role = roleRepository.findById(roleId)
+					.orElseThrow(() -> new IllegalArgumentException("Invalid role: " + roleId));
+
+			UserRoleAssignment assignment = new UserRoleAssignment();
+			assignment.setUser(user);
+			assignment.setRole(role);
+			assignments.add(assignment);
+
+			// Record history
+			UserRoleAssignmentHistory history = new UserRoleAssignmentHistory();
+			history.setUserId(user.getUserId());
+			history.setRoleId(role.getRoleId());
+			history.setAction("ASSIGNED");
+			assignmentsHistory.add(history);
+
+		}
+
+		user.setRoleAssignments(assignments);
+
+		User saveUser = userRepository.save(user);
+
+		userRoleAssignmentHistoryRepository.saveAll(assignmentsHistory);
+
+//		        return user.getUserId();
+		return userMapper.toDto(saveUser);
 	}
 
 	@Override
@@ -129,14 +161,81 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public UserDto updateUser(String userId, UserUpdateDto userUpdateDto) {
+	public UserDto updateUser(String userId, UserUpdateRequest userUpdateRequest) {
 		logger.info("@@@@@@@@@@@@@@@@@@@ 1");
 		briefOverviewOfPersistentContextContext();
 		User existingUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId));
 
 		logger.info("@@@@@@@@@@@@@@@@@@@ 2");
 		briefOverviewOfPersistentContextContext();
-		userMapper.updateEntity(userUpdateDto, existingUser);
+		userMapper.updateEntity(userUpdateRequest, existingUser);
+
+//		User updatedUser = userRepository.save(existingUser);
+		// Convert incoming roleIds to a Set for efficient lookup
+		Set<String> incomingRoleIds = new HashSet<>(userUpdateRequest.getRoleIds());
+
+		checkRolesExist(incomingRoleIds);
+
+		Iterator<UserRoleAssignment> iterator = existingUser.getRoleAssignments().iterator();
+		while (iterator.hasNext()) {
+			UserRoleAssignment assignment = iterator.next();
+			if (!incomingRoleIds.contains(assignment.getRole().getRoleId())) {
+
+				// Record history first
+				UserRoleAssignmentHistory history = new UserRoleAssignmentHistory();
+				history.setUserId(existingUser.getUserId());
+				history.setRoleId(assignment.getRole().getRoleId());
+				history.setAction("REMOVED");
+				userRoleAssignmentHistoryRepository.save(history);
+
+				assignment.getRole().getRoleAssignments().remove(assignment);
+				assignment.setUser(null); // break bidirectional link
+				assignment.setRole(null);
+				iterator.remove();        // safe way to remove from collection
+			}
+		}
+
+		// Load current assignments
+		List<UserRoleAssignment> currentAssignments = userRoleAssignmentRepository
+				.findByUser_UserId(existingUser.getUserId());
+
+//		// Find roles to be removed
+//		for (UserRoleAssignment assignment : currentAssignments) {
+//			String existingRoleId = assignment.getRole().getRoleId();
+//			if (!incomingRoleIds.contains(existingRoleId)) {
+//				userRoleAssignmentRepository.delete(assignment);
+//
+//				// Record history
+//				UserRoleAssignmentHistory history = new UserRoleAssignmentHistory();
+//				history.setUserId(updatedUser.getUserId());
+//				history.setRoleId(existingRoleId);
+//				history.setAction("REMOVED");
+//				userRoleAssignmentHistoryRepository.save(history);
+//			}
+//		}
+
+		// Add new roles
+		List<Role> roles = roleRepository.findAllById(incomingRoleIds);
+		Set<String> existingRoleIds = currentAssignments.stream().map(ura -> ura.getRole().getRoleId())
+				.collect(Collectors.toSet());
+
+		for (Role role : roles) {
+			if (!existingRoleIds.contains(role.getRoleId())) {
+				UserRoleAssignment newAssignment = new UserRoleAssignment();
+				newAssignment.setUser(existingUser);
+				newAssignment.setRole(role);
+//				userRoleAssignmentRepository.save(newAssignment);
+				existingUser.addRoleAssignment(newAssignment);
+
+				// Record history
+				UserRoleAssignmentHistory history = new UserRoleAssignmentHistory();
+				history.setUserId(existingUser.getUserId());
+				history.setRoleId(role.getRoleId());
+				history.setAction("ASSIGNED");
+				userRoleAssignmentHistoryRepository.save(history);
+			}
+		}
+
 //		
 //		logger.info("@@@@@@@@@@@@@@@@@@@ 3");
 //		briefOverviewOfPersistentContextContext();
@@ -144,8 +243,8 @@ public class UserServiceImpl implements UserService {
 //		logger.info("@@@@@@@@@@@@@@@@@@@ 4");
 //		briefOverviewOfPersistentContextContext();
 //		
-//		if (userUpdateDto.getRoleIds() != null) {
-//			for (String roleId : userUpdateDto.getRoleIds()) {
+//		if (userUpdateRequest.getRoleIds() != null) {
+//			for (String roleId : userUpdateRequest.getRoleIds()) {
 //				Role role = roleRepository.findById(roleId)
 //						.orElseThrow(() -> new EntityNotFoundException(roleId + " not found"));
 //				existingUser.addRole(role);
@@ -160,7 +259,10 @@ public class UserServiceImpl implements UserService {
 //		User updatedUser = userRepository.save(existingUser);
 //		logger.info("@@@@@@@@@@@@@@@@@@@ 6-1");
 //		briefOverviewOfPersistentContextContext();
-		return userMapper.toDto(existingUser);
+
+		User updatedUser = userRepository.save(existingUser);
+
+		return userMapper.toDto(updatedUser);
 //		return null;
 	}
 
@@ -168,7 +270,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUserById(String userId) {
 		User existingUser = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException(userId));
-		userRepository.deleteById(userId);
+
+		List<UserRoleAssignmentHistory> assignmentsHistory = new ArrayList<>();
+		for (UserRoleAssignment ura : existingUser.getRoleAssignments()) {
+
+			// Record history
+			UserRoleAssignmentHistory history = new UserRoleAssignmentHistory();
+			history.setUserId(existingUser.getUserId());
+			history.setRoleId(ura.getRole().getRoleId());
+			history.setAction("REMOVED");
+			assignmentsHistory.add(history);
+		}
+
+		userRepository.delete(existingUser);
+		userRoleAssignmentHistoryRepository.saveAll(assignmentsHistory);
 	}
 
 	@Transactional
@@ -276,14 +391,15 @@ public class UserServiceImpl implements UserService {
 
 	@Transactional
 	@Override
-	public void assignRoles(RoleAssignmentRequestDto dto) {
-		User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+	public void assignRoles(UserRoleAssignmentRequest request) {
+		User user = userRepository.findById(request.getUserId())
+				.orElseThrow(() -> new RuntimeException("User not found"));
 
 		// Convert incoming roleIds to a Set for efficient lookup
-		Set<String> incomingRoleIds = new HashSet<>(dto.getRoleIds());
+		Set<String> incomingRoleIds = new HashSet<>(request.getRoleIds());
 
 		checkRolesExist(incomingRoleIds);
-		
+
 		// Load current assignments
 		List<UserRoleAssignment> currentAssignments = userRoleAssignmentRepository.findByUser_UserId(user.getUserId());
 
@@ -326,9 +442,10 @@ public class UserServiceImpl implements UserService {
 
 	private void checkRolesExist(Set<String> incomingRoleIds) {
 		for (String roleId : incomingRoleIds) {
-			roleRepository.findById(roleId).orElseThrow(()-> new EntityNotFoundException("role " + roleId + " not found"));
+			roleRepository.findById(roleId)
+					.orElseThrow(() -> new EntityNotFoundException("role " + roleId + " not found"));
 		}
-		
+
 	}
 
 }

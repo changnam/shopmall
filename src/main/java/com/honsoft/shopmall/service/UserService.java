@@ -7,21 +7,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.honsoft.shopmall.dto.UserDto;
-import com.honsoft.shopmall.request.RoleAssignmentRequestDto;
-import com.honsoft.shopmall.request.UserCreateDto;
-import com.honsoft.shopmall.request.UserUpdateDto;
+import com.honsoft.shopmall.request.UserRoleAssignmentRequest;
+import com.honsoft.shopmall.request.UserCreateRequest;
+import com.honsoft.shopmall.request.UserUpdateRequest;
 
 public interface UserService {
-	UserDto createUser(UserCreateDto userCreateDto);
+	UserDto createUser(UserCreateRequest userCreateRequest);
 	List<UserDto> getAllUsers();
 	UserDto getUserById(String userId);
-	UserDto updateUser(String userId, UserUpdateDto userUpdateDto);
+	UserDto updateUser(String userId, UserUpdateRequest userUpdateRequest);
 	void deleteUserById(String userId);
 	void assignRoleToUser(String userId, String roleId);
 	void removeRoleFromUser(String userId, String roleId);
 	Page<UserDto> getPageUsers(Pageable pageable);
 	Optional<UserDto> findById(String id);
 	void assignRoleToUser(String roleId, String userId, String assignedBy);
-	void assignRoles(RoleAssignmentRequestDto roleAssignmentRequestDto);
+	void assignRoles(UserRoleAssignmentRequest userRoleAssignmentRequest);
 	
 }

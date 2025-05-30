@@ -45,4 +45,19 @@ public class User extends BaseEntity<String> {
 	@OrderBy("assignedAt DESC") // or "role.roleId ASC", depending on your entity fields
 	private List<UserRoleAssignment> roleAssignments ; // 초기화 되어 있어야 add, clear 등 가능함
 
+	public void addRoleAssignment(UserRoleAssignment assignment) {
+	    if (roleAssignments == null) {
+	        roleAssignments = new ArrayList<>();
+	    }
+	    roleAssignments.add(assignment);
+	}
+
+	public void removeRoleAssignment(UserRoleAssignment assignment) {
+	    if (roleAssignments != null) {
+	        roleAssignments.remove(assignment);
+	        assignment.setUser(null);
+	        assignment.setRole(null);
+	    }
+	}
+
 }

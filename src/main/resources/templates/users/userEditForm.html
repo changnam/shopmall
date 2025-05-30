@@ -17,7 +17,7 @@
 		</div>
 
 		<div class="row">
-			<form th:action="@{'/users/edit/' + ${userUpdateDto.userId}}" th:object="${userUpdateDto}"
+			<form th:action="@{'/users/edit/' + ${userUpdateRequest.userId}}" th:object="${userUpdateRequest}"
 				method="post">
 				 <input type="hidden" name="_method" value="put" />
 				<div class="mb-3 row">

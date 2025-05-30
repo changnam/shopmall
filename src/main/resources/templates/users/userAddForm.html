@@ -16,7 +16,7 @@
     </div>
 
     <!-- Form Start -->
-    <form th:action="@{/users/add}" th:object="${userCreateDto}" method="post">
+    <form th:action="@{/users/add}" th:object="${userCreateRequest}" method="post">
         <div class="mb-3 row">
             <label for="userId" class="col-sm-2 col-form-label">ID</label>
             <div class="col-sm-3">

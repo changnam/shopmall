@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class RoleAssignmentRequestDto {
+public class UserRoleAssignmentRequest {
     private String userId;
     private List<String> roleIds;
 }

@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.UserDto;
-import com.honsoft.shopmall.request.RoleAssignmentRequestDto;
-import com.honsoft.shopmall.request.UserCreateDto;
-import com.honsoft.shopmall.request.UserUpdateDto;
+import com.honsoft.shopmall.request.UserRoleAssignmentRequest;
+import com.honsoft.shopmall.request.UserCreateRequest;
+import com.honsoft.shopmall.request.UserUpdateRequest;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.UserService;
 
@@ -55,14 +55,15 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Object> createUser(@RequestBody UserCreateDto userCreateDto){
-		UserDto createdUserDto = userService.createUser(userCreateDto);
+	public ResponseEntity<Object> createUser(@RequestBody UserCreateRequest userCreateRequest){
+		UserDto createdUserDto = userService.createUser(userCreateRequest);
+//		String userId = userService.createUser(userCreateRequest);
 		return ResponseHandler.responseBuilder("create success", HttpStatus.OK, createdUserDto);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Object> updateUser(@PathVariable("id") String userId,@RequestBody UserUpdateDto userUpdateDto){
-		UserDto updatedUserDto = userService.updateUser(userId,userUpdateDto);
+	public ResponseEntity<Object> updateUser(@PathVariable("id") String userId,@RequestBody UserUpdateRequest userUpdateRequest){
+		UserDto updatedUserDto = userService.updateUser(userId,userUpdateRequest);
 		return ResponseHandler.responseBuilder("update success", HttpStatus.OK, updatedUserDto);
 	}
 	
@@ -73,9 +74,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/assign-roles")
-	public ResponseEntity<?> assignRoles(@RequestBody RoleAssignmentRequestDto dto) {
-	    userService.assignRoles(dto);
-	    return ResponseHandler.responseBuilder("role assignment success", HttpStatus.OK, dto.getRoleIds());
+	public ResponseEntity<?> assignRoles(@RequestBody UserRoleAssignmentRequest userRoleAssignmentRequest) {
+	    userService.assignRoles(userRoleAssignmentRequest);
+	    return ResponseHandler.responseBuilder("role assignment success", HttpStatus.OK, userRoleAssignmentRequest.getRoleIds());
 	}
 
 }

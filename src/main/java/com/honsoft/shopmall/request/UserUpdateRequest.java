@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 //@Builder
-public class UserUpdateDto {
+public class UserUpdateRequest {
 
 	private String name;
 	private String email;
