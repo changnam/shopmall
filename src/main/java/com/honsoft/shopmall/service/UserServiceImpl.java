@@ -172,32 +172,34 @@ public class UserServiceImpl implements UserService {
 
 //		User updatedUser = userRepository.save(existingUser);
 		// Convert incoming roleIds to a Set for efficient lookup
-		Set<String> incomingRoleIds = new HashSet<>(userUpdateRequest.getRoleIds());
+//		Set<String> incomingRoleIds = new HashSet<>();
+		if (userUpdateRequest.getRoleIds() != null) {
+			Set<String> incomingRoleIds = new HashSet<>(userUpdateRequest.getRoleIds());
 
-		checkRolesExist(incomingRoleIds);
+			checkRolesExist(incomingRoleIds);
 
-		Iterator<UserRoleAssignment> iterator = existingUser.getRoleAssignments().iterator();
-		while (iterator.hasNext()) {
-			UserRoleAssignment assignment = iterator.next();
-			if (!incomingRoleIds.contains(assignment.getRole().getRoleId())) {
+			Iterator<UserRoleAssignment> iterator = existingUser.getRoleAssignments().iterator();
+			while (iterator.hasNext()) {
+				UserRoleAssignment assignment = iterator.next();
+				if (!incomingRoleIds.contains(assignment.getRole().getRoleId())) {
 
-				// Record history first
-				UserRoleAssignmentHistory history = new UserRoleAssignmentHistory();
-				history.setUserId(existingUser.getUserId());
-				history.setRoleId(assignment.getRole().getRoleId());
-				history.setAction("REMOVED");
-				userRoleAssignmentHistoryRepository.save(history);
+					// Record history first
+					UserRoleAssignmentHistory history = new UserRoleAssignmentHistory();
+					history.setUserId(existingUser.getUserId());
+					history.setRoleId(assignment.getRole().getRoleId());
+					history.setAction("REMOVED");
+					userRoleAssignmentHistoryRepository.save(history);
 
-				assignment.getRole().getRoleAssignments().remove(assignment);
-				assignment.setUser(null); // break bidirectional link
-				assignment.setRole(null);
-				iterator.remove();        // safe way to remove from collection
+					assignment.getRole().getRoleAssignments().remove(assignment);
+					assignment.setUser(null); // break bidirectional link
+					assignment.setRole(null);
+					iterator.remove(); // safe way to remove from collection
+				}
 			}
-		}
 
-		// Load current assignments
-		List<UserRoleAssignment> currentAssignments = userRoleAssignmentRepository
-				.findByUser_UserId(existingUser.getUserId());
+			// Load current assignments
+			List<UserRoleAssignment> currentAssignments = userRoleAssignmentRepository
+					.findByUser_UserId(existingUser.getUserId());
 
 //		// Find roles to be removed
 //		for (UserRoleAssignment assignment : currentAssignments) {
@@ -214,28 +216,28 @@ public class UserServiceImpl implements UserService {
 //			}
 //		}
 
-		// Add new roles
-		List<Role> roles = roleRepository.findAllById(incomingRoleIds);
-		Set<String> existingRoleIds = currentAssignments.stream().map(ura -> ura.getRole().getRoleId())
-				.collect(Collectors.toSet());
+			// Add new roles
+			List<Role> roles = roleRepository.findAllById(incomingRoleIds);
+			Set<String> existingRoleIds = currentAssignments.stream().map(ura -> ura.getRole().getRoleId())
+					.collect(Collectors.toSet());
 
-		for (Role role : roles) {
-			if (!existingRoleIds.contains(role.getRoleId())) {
-				UserRoleAssignment newAssignment = new UserRoleAssignment();
-				newAssignment.setUser(existingUser);
-				newAssignment.setRole(role);
+			for (Role role : roles) {
+				if (!existingRoleIds.contains(role.getRoleId())) {
+					UserRoleAssignment newAssignment = new UserRoleAssignment();
+					newAssignment.setUser(existingUser);
+					newAssignment.setRole(role);
 //				userRoleAssignmentRepository.save(newAssignment);
-				existingUser.addRoleAssignment(newAssignment);
+					existingUser.addRoleAssignment(newAssignment);
 
-				// Record history
-				UserRoleAssignmentHistory history = new UserRoleAssignmentHistory();
-				history.setUserId(existingUser.getUserId());
-				history.setRoleId(role.getRoleId());
-				history.setAction("ASSIGNED");
-				userRoleAssignmentHistoryRepository.save(history);
+					// Record history
+					UserRoleAssignmentHistory history = new UserRoleAssignmentHistory();
+					history.setUserId(existingUser.getUserId());
+					history.setRoleId(role.getRoleId());
+					history.setAction("ASSIGNED");
+					userRoleAssignmentHistoryRepository.save(history);
+				}
 			}
 		}
-
 //		
 //		logger.info("@@@@@@@@@@@@@@@@@@@ 3");
 //		briefOverviewOfPersistentContextContext();
