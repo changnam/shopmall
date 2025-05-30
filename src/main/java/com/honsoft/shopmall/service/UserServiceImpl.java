@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.management.RuntimeErrorException;
+
 import org.hibernate.engine.spi.CollectionEntry;
 import org.hibernate.engine.spi.EntityEntry;
 import org.hibernate.engine.spi.EntityKey;
@@ -21,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +44,7 @@ import com.honsoft.shopmall.repository.UserRoleAssignmentHistoryRepository;
 import com.honsoft.shopmall.repository.UserRoleAssignmentRepository;
 import com.honsoft.shopmall.repository.UserRoleHistoryRepository;
 import com.honsoft.shopmall.request.UserCreateRequest;
+import com.honsoft.shopmall.request.UserPasswordUpdateRequest;
 import com.honsoft.shopmall.request.UserRoleAssignmentRequest;
 import com.honsoft.shopmall.request.UserUpdateRequest;
 
@@ -448,6 +453,23 @@ public class UserServiceImpl implements UserService {
 					.orElseThrow(() -> new EntityNotFoundException("role " + roleId + " not found"));
 		}
 
+	}
+
+	@Transactional
+	@Override
+	public UserDto changePassword(UserPasswordUpdateRequest upur) {
+		User existing = userRepository.findById(upur.getUserId())
+				.orElseThrow(() -> new EntityNotFoundException(upur.getUserId() + " not found"));
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+		if (!auth.getName().equals(existing.getEmail())) {
+			if (!auth.getName().equals("admin@honsoft.com"))
+				throw new RuntimeException("본인 패스워드만 변경이 가능합니다.");
+		}
+
+		existing.setPassword(passwordEncoder.encode(upur.getPassword()));
+		User updated = userRepository.save(existing);
+		return userMapper.toDto(updated);
 	}
 
 }

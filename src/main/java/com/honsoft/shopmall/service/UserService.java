@@ -9,10 +9,12 @@ import org.springframework.data.domain.Pageable;
 import com.honsoft.shopmall.dto.UserDto;
 import com.honsoft.shopmall.request.UserRoleAssignmentRequest;
 import com.honsoft.shopmall.request.UserCreateRequest;
+import com.honsoft.shopmall.request.UserPasswordUpdateRequest;
 import com.honsoft.shopmall.request.UserUpdateRequest;
 
 public interface UserService {
 	UserDto createUser(UserCreateRequest userCreateRequest);
+	UserDto changePassword(UserPasswordUpdateRequest userPasswordUpdateRequest);
 	List<UserDto> getAllUsers();
 	UserDto getUserById(String userId);
 	UserDto updateUser(String userId, UserUpdateRequest userUpdateRequest);

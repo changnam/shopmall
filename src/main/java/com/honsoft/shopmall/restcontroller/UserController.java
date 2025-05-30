@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.honsoft.shopmall.dto.UserDto;
 import com.honsoft.shopmall.request.UserRoleAssignmentRequest;
 import com.honsoft.shopmall.request.UserCreateRequest;
+import com.honsoft.shopmall.request.UserPasswordUpdateRequest;
 import com.honsoft.shopmall.request.UserUpdateRequest;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.UserService;
@@ -77,6 +78,12 @@ public class UserController {
 	public ResponseEntity<?> assignRoles(@RequestBody UserRoleAssignmentRequest userRoleAssignmentRequest) {
 	    userService.assignRoles(userRoleAssignmentRequest);
 	    return ResponseHandler.responseBuilder("role assignment success", HttpStatus.OK, userRoleAssignmentRequest.getRoleIds());
+	}
+	
+	@PostMapping("/change-password")
+	public ResponseEntity<?> changePassword(@RequestBody UserPasswordUpdateRequest userPasswordUpdateRequest) {
+	    UserDto updated = userService.changePassword(userPasswordUpdateRequest);
+	    return ResponseHandler.responseBuilder("password change success", HttpStatus.OK, updated);
 	}
 
 }
