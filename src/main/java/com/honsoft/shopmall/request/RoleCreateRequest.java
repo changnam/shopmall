@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleCreateDto {
+public class RoleCreateRequest {
 	private String roleId;
 	private String roleName;
 //	private String createdBy;

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Table(name = " user_role_assignment_histories")
-public class UserRoleAssignmentHistory {
+public class UserRoleAssignmentHistory extends BaseEntity<String>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

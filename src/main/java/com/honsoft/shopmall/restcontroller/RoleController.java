@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.honsoft.shopmall.dto.RoleDto;
-import com.honsoft.shopmall.request.RoleCreateDto;
+import com.honsoft.shopmall.request.RoleCreateRequest;
 import com.honsoft.shopmall.request.RoleUpdateDto;
 import com.honsoft.shopmall.response.ResponseHandler;
 import com.honsoft.shopmall.service.RoleService;
@@ -56,8 +56,8 @@ public class RoleController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Object> createrole(@RequestBody RoleCreateDto roleCreateDto) {
-		RoleDto createdroleDto = roleService.createRole(roleCreateDto);
+	public ResponseEntity<Object> createrole(@RequestBody RoleCreateRequest roleCreateRequest) {
+		RoleDto createdroleDto = roleService.createRole(roleCreateRequest);
 		return ResponseHandler.responseBuilder("role create success", HttpStatus.OK, createdroleDto);
 	}
 

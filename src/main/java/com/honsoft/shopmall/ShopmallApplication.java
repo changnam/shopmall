@@ -34,7 +34,7 @@ import com.honsoft.shopmall.repository.PermissionRepository;
 import com.honsoft.shopmall.repository.PersonRepository;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
-import com.honsoft.shopmall.request.RoleCreateDto;
+import com.honsoft.shopmall.request.RoleCreateRequest;
 import com.honsoft.shopmall.request.UserCreateRequest;
 import com.honsoft.shopmall.service.RoleService;
 import com.honsoft.shopmall.service.UserService;
@@ -185,16 +185,15 @@ public class ShopmallApplication implements CommandLineRunner {
 //		
 		Role role = roleRepository.findById("admin").orElse(null);
 		if (role == null) {
-//			RoleCreateDto roleCreateDto = new RoleCreateDto();
-//			roleCreateDto.setRoleId("admin");
-//			roleCreateDto.setRoleName("ROLE_ADMIN");
-////			roleCreateDto.setCreatedBy("Application");
-//			RoleDto adminRole = roleService.createRole(roleCreateDto);
-//			logger.info("adminRole role created : {}",adminRole.toString());
-			role = new Role();
-			role.setRoleId("admin");
-			role.setRoleName("ROLE_ADMIN");
-			roleRepository.save(role);
+			RoleCreateRequest roleCreateRequest = new RoleCreateRequest();
+			roleCreateRequest.setRoleId("admin");
+			roleCreateRequest.setRoleName("ROLE_ADMIN");
+			RoleDto adminRole = roleService.createRole(roleCreateRequest);
+			logger.info("adminRole role created : {}",adminRole.toString());
+//			role = new Role();
+//			role.setRoleId("admin");
+//			role.setRoleName("ROLE_ADMIN");
+//			roleRepository.save(role);
 		}
 
 //		User user = userRepository.findById("cngoh").orElse(null);
@@ -206,24 +205,24 @@ public class ShopmallApplication implements CommandLineRunner {
 
 		User admin = userRepository.findById("admin").orElse(null);
 		if (admin == null) {
-//			userCreateRequest adminCreateRequest = new UserCreateRequest();
-//			adminCreateRequest.setUserId("admin");
-//			adminCreateRequest.setEmail("admin@honsoft.com");
-//			adminCreateRequest.setPassword(passwordEncoder.encode("password"));
-//			adminCreateRequest.setRoleIds(new HashSet<>(List.of("admin")));
-//			UserDto adminDto = userService.createUser(adminCreateRequest);
-			admin = new User();
-			admin.setUserId("admin");
-			admin.setEmail("admin@honsoft.com");
-			admin.setPassword(passwordEncoder.encode("password"));
-			userRepository.save(admin);
+			UserCreateRequest adminCreateRequest = new UserCreateRequest();
+			adminCreateRequest.setUserId("admin");
+			adminCreateRequest.setEmail("admin@honsoft.com");
+			adminCreateRequest.setPassword(passwordEncoder.encode("password"));
+			adminCreateRequest.setRoleIds(new HashSet<>(List.of("admin")));
+			UserDto adminDto = userService.createUser(adminCreateRequest);
+//			admin = new User();
+//			admin.setUserId("admin");
+//			admin.setEmail("admin@honsoft.com");
+//			admin.setPassword(passwordEncoder.encode("password"));
+//			userRepository.save(admin);
 //			User adminUser = new User();
 //			adminUser.setUserId("admin");
 //			adminUser.setEmail("admin@honsoft.com");
 //			adminUser.setPassword(passwordEncoder.encode("password"));
 //			admin.setUserRoles(new HashSet<>(List.of("")));
 //			userRepository.save(adminUser);
-//			logger.info("admin user created : {}",adminDto.toString());
+			logger.info("admin user created : {}",adminDto.toString());
 		}
 		
 	}

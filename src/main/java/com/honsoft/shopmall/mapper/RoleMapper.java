@@ -24,7 +24,7 @@ import com.honsoft.shopmall.entity.RolePermission;
 import com.honsoft.shopmall.entity.RolePermissionId;
 import com.honsoft.shopmall.entity.UserRole;
 import com.honsoft.shopmall.repository.PermissionRepository;
-import com.honsoft.shopmall.request.RoleCreateDto;
+import com.honsoft.shopmall.request.RoleCreateRequest;
 import com.honsoft.shopmall.request.RoleUpdateDto;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -67,10 +67,10 @@ public abstract class RoleMapper {
     
 	@Mapping(target = "rolePermissions", ignore = true)
 	@Mapping(target = "roleAssignments", ignore = true)
-	public abstract Role toEntity(RoleCreateDto roleCreateDto);
+	public abstract Role toEntity(RoleCreateRequest roleCreateRequest);
 	
 	@AfterMapping
-	public void afterCreateMapping(RoleCreateDto dto, @MappingTarget Role role) {
+	public void afterCreateMapping(RoleCreateRequest dto, @MappingTarget Role role) {
 		if (dto.getPermissionIds() != null) {
 			List<RolePermission> rolePermissions = new ArrayList<>();
 			for (String permissionId : dto.getPermissionIds()) {

@@ -23,7 +23,7 @@ import com.honsoft.shopmall.mapper.UserMapper;
 import com.honsoft.shopmall.repository.PermissionRepository;
 import com.honsoft.shopmall.repository.RoleRepository;
 import com.honsoft.shopmall.repository.UserRepository;
-import com.honsoft.shopmall.request.RoleCreateDto;
+import com.honsoft.shopmall.request.RoleCreateRequest;
 import com.honsoft.shopmall.request.RoleUpdateDto;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -52,9 +52,9 @@ public class RoleServiceImpl implements RoleService {
 
 	@Transactional
 	@Override
-	public RoleDto createRole(RoleCreateDto roleCreateDto) {
-		roleRepository.findById(roleCreateDto.getRoleId()).ifPresent(r -> {throw bizExceptionMessageService.createLocalizedException("ROLE_ALREADY_EXIST");});
-		Role role = roleMapper.toEntity(roleCreateDto);
+	public RoleDto createRole(RoleCreateRequest roleCreateRequest) {
+		roleRepository.findById(roleCreateRequest.getRoleId()).ifPresent(r -> {throw bizExceptionMessageService.createLocalizedException("ROLE_ALREADY_EXIST");});
+		Role role = roleMapper.toEntity(roleCreateRequest);
 		Role savedRole = roleRepository.save(role);
 		return roleMapper.toDto(savedRole);
 	}

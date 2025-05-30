@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.honsoft.shopmall.dto.PermissionDto;
 import com.honsoft.shopmall.dto.RoleDto;
-import com.honsoft.shopmall.request.RoleCreateDto;
+import com.honsoft.shopmall.request.RoleCreateRequest;
 import com.honsoft.shopmall.service.PermissionService;
 import com.honsoft.shopmall.service.RoleService;
 
@@ -54,20 +54,20 @@ public class RoleController {
 
 		List<PermissionDto> permissions = permissionService.getAllPermissions();
 		
-		m.addAttribute("roleCreateDto", new RoleCreateDto());
+		m.addAttribute("roleCreateRequest", new RoleCreateRequest());
 		m.addAttribute("permissions",permissions);
 		
 		return "roles/roleAddForm";
 	}
 
 	@PostMapping("/add")
-	public String createRole(Model m, @Validated @ModelAttribute("roleCreteDto") RoleCreateDto roleCreateDto,
+	public String createRole(Model m, @Validated @ModelAttribute("roleCreteDto") RoleCreateRequest roleCreateRequest,
 			BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return "roles/roleAddForm";
 		}
 		
-		RoleDto created = roleService.createRole(roleCreateDto);
+		RoleDto created = roleService.createRole(roleCreateRequest);
 
 		return "redirect:/roles";
 	}

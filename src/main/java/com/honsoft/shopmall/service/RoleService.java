@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.honsoft.shopmall.dto.RoleDto;
-import com.honsoft.shopmall.request.RoleCreateDto;
+import com.honsoft.shopmall.request.RoleCreateRequest;
 import com.honsoft.shopmall.request.RoleUpdateDto;
 
 public interface RoleService {
-	RoleDto createRole(RoleCreateDto roleCreateDto);
+	RoleDto createRole(RoleCreateRequest roleCreateRequest);
 	Page<RoleDto> getAllRoles(Pageable pageable) ;
 	List<RoleDto> getAllRoles();
 	RoleDto getRoleById(String id);
